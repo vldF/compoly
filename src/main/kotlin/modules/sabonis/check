@@ -5,7 +5,9 @@ fun isUpdated(): Boolean? {
         if (newPage != File("oldPage.txt")) {
             File("oldPage.txt").bufferWriter().use { it.write(newPage) }
             return true
-        } else return false
+        } else {
+            return false
+        }
     } catch (e: java.nio.file.InvalidPathException) {
         print("Неправильный адрес")
     } finally {
