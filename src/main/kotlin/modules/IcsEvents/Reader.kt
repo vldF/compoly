@@ -1,4 +1,4 @@
-package modules.icsEvents
+package modules.IcsEvents
 
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component

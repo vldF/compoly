@@ -1,14 +1,15 @@
-package modules.icsEvents
+package modules.IcsEvents
 
 import api.Vk
 import vkApiToken
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
-class icsEvents{
+class IcsEvents : modules.Module {
+    override val name = "Проверка ивентов в расписаниях"
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
 
-    fun call() {
+    override fun call() {
         val reader = Reader()
         val currentTime = System.currentTimeMillis()
 
