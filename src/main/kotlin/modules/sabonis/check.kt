@@ -35,7 +35,3 @@ fun isUpdated(): Boolean? {
         null
     }
 }
-
-fun main() {
-    println(isUpdated())
-}
