@@ -1,4 +1,4 @@
-package modules.icsEvents
+package modules.IcsEvents
 
 import org.junit.jupiter.api.Test
 
