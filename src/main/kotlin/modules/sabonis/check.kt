@@ -18,7 +18,7 @@ fun sendGet(address: String): String? {
             println("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
             return inputStream.bufferedReader().readText()
         }
-    } catch (e: FileNotFoundException) {
+    } catch (e: Exception) {
         return null
     }
 }
@@ -46,8 +46,4 @@ fun isUpdated(): Boolean? {
         null
     }
 
-}
-
-fun main() {
-    isUpdated()
 }
