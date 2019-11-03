@@ -4,8 +4,10 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.nio.file.Paths
 
 const val page = "http://sergei-sabonis.ru/Student/20192020/dm2019.htm"
+const val filePath = """\src\main\kotlin\modules\sabonis\oldPage.txt"""
 
 fun sendGet(address: String): String {
     val url = URL(address)
@@ -17,7 +19,8 @@ fun sendGet(address: String): String {
 }
 
 fun isUpdated(): Boolean? {
-    val path = ""
+    val path = Paths.get("").toAbsolutePath().toString() + "" +"\\" + filePath
+    println(path)
     val newPage = sendGet(page)
     return try {
         if (newPage != File(path).readText()) {
@@ -27,11 +30,7 @@ fun isUpdated(): Boolean? {
             false
         }
     } catch (e: FileNotFoundException) {
-        print("Указанный файл не найден")
+        println("Указанный файл не найден")
         null
     }
-}
-
-fun main() {
-    isUpdated()
 }
