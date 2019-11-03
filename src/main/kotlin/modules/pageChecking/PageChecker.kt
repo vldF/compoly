@@ -6,7 +6,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.file.Paths
 
-class pageChecker : modules.Module {
+class PageChecker : modules.Module {
     override val callingType = 0
     override val millis = 7 * 60 * 60L
     override val name = "Проверка обновления страницы"
