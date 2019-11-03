@@ -20,8 +20,8 @@ fun isUpdated(): Boolean? {
     val path = ""
     val newPage = sendGet(page)
     return try {
-        if (newPage != File("oldPage.txt").readText()) {
-            File("oldPage.txt").bufferedWriter().use { it.write(newPage) }
+        if (newPage != File(path).readText()) {
+            File(path).bufferedWriter().use { it.write(newPage) }
             true
         } else {
             false
