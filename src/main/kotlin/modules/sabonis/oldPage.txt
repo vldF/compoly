@@ -1,1 +1,27 @@
-null
+﻿<html>
+
+<head>
+<title>Сабонис Сергей Станиславович - официальная страница - Дискретная математика</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="ru">
+<style> td.tdcenter { border:1px black solid; text-align: "center" }
+	td.tdsimple { border:1px black solid; }
+td.tdwarning {
+  border:1px black solid;
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+	</style>
+</head>
+
+<body bgcolor="#aaaaaa">
+
+<h4>Результаты контрольных работ</h4>
+<p>Проверенное на 21.10: <a href="dm2019.pdf">группы 3530901/90004, 3530901/90003</a></p>
+
+<br><br><br>
+<hr>
+
+</body>
+</html>
