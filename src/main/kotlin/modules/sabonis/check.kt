@@ -29,7 +29,7 @@ fun isUpdated(): Boolean? {
 
     val newPage = sendGet(page)
     if (newPage == null) {
-        println("Указанной страницы не существует")
+        println("Не удается получить доступ к странице $page")
         return null
     }
 
@@ -45,4 +45,9 @@ fun isUpdated(): Boolean? {
         println("Указанный файл не найден")
         null
     }
+
+}
+
+fun main() {
+    isUpdated()
 }
