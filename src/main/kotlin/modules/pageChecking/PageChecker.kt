@@ -48,13 +48,11 @@ class PageChecker : modules.Module {
     }
 
     override fun call() {
-
         val pages = listOf("http://sergei-sabonis.ru/Student/20192020/dm2019.htm") //Можно добавить сюда другие сайты
         for (page in pages) {
             if (isUpdated(page) == true) {
                 println("Страница $page была обновлена") //вывод в ВК, можно добавить время и т.п.
             }
         }
-
     }
 }
