@@ -1,5 +1,8 @@
 package modules.pageChecking
 
+import api.Vk
+import chatIds
+import log
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.HttpURLConnection
@@ -8,13 +11,14 @@ import java.nio.file.Paths
 import modules.Module
 
 class PageChecker : Module {
-    override val callingType = 0
-    override val millis = 7 * 60 * 60L
+    override val callingType = 1
+    override val millis = 10 * 1000L
     override val name = "Проверка обновления страницы"
     override var lastCalling = System.currentTimeMillis() + 3 * 60 * 60 * 1000L
 
     private val pages = listOf(
-        "http://sergei-sabonis.ru/Student/20192020/dm2019.htm"
+        "http://sergei-sabonis.ru/Student/20192020/dm2019.htm",
+        "https://en.wikipedia.org/wiki/Special:Random"
     ) //Можно добавить сюда другие сайты
 
     private fun getPath(page: String): String {
@@ -27,11 +31,11 @@ class PageChecker : Module {
             val url = URL(address)
             with(url.openConnection() as HttpURLConnection) {
                 requestMethod = "GET"  // optional default is GET
-                println("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
+                log.info("Sent 'GET' request to $url, [$responseCode]")
                 return inputStream.bufferedReader().readText()
             }
         } catch (e: Exception) {
-            println("Не удается получить доступ к странице $address")
+            log.warning("Can not get $address")
             return null
         }
     }
@@ -42,13 +46,13 @@ class PageChecker : Module {
         return try {
             if (newPage != File(path).readText()) {
                 File(path).bufferedWriter().use { it.write(newPage) }
-                println("Файл $path обновлен")
+                log.info("Page $path was updated")
                 true
             } else {
                 false
             }
         } catch (e: FileNotFoundException) {
-            println("Файл $path не найден")
+            log.warning("File $path not found")
             null
         }
     }
@@ -59,7 +63,7 @@ class PageChecker : Module {
             val text = sendGet(page)
             if (text != null) {
                 File(path).writeText(text)
-                println("Файл $path был создан")
+                log.info("File $path was created")
             }
         }
     }
@@ -67,7 +71,8 @@ class PageChecker : Module {
     override fun call() {
         for (page in pages) {
             if (isUpdated(page) == true) {
-                println("Страница $page была обновлена") //вывод в ВК, можно добавить время и т.п.
+                log.info("Page $page was updated")
+                Vk().send("Обновление страницы $page", chatIds)
             }
         }
     }

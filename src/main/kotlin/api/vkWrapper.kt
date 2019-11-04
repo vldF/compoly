@@ -1,7 +1,7 @@
 package api
 
 import chatIds
-import getLogger
+import log
 import testMode
 import vkApiToken
 import java.lang.StringBuilder
@@ -15,7 +15,6 @@ import java.net.http.HttpResponse
 
 class Vk {
     @Suppress("SameParameterValue")
-    private val log = getLogger("vk wrapper")
     private fun post(methodName: String, params: MutableMap<String, String>) {
         if (testMode) {
             return

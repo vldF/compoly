@@ -1,14 +1,15 @@
 import modules.icsEvents.IcsEvents
 import modules.Module
+import modules.pageChecking.PageChecker
 import kotlin.concurrent.timer
 
 fun main() {
-    val log = getLogger("main")
     log.info("Starting")
-    val modules = listOf<Module>(IcsEvents())
+
+    val modules = listOf(IcsEvents(), PageChecker())
     val timedModules = mutableListOf<Module>()
     val periodicalModules = mutableListOf<Module>()
-    log.info("${modules.size} linked")
+
     for (module in modules) {
         when {
             module.callingType == 0 -> timedModules.add(module)
@@ -18,12 +19,15 @@ fun main() {
             }
         }
     }
+    log.info("${modules.size} linked")
     log.info("Initialization done")
+
     for (module in periodicalModules) {
         timer("main loop", false, 0L, module.millis) {
             module.call()
         }
     }
+
     while (true) {
         for (module in modules) {
             val time = System.currentTimeMillis() + 3 * 60 * 60 * 1000L

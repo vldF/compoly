@@ -2,12 +2,10 @@ package modules.icsEvents
 
 import api.Vk
 import chatIds
-import getLogger
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
 class IcsEvents : modules.Module {
-    val log = getLogger("icalendar events")
     override val callingType = 0
     override val millis = 7 * 60 * 60L
     override val name = "Проверка ивентов в расписаниях"
