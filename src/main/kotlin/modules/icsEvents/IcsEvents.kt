@@ -9,7 +9,7 @@ class IcsEvents : modules.Module {
     override val callingType = 0
     override val millis = 7 * 60 * 60L
     override val name = "Проверка ивентов в расписаниях"
-    override var lastCalling = System.currentTimeMillis() + 3 * 60 * 60 * 1000L
+    override var lastCalling = 0L
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
 
     override fun call() {

@@ -14,13 +14,13 @@ class PageChecker : Module {
     override val callingType = 1
     override val millis = 10 * 1000L
     override val name = "Проверка обновления страницы"
-    override var lastCalling = System.currentTimeMillis() + 3 * 60 * 60 * 1000L
+    override var lastCalling = 0L
 
     // Можно добавить сюда другие сайты
     private val pages = listOf(
         Link("Практика по дискретке [Сабонис]", "http://sergei-sabonis.ru/Student/20192020/dm2019.htm"),
         Link("Практика по вышмату [Давыдов]",
-            "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op/export?format=xlsx&gid=693072555",
+            "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op/export?format=tsv&gid=693072555",
             "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op")
     )
 
