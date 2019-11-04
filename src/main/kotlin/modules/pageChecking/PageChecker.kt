@@ -51,7 +51,7 @@ class PageChecker : Module {
         }
     }
 
-    fun init() { //Следует запускать после добавления новых страниц
+    fun createFiles() { //Следует запускать после добавления новых страниц
         for (page in pages) {
             val path = getPath(page)
             val text = sendGet(page)
