@@ -13,7 +13,9 @@ class PageChecker : Module {
     override val name = "Проверка обновления страницы"
     override var lastCalling = System.currentTimeMillis() + 3 * 60 * 60 * 1000L
 
-    private val pages = listOf("http://sergei-sabonis.ru/Student/20192020/dm2019.htm") //Можно добавить сюда другие сайты
+    private val pages = listOf(
+        "http://sergei-sabonis.ru/Student/20192020/dm2019.htm"
+    ) //Можно добавить сюда другие сайты
 
     private fun getPath(page: String): String {
         val filePath = "/data/savedPages/" + page.replace(Regex("""[\\?|"/.:<>*]"""), "_") + ".txt"
