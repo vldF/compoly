@@ -16,10 +16,13 @@ class PageChecker : Module {
     override val name = "Проверка обновления страницы"
     override var lastCalling = System.currentTimeMillis() + 3 * 60 * 60 * 1000L
 
+    // Можно добавить сюда другие сайты
     private val pages = listOf(
-        "http://sergei-sabonis.ru/Student/20192020/dm2019.htm",
-        "https://en.wikipedia.org/wiki/Special:Random"
-    ) //Можно добавить сюда другие сайты
+        Link("Практика по дискретке [Сабонис]", "http://sergei-sabonis.ru/Student/20192020/dm2019.htm"),
+        Link("Практика по вышмату [Давыдов]",
+            "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op/export?format=xlsx&gid=693072555",
+            "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op")
+    )
 
     private fun getPath(page: String): String {
         val filePath = "/data/savedPages/" + page.replace(Regex("""[\\?|"/.:<>*]"""), "_") + ".txt"
@@ -59,8 +62,8 @@ class PageChecker : Module {
 
     fun createFiles() { //Следует запускать после добавления новых страниц
         for (page in pages) {
-            val path = getPath(page)
-            val text = sendGet(page)
+            val path = getPath(page.trueUrl)
+            val text = sendGet(page.trueUrl)
             if (text != null) {
                 File(path).writeText(text)
                 log.info("File $path was created")
@@ -70,10 +73,12 @@ class PageChecker : Module {
 
     override fun call() {
         for (page in pages) {
-            if (isUpdated(page) == true) {
-                log.info("Page $page was updated")
-                Vk().send("Обновление страницы $page", chatIds)
+            if (isUpdated(page.trueUrl) == true) {
+                log.info("Page ${page.showingUrl} was updated")
+                Vk().send("Обновление страницы ${page.showingUrl}", chatIds)
             }
         }
     }
 }
+
+data class Link(val name: String, val trueUrl: String, val showingUrl: String = trueUrl)

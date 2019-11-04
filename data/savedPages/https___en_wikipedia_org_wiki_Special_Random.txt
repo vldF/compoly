@@ -2,14 +2,14 @@
 <html class="client-nojs" lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
-<title>Nizhneyablochny - Wikipedia</title>
-<script>document.documentElement.className="client-js";RLCONF={"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Nizhneyablochny","wgTitle":"Nizhneyablochny","wgCurRevisionId":921336271,"wgRevisionId":921336271,"wgArticleId":62056164,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Articles with short description","Articles containing Russian-language text","All stub articles","Rural localities in Volgograd Oblast","Southern Russia geography stubs"],"wgBreakFrames":!1,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":
-"Nizhneyablochny","wgRelevantArticleId":62056164,"wgRequestId":"XcBhIQpAICIAABTCQLAAAADG","wgCSPNonce":!1,"wgIsProbablyEditable":!0,"wgRelevantPageIsProbablyEditable":!0,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgMediaViewerOnClick":!0,"wgMediaViewerEnabledByDefault":!0,"wgPopupsReferencePreviews":!1,"wgPopupsConflictsWithNavPopupGadget":!1,"wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgMFDisplayWikibaseDescriptions":{"search":!0,"nearby":!0,"watchlist":!0,"tagline":!1},"wgWMESchemaEditAttemptStepOversample":!1,"wgULSCurrentAutonym":"English","wgNoticeProject":"wikipedia","wgWikibaseItemId":"Q19691692","wgCentralAuthMobileDomain":!1,"wgEditSubmitButtonLabelPublish":!0};RLSTATE={"ext.globalCssJs.user.styles":"ready","site.styles":"ready","noscript":"ready","user.styles":"ready","ext.globalCssJs.user":"ready","user":"ready","user.options":"ready","user.tokens":"loading","ext.cite.styles":"ready",
-"mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","wikibase.client.init":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready","ext.uls.interlanguage":"ready","ext.wikimediaBadges":"ready","ext.3d.styles":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"};RLPAGEMODULES=["ext.cite.ux-enhancements","site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.searchSuggest","ext.gadget.teahouse","ext.gadget.ReferenceTooltips","ext.gadget.watchlist-notice","ext.gadget.DRN-wizard","ext.gadget.charinsert","ext.gadget.refToolbar","ext.gadget.extra-toolbar-buttons","ext.gadget.switcher","ext.centralauth.centralautologin","mmv.head","mmv.bootstrap.autostart","ext.popups","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader","ext.eventLogging","ext.wikimediaEvents","ext.navigationTiming","ext.uls.compactlinks","ext.uls.interface","ext.cx.eventlogging.campaigns","ext.quicksurveys.init",
-"ext.centralNotice.geoIP","ext.centralNotice.startUp","skins.vector.js"];</script>
+<title>Grzegorz Guzik - Wikipedia</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Grzegorz_Guzik","wgTitle":"Grzegorz Guzik","wgCurRevisionId":917001373,"wgRevisionId":917001373,"wgArticleId":41981094,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["All stub articles","1991 births","Living people","Polish male biathletes","Biathletes at the 2014 Winter Olympics","Biathletes at the 2018 Winter Olympics","Olympic biathletes of Poland","People from Sucha County","European biathlon biography stubs","Polish winter sports biography stubs"],"wgBreakFrames":!1,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],
+"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Grzegorz_Guzik","wgRelevantArticleId":41981094,"wgRequestId":"Xb49fApAME8AAHoUoAoAAAAN","wgCSPNonce":!1,"wgIsProbablyEditable":!0,"wgRelevantPageIsProbablyEditable":!0,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgMediaViewerOnClick":!0,"wgMediaViewerEnabledByDefault":!0,"wgPopupsReferencePreviews":!1,"wgPopupsConflictsWithNavPopupGadget":!1,"wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgMFDisplayWikibaseDescriptions":{"search":!0,"nearby":!0,"watchlist":!0,"tagline":!1},"wgWMESchemaEditAttemptStepOversample":!1,"wgULSCurrentAutonym":"English","wgNoticeProject":"wikipedia","wgWikibaseItemId":"Q1235736","wgCentralAuthMobileDomain":!1,"wgEditSubmitButtonLabelPublish":!0};RLSTATE={"ext.globalCssJs.user.styles":"ready","site.styles":"ready","noscript":"ready","user.styles":"ready",
+"ext.globalCssJs.user":"ready","user":"ready","user.options":"ready","user.tokens":"loading","ext.cite.styles":"ready","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.toc.styles":"ready","wikibase.client.init":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready","ext.uls.interlanguage":"ready","ext.wikimediaBadges":"ready","ext.3d.styles":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"};RLPAGEMODULES=["ext.cite.ux-enhancements","site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","mediawiki.searchSuggest","ext.gadget.teahouse","ext.gadget.ReferenceTooltips","ext.gadget.watchlist-notice","ext.gadget.DRN-wizard","ext.gadget.charinsert","ext.gadget.refToolbar","ext.gadget.extra-toolbar-buttons","ext.gadget.switcher","ext.centralauth.centralautologin","mmv.head","mmv.bootstrap.autostart","ext.popups","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader","ext.eventLogging",
+"ext.wikimediaEvents","ext.navigationTiming","ext.uls.compactlinks","ext.uls.interface","ext.cx.eventlogging.campaigns","ext.quicksurveys.init","ext.centralNotice.geoIP","ext.centralNotice.startUp","skins.vector.js"];</script>
 <script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.tokens@tffin",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
 });});</script>
-<link rel="stylesheet" href="/w/load.php?lang=en&amp;modules=ext.3d.styles%7Cext.cite.styles%7Cext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.skinning.interface%7Cskins.vector.styles%7Cwikibase.client.init&amp;only=styles&amp;skin=vector"/>
+<link rel="stylesheet" href="/w/load.php?lang=en&amp;modules=ext.3d.styles%7Cext.cite.styles%7Cext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.skinning.interface%7Cmediawiki.toc.styles%7Cskins.vector.styles%7Cwikibase.client.init&amp;only=styles&amp;skin=vector"/>
 <script async="" src="/w/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
 <meta name="ResourceLoaderDynamicStyles" content=""/>
 <link rel="stylesheet" href="/w/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
@@ -17,21 +17,21 @@
 <meta name="referrer" content="origin"/>
 <meta name="referrer" content="origin-when-crossorigin"/>
 <meta name="referrer" content="origin-when-cross-origin"/>
-<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Outline_Map_of_Volgograd_Oblast.svg/1200px-Outline_Map_of_Volgograd_Oblast.svg.png"/>
-<link rel="alternate" href="android-app://org.wikipedia/http/en.m.wikipedia.org/wiki/Nizhneyablochny"/>
-<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/w/index.php?title=Nizhneyablochny&amp;action=edit"/>
-<link rel="edit" title="Edit this page" href="/w/index.php?title=Nizhneyablochny&amp;action=edit"/>
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Biathlon_European_Championships_2017_Sprint_Men_0771.JPG/1200px-Biathlon_European_Championships_2017_Sprint_Men_0771.JPG"/>
+<link rel="alternate" href="android-app://org.wikipedia/http/en.m.wikipedia.org/wiki/Grzegorz_Guzik"/>
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit"/>
+<link rel="edit" title="Edit this page" href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit"/>
 <link rel="apple-touch-icon" href="/static/apple-touch/wikipedia.png"/>
 <link rel="shortcut icon" href="/static/favicon/wikipedia.ico"/>
 <link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="Wikipedia (en)"/>
 <link rel="EditURI" type="application/rsd+xml" href="//en.wikipedia.org/w/api.php?action=rsd"/>
 <link rel="license" href="//creativecommons.org/licenses/by-sa/3.0/"/>
-<link rel="canonical" href="https://en.wikipedia.org/wiki/Nizhneyablochny"/>
+<link rel="canonical" href="https://en.wikipedia.org/wiki/Grzegorz_Guzik"/>
 <link rel="dns-prefetch" href="//login.wikimedia.org"/>
 <link rel="dns-prefetch" href="//meta.wikimedia.org" />
 <!--[if lt IE 9]><script src="/w/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
 </head>
-<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-Nizhneyablochny rootpage-Nizhneyablochny skin-vector action-view">
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-Grzegorz_Guzik rootpage-Grzegorz_Guzik skin-vector action-view">
 <div id="mw-page-base" class="noprint"></div>
 <div id="mw-head-base" class="noprint"></div>
 <div id="content" class="mw-body" role="main">
@@ -40,7 +40,7 @@
 	<div class="mw-indicators mw-body-content">
 </div>
 
-	<h1 id="firstHeading" class="firstHeading" lang="en">Nizhneyablochny</h1>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Grzegorz Guzik</h1>
 	
 	<div id="bodyContent" class="mw-body-content">
 		<div id="siteSub" class="noprint">From Wikipedia, the free encyclopedia</div>
@@ -51,62 +51,224 @@
 		<div id="jump-to-nav"></div>
 		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
 		<a class="mw-jump-link" href="#p-search">Jump to search</a>
-		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><div class="shortdescription nomobile noexcerpt noprint searchaux" style="display:none">Khutor in Volgograd Oblast, Russia</div><table class="infobox geography vcard" style="width:22em;width:23em"><tbody><tr><th colspan="2" style="text-align:center;font-size:125%;font-weight:bold;font-size:1.25em; white-space:nowrap"><div style="display:inline" class="fn org">Nizhneyablochny</div><br /><div class="nickname" style="font-weight:normal;display:inline;">Нижнеяблочный</div></th></tr><tr><td colspan="2" style="text-align:center;background-color:#cddeff; font-weight:bold;"><div class="category">Khutor</div></td></tr><tr class="mergedtoprow"><td colspan="2" style="text-align:center"><div class="switcher-container"><div class="center"><div style="width:250px;float:none;clear:both;margin-left:auto;margin-right:auto"><div style="width:250px;padding:0"><div style="position:relative;width:250px"><a href="/wiki/File:Outline_Map_of_Volgograd_Oblast.svg" class="image" title="Nizhneyablochny is located in Volgograd Oblast"><img alt="Nizhneyablochny is located in Volgograd Oblast" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Outline_Map_of_Volgograd_Oblast.svg/250px-Outline_Map_of_Volgograd_Oblast.svg.png" decoding="async" width="250" height="234" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Outline_Map_of_Volgograd_Oblast.svg/375px-Outline_Map_of_Volgograd_Oblast.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Outline_Map_of_Volgograd_Oblast.svg/500px-Outline_Map_of_Volgograd_Oblast.svg.png 2x" data-file-width="865" data-file-height="810" /></a><div style="position:absolute;top:88.116%;left:31.547%"><div style="position:absolute;left:-3px;top:-3px;line-height:0"><img alt="Nizhneyablochny" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Red_pog.svg/6px-Red_pog.svg.png" decoding="async" title="Nizhneyablochny" width="6" height="6" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Red_pog.svg/9px-Red_pog.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Red_pog.svg/12px-Red_pog.svg.png 2x" data-file-width="64" data-file-height="64" /></div><div style="font-size:90%;line-height:110%;position:absolute;width:6em;top:-0.75em;left:4px;text-align:left"><div style="display:inline;padding:1px;float:left">Nizhneyablochny</div></div></div></div><div></div><span class="switcher-label" style="display:none">Show map of Volgograd Oblast</span></div></div></div><div class="center"><div style="width:250px;float:none;clear:both;margin-left:auto;margin-right:auto"><div style="width:250px;padding:0"><div style="position:relative;width:250px"><a href="/wiki/File:Russia_edcp_location_map.svg" class="image" title="Nizhneyablochny is located in Russia"><img alt="Nizhneyablochny is located in Russia" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Russia_edcp_location_map.svg/250px-Russia_edcp_location_map.svg.png" decoding="async" width="250" height="135" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Russia_edcp_location_map.svg/375px-Russia_edcp_location_map.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Russia_edcp_location_map.svg/500px-Russia_edcp_location_map.svg.png 2x" data-file-width="1181" data-file-height="637" /></a><div style="position:absolute;top:57.482%;left:7.199%"><div style="position:absolute;left:-3px;top:-3px;line-height:0"><img alt="Nizhneyablochny" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Red_pog.svg/6px-Red_pog.svg.png" decoding="async" title="Nizhneyablochny" width="6" height="6" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Red_pog.svg/9px-Red_pog.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Red_pog.svg/12px-Red_pog.svg.png 2x" data-file-width="64" data-file-height="64" /></div><div style="font-size:90%;line-height:110%;position:absolute;width:6em;top:-0.75em;left:4px;text-align:left"><div style="display:inline;padding:1px;float:left">Nizhneyablochny</div></div></div></div><div></div><span class="switcher-label" style="display:none">Show map of Russia</span></div></div></div></div></td></tr><tr class="mergedbottomrow"><td colspan="2" style="text-align:center">Coordinates: <span class="plainlinks nourlexpansion"><a class="external text" href="//tools.wmflabs.org/geohack/geohack.php?pagename=Nizhneyablochny&amp;params=47_50_N_43_06_E_type:city_region:RU-VGG"><span class="geo-default"><span class="geo-dms" title="Maps, aerial photos, and other data for this location"><span class="latitude">47°50′N</span> <span class="longitude">43°06′E</span></span></span><span class="geo-multi-punct">&#xfeff; / &#xfeff;</span><span class="geo-nondefault"><span class="geo-dec" title="Maps, aerial photos, and other data for this location">47.833°N 43.100°E</span><span style="display:none">&#xfeff; / <span class="geo">47.833; 43.100</span></span></span></a></span><sup id="cite_ref-1" class="reference"><a href="#cite_note-1">&#91;1&#93;</a></sup></td></tr><tr class="mergedtoprow"><th scope="row">Country</th><td><a href="/wiki/Russia" title="Russia">Russia</a></td></tr><tr class="mergedrow"><th scope="row"><a href="/wiki/List_of_regions_of_Russia" class="mw-redirect" title="List of regions of Russia">Region</a></th><td><a href="/wiki/Volgograd_Oblast" title="Volgograd Oblast">Volgograd Oblast</a></td></tr><tr class="mergedrow"><th scope="row"><a href="/wiki/Districts_of_Russia" title="Districts of Russia">District</a></th><td><a href="/wiki/Kotelnikovsky_District" title="Kotelnikovsky District">Kotelnikovsky District</a></td></tr><tr class="mergedtoprow"><th scope="row"><a href="/wiki/Time_zone" title="Time zone">Time zone</a></th><td><a href="/wiki/UTC%2B4:00" class="mw-redirect" title="UTC+4:00">UTC+4:00</a></td></tr></tbody></table>
-<p><b>Nizhneyablochny</b> (<a href="/wiki/Russian_language" title="Russian language">Russian</a>: <span lang="ru">Нижнеяблочный</span>) is a <a href="/wiki/Types_of_inhabited_localities_in_Russia" class="mw-redirect" title="Types of inhabited localities in Russia">rural locality</a> (a <a href="/wiki/Village#Russia" title="Village">khutor</a>) in <a href="/wiki/Kotelnikovsky_District" title="Kotelnikovsky District">Kotelnikovsky District</a>, <a href="/wiki/Volgograd_Oblast" title="Volgograd Oblast">Volgograd Oblast</a>, Russia. The population was 1,174 as of 2010.<sup id="cite_ref-2" class="reference"><a href="#cite_note-2">&#91;2&#93;</a></sup> There are 12 streets.
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><div class="thumb tright"><div class="thumbinner" style="width:222px;"><a href="/wiki/File:Biathlon_European_Championships_2017_Sprint_Men_0771.JPG" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Biathlon_European_Championships_2017_Sprint_Men_0771.JPG/220px-Biathlon_European_Championships_2017_Sprint_Men_0771.JPG" decoding="async" width="220" height="147" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Biathlon_European_Championships_2017_Sprint_Men_0771.JPG/330px-Biathlon_European_Championships_2017_Sprint_Men_0771.JPG 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Biathlon_European_Championships_2017_Sprint_Men_0771.JPG/440px-Biathlon_European_Championships_2017_Sprint_Men_0771.JPG 2x" data-file-width="4608" data-file-height="3072" /></a>  <div class="thumbcaption"><div class="magnify"><a href="/wiki/File:Biathlon_European_Championships_2017_Sprint_Men_0771.JPG" class="internal" title="Enlarge"></a></div>Guzik at the European Championships 2017</div></div></div>
+<p><b>Grzegorz Guzik</b> (born 20 August 1991 in <a href="/wiki/Sucha_Beskidzka" title="Sucha Beskidzka">Sucha Beskidzka</a>) is a Polish <a href="/wiki/Biathlon" title="Biathlon">biathlete</a>. He competed at the <a href="/wiki/Biathlon_World_Championships_2013" title="Biathlon World Championships 2013">Biathlon World Championships 2013</a> in <a href="/wiki/Nove_Mesto_na_Morave" class="mw-redirect" title="Nove Mesto na Morave">Nove Mesto na Morave</a>. He competed at the <a href="/wiki/2014_Winter_Olympics" title="2014 Winter Olympics">2014 Winter Olympics</a> in <a href="/wiki/Sochi" title="Sochi">Sochi</a>, in <a href="/wiki/Biathlon_at_the_2014_Winter_Olympics_%E2%80%93_Men%27s_sprint" title="Biathlon at the 2014 Winter Olympics – Men&#39;s sprint">sprint</a> and <a href="/wiki/Biathlon_at_the_2014_Winter_Olympics_%E2%80%93_Men%27s_individual" title="Biathlon at the 2014 Winter Olympics – Men&#39;s individual">individual</a>.<sup id="cite_ref-sochi_1-0" class="reference"><a href="#cite_note-sochi-1">&#91;1&#93;</a></sup>
+</p><p>In July 2014, Guzik married fellow biathlete <a href="/wiki/Krystyna_Guzik" title="Krystyna Guzik">Krystyna Pałka</a>.<sup id="cite_ref-2" class="reference"><a href="#cite_note-2">&#91;2&#93;</a></sup>
 </p>
-<h2><span class="mw-headline" id="References">References</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Nizhneyablochny&amp;action=edit&amp;section=1" title="Edit section: References">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<div id="toc" class="toc"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2>Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Biathlon_results"><span class="tocnumber">1</span> <span class="toctext">Biathlon results</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#Olympic_Games"><span class="tocnumber">1.1</span> <span class="toctext">Olympic Games</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#World_Championships"><span class="tocnumber">1.2</span> <span class="toctext">World Championships</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-4"><a href="#References"><span class="tocnumber">2</span> <span class="toctext">References</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Biathlon_results">Biathlon results</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit&amp;section=1" title="Edit section: Biathlon results">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>All results are sourced from the <a href="/wiki/International_Biathlon_Union" title="International Biathlon Union">International Biathlon Union</a>.
+</p>
+<h3><span class="mw-headline" id="Olympic_Games">Olympic Games</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit&amp;section=2" title="Edit section: Olympic Games">edit</a><span class="mw-editsection-bracket">]</span></span></h3>
+<p><i>0 medals</i>
+</p>
+<table class="wikitable" style="text-align: center;">
+
+<tbody><tr>
+<th>Event
+</th>
+<th style="width:70px;">Individual
+</th>
+<th style="width:70px;">Sprint
+</th>
+<th style="width:70px;">Pursuit
+</th>
+<th style="width:70px;"><span class="nowrap">Mass start</span>
+</th>
+<th style="width:70px;">Relay
+</th>
+<th style="width:70px;"><span class="nowrap">Mixed relay</span>
+</th></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/Russia" title="Russia"><img alt="Russia" src="//upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/23px-Flag_of_Russia.svg.png" decoding="async" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/35px-Flag_of_Russia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/45px-Flag_of_Russia.svg.png 2x" data-file-width="900" data-file-height="600" /></a></span> <a href="/wiki/Biathlon_at_the_2014_Winter_Olympics" title="Biathlon at the 2014 Winter Olympics">2014 Sochi</a>
+</td>
+<td>85th
+</td>
+<td>84th
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/South_Korea" title="South Korea"><img alt="South Korea" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/23px-Flag_of_South_Korea.svg.png" decoding="async" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/35px-Flag_of_South_Korea.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/45px-Flag_of_South_Korea.svg.png 2x" data-file-width="900" data-file-height="600" /></a></span> <a href="/wiki/Biathlon_at_the_2018_Winter_Olympics" title="Biathlon at the 2018 Winter Olympics">2018 Pyeongchang</a>
+</td>
+<td>33rd
+</td>
+<td>59th
+</td>
+<td>56th
+</td>
+<td>—
+</td>
+<td>
+</td>
+<td>
+</td></tr></tbody></table>
+<dl><dd><i>*The mixed relay was added as an event in 2014.</i></dd></dl>
+<h3><span class="mw-headline" id="World_Championships">World Championships</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit&amp;section=3" title="Edit section: World Championships">edit</a><span class="mw-editsection-bracket">]</span></span></h3>
+<p><i>0 medals</i>
+</p>
+<table class="wikitable" style="text-align: center;">
+
+<tbody><tr>
+<th>Event
+</th>
+<th style="width:70px;">Individual
+</th>
+<th style="width:70px;">Sprint
+</th>
+<th style="width:70px;">Pursuit
+</th>
+<th style="width:70px;"><span class="nowrap">Mass start</span>
+</th>
+<th style="width:70px;">Relay
+</th>
+<th style="width:70px;"><span class="nowrap">Mixed relay</span>
+</th></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/Czech_Republic" title="Czech Republic"><img alt="Czech Republic" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_Czech_Republic.svg/23px-Flag_of_the_Czech_Republic.svg.png" decoding="async" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_Czech_Republic.svg/35px-Flag_of_the_Czech_Republic.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_Czech_Republic.svg/45px-Flag_of_the_Czech_Republic.svg.png 2x" data-file-width="900" data-file-height="600" /></a></span> <a href="/wiki/Biathlon_World_Championships_2013" title="Biathlon World Championships 2013">2013 Nové Město</a>
+</td>
+<td>113th
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/Finland" title="Finland"><img alt="Finland" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Finland.svg/23px-Flag_of_Finland.svg.png" decoding="async" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Finland.svg/35px-Flag_of_Finland.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Finland.svg/46px-Flag_of_Finland.svg.png 2x" data-file-width="1800" data-file-height="1100" /></a></span> <a href="/wiki/Biathlon_World_Championships_2015" title="Biathlon World Championships 2015">2015 Kontiolahti</a>
+</td>
+<td>77th
+</td>
+<td>89th
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>20th
+</td>
+<td>—
+</td></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/Norway" title="Norway"><img alt="Norway" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png" decoding="async" width="21" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/32px-Flag_of_Norway.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/41px-Flag_of_Norway.svg.png 2x" data-file-width="1100" data-file-height="800" /></a></span> <a href="/wiki/Biathlon_World_Championships_2016" title="Biathlon World Championships 2016">2016 Oslo Holmenkollen</a>
+</td>
+<td>80th
+</td>
+<td>78th
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>21st
+</td>
+<td>20th
+</td></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/Austria" title="Austria"><img alt="Austria" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/23px-Flag_of_Austria.svg.png" decoding="async" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/35px-Flag_of_Austria.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/45px-Flag_of_Austria.svg.png 2x" data-file-width="900" data-file-height="600" /></a></span> <a href="/wiki/Biathlon_World_Championships_2017" title="Biathlon World Championships 2017">2017 Hochfilzen</a>
+</td>
+<td>90th
+</td>
+<td>53rd
+</td>
+<td>57th
+</td>
+<td>—
+</td>
+<td>24th
+</td>
+<td>—
+</td></tr>
+<tr>
+<td align="left"><span class="flagicon"><a href="/wiki/Sweden" title="Sweden"><img alt="Sweden" src="//upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/23px-Flag_of_Sweden.svg.png" decoding="async" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/35px-Flag_of_Sweden.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/46px-Flag_of_Sweden.svg.png 2x" data-file-width="1600" data-file-height="1000" /></a></span> <a href="/wiki/Biathlon_World_Championships_2019" title="Biathlon World Championships 2019">2019 Östersund</a>
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>—
+</td>
+<td>9th
+</td></tr></tbody></table>
+<dl><dd><i>*During Olympic seasons competitions are only held for those events not included in the Olympic program.</i></dd>
+<dd><i>**The mixed relay was added as an event in 2005.</i></dd></dl>
+<h2><span class="mw-headline" id="References">References</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit&amp;section=4" title="Edit section: References">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
 <div class="reflist" style="list-style-type: decimal;">
 <div class="mw-references-wrap"><ol class="references">
-<li id="cite_note-1"><span class="mw-cite-backlink"><b><a href="#cite_ref-1">^</a></b></span> <span class="reference-text"><a rel="nofollow" class="external text" href="https://mapdata.ru/volgogradskaya-oblast/kotelnikovskiy-rayon/">Карта Котельниковского района Волгоградской области</a></span>
+<li id="cite_note-sochi-1"><span class="mw-cite-backlink"><b><a href="#cite_ref-sochi_1-0">^</a></b></span> <span class="reference-text"><cite class="citation web"><a rel="nofollow" class="external text" href="http://www.sochi2014.com/en/athlete-grzegorz-guzik">"Grzegorz Guzik"</a>. sochi2014<span class="reference-accessdate">. Retrieved <span class="nowrap">18 February</span> 2014</span>.</cite><span title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=unknown&amp;rft.btitle=Grzegorz+Guzik&amp;rft.pub=sochi2014&amp;rft_id=http%3A%2F%2Fwww.sochi2014.com%2Fen%2Fathlete-grzegorz-guzik&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3AGrzegorz+Guzik" class="Z3988"></span><style data-mw-deduplicate="TemplateStyles:r886058088">.mw-parser-output cite.citation{font-style:inherit}.mw-parser-output .citation q{quotes:"\"""\"""'""'"}.mw-parser-output .citation .cs1-lock-free a{background:url("//upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lock-green.svg/9px-Lock-green.svg.png")no-repeat;background-position:right .1em center}.mw-parser-output .citation .cs1-lock-limited a,.mw-parser-output .citation .cs1-lock-registration a{background:url("//upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Lock-gray-alt-2.svg/9px-Lock-gray-alt-2.svg.png")no-repeat;background-position:right .1em center}.mw-parser-output .citation .cs1-lock-subscription a{background:url("//upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Lock-red-alt-2.svg/9px-Lock-red-alt-2.svg.png")no-repeat;background-position:right .1em center}.mw-parser-output .cs1-subscription,.mw-parser-output .cs1-registration{color:#555}.mw-parser-output .cs1-subscription span,.mw-parser-output .cs1-registration span{border-bottom:1px dotted;cursor:help}.mw-parser-output .cs1-ws-icon a{background:url("//upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Wikisource-logo.svg/12px-Wikisource-logo.svg.png")no-repeat;background-position:right .1em center}.mw-parser-output code.cs1-code{color:inherit;background:inherit;border:inherit;padding:inherit}.mw-parser-output .cs1-hidden-error{display:none;font-size:100%}.mw-parser-output .cs1-visible-error{font-size:100%}.mw-parser-output .cs1-maint{display:none;color:#33aa33;margin-left:0.3em}.mw-parser-output .cs1-subscription,.mw-parser-output .cs1-registration,.mw-parser-output .cs1-format{font-size:95%}.mw-parser-output .cs1-kern-left,.mw-parser-output .cs1-kern-wl-left{padding-left:0.2em}.mw-parser-output .cs1-kern-right,.mw-parser-output .cs1-kern-wl-right{padding-right:0.2em}</style></span>
 </li>
-<li id="cite_note-2"><span class="mw-cite-backlink"><b><a href="#cite_ref-2">^</a></b></span> <span class="reference-text">Всероссийская перепись населения 2010 года. Численность населения городских округов, муниципальных районов, городских и сельских поселений, городских и сельских населённых пунктов Волгоградской области</span>
+<li id="cite_note-2"><span class="mw-cite-backlink"><b><a href="#cite_ref-2">^</a></b></span> <span class="reference-text"><cite class="citation web"><a rel="nofollow" class="external text" href="https://web.archive.org/web/20150206175213/http://www5.biathlonworld.com/en/press_releases.html/do/detail?presse=2243#">"Krystyna Palka Weds Grzegorz Guzik"</a>. <i><a href="/wiki/International_Biathlon_Union" title="International Biathlon Union">International Biathlon Union</a></i>. 8 July 2014. Archived from <a rel="nofollow" class="external text" href="http://www5.biathlonworld.com/en/press_releases.html/do/detail?presse=2243">the original</a> on 2015-02-06<span class="reference-accessdate">. Retrieved <span class="nowrap">6 February</span> 2015</span>.</cite><span title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.genre=unknown&amp;rft.jtitle=International+Biathlon+Union&amp;rft.atitle=Krystyna+Palka+Weds+Grzegorz+Guzik&amp;rft.date=2014-07-08&amp;rft_id=http%3A%2F%2Fwww5.biathlonworld.com%2Fen%2Fpress_releases.html%2Fdo%2Fdetail%3Fpresse%3D2243&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3AGrzegorz+Guzik" class="Z3988"></span><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r886058088"/></span>
 </li>
 </ol></div></div>
-<p><br />
-</p>
-<table class="metadata plainlinks stub" role="presentation" style="background:transparent"><tbody><tr><td><a href="/wiki/File:Volgograd-obl-geo-stub.png" class="image"><img alt="Stub icon" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/de/Volgograd-obl-geo-stub.png/30px-Volgograd-obl-geo-stub.png" decoding="async" width="30" height="28" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/de/Volgograd-obl-geo-stub.png/45px-Volgograd-obl-geo-stub.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/de/Volgograd-obl-geo-stub.png/60px-Volgograd-obl-geo-stub.png 2x" data-file-width="195" data-file-height="183" /></a></td><td><i>This <a href="/wiki/Volgograd_Oblast" title="Volgograd Oblast">Volgograd Oblast</a> location article is a <a href="/wiki/Wikipedia:Stub" title="Wikipedia:Stub">stub</a>. You can help Wikipedia by <a class="external text" href="https://en.wikipedia.org/w/index.php?title=Nizhneyablochny&amp;action=edit">expanding it</a>.</i><div class="plainlinks hlist navbar mini" style="position: absolute; right: 15px; display: none;"><ul><li class="nv-view"><a href="/wiki/Template:VolgogradOblast-geo-stub" title="Template:VolgogradOblast-geo-stub"><abbr title="View this template">v</abbr></a></li><li class="nv-talk"><a href="/wiki/Template_talk:VolgogradOblast-geo-stub" title="Template talk:VolgogradOblast-geo-stub"><abbr title="Discuss this template">t</abbr></a></li><li class="nv-edit"><a class="external text" href="https://en.wikipedia.org/w/index.php?title=Template:VolgogradOblast-geo-stub&amp;action=edit"><abbr title="Edit this template">e</abbr></a></li></ul></div></td></tr></tbody></table>
+<table class="metadata plainlinks stub" role="presentation" style="background:transparent"><tbody><tr><td><a href="/wiki/File:Biathlon_pictogram.svg" class="image"><img alt="Stub icon" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Biathlon_pictogram.svg/30px-Biathlon_pictogram.svg.png" decoding="async" width="30" height="30" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Biathlon_pictogram.svg/45px-Biathlon_pictogram.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/00/Biathlon_pictogram.svg/60px-Biathlon_pictogram.svg.png 2x" data-file-width="300" data-file-height="300" /></a></td><td><i>This Polish biographical article relating to biathlon is a <a href="/wiki/Wikipedia:Stub" title="Wikipedia:Stub">stub</a>. You can help Wikipedia by <a class="external text" href="https://en.wikipedia.org/w/index.php?title=Grzegorz_Guzik&amp;action=edit">expanding it</a>.</i><div class="plainlinks hlist navbar mini" style="position: absolute; right: 15px; display: none;"><ul><li class="nv-view"><a href="/wiki/Template:Poland-biathlon-bio-stub" title="Template:Poland-biathlon-bio-stub"><abbr title="View this template">v</abbr></a></li><li class="nv-talk"><a href="/wiki/Template_talk:Poland-biathlon-bio-stub" title="Template talk:Poland-biathlon-bio-stub"><abbr title="Discuss this template">t</abbr></a></li><li class="nv-edit"><a class="external text" href="https://en.wikipedia.org/w/index.php?title=Template:Poland-biathlon-bio-stub&amp;action=edit"><abbr title="Edit this template">e</abbr></a></li></ul></div></td></tr></tbody></table>
 <!-- 
 NewPP limit report
-Parsed by mw1332
-Cached time: 20191104173426
+Parsed by mw1246
+Cached time: 20191023150401
 Cache expiry: 2592000
 Dynamic content: false
-Complications: []
-CPU time usage: 0.460 seconds
-Real time usage: 0.554 seconds
-Preprocessor visited node count: 2579/1000000
+Complications: [vary‐revision‐sha1]
+CPU time usage: 0.252 seconds
+Real time usage: 0.364 seconds
+Preprocessor visited node count: 950/1000000
 Preprocessor generated node count: 0/1500000
-Post‐expand include size: 24026/2097152 bytes
-Template argument size: 4406/2097152 bytes
-Highest expansion depth: 14/40
-Expensive parser function count: 2/500
-Unstrip recursion depth: 0/20
-Unstrip post‐expand size: 1092/5000000 bytes
+Post‐expand include size: 9431/2097152 bytes
+Template argument size: 693/2097152 bytes
+Highest expansion depth: 10/40
+Expensive parser function count: 0/500
+Unstrip recursion depth: 1/20
+Unstrip post‐expand size: 5893/5000000 bytes
 Number of Wikibase entities loaded: 0/400
-Lua time usage: 0.318/10.000 seconds
-Lua memory usage: 10.18 MB/50 MB
+Lua time usage: 0.075/10.000 seconds
+Lua memory usage: 1.98 MB/50 MB
 -->
 <!--
 Transclusion expansion time report (%,ms,calls,template)
-100.00%  528.885      1 -total
- 65.02%  343.866      1 Template:Infobox_settlement
- 49.01%  259.225      1 Template:Infobox
- 30.59%  161.785      1 Template:Lang-ru
- 10.55%   55.783      3 Template:Main_other
-  4.34%   22.944      1 Template:Pagetype
-  3.99%   21.091      5 Template:Both
-  3.36%   17.791      1 Template:Location_map
-  2.75%   14.519      1 Template:VolgogradOblast-geo-stub
-  2.71%   14.309      4 Template:If_empty
+100.00%  280.211      1 -total
+ 52.74%  147.786      1 Template:Reflist
+ 46.23%  129.550      2 Template:Cite_web
+ 31.97%   89.589      7 Template:Flagicon
+ 13.12%   36.761      1 Template:Poland-biathlon-bio-stub
+ 10.72%   30.032      1 Template:Asbox
+  6.80%   19.053      7 Template:Yesno-no
+  4.64%   13.005      7 Template:Flagicon/core
+  3.85%   10.795      1 Template:Country_data_Russia
+  3.52%    9.860      1 Template:Country_data_AUT
 -->
 
-<!-- Saved in parser cache with key enwiki:pcache:idhash:62056164-0!canonical and timestamp 20191104173426 and revision id 921336271
+<!-- Saved in parser cache with key enwiki:pcache:idhash:41981094-0!canonical and timestamp 20191023150400 and revision id 917001373
  -->
 </div><noscript><img src="//en.wikipedia.org/wiki/Special:CentralAutoLogin/start?type=1x1" alt="" title="" width="1" height="1" style="border: none; position: absolute;" /></noscript></div>
 		
-		<div class="printfooter">Retrieved from "<a dir="ltr" href="https://en.wikipedia.org/w/index.php?title=Nizhneyablochny&amp;oldid=921336271">https://en.wikipedia.org/w/index.php?title=Nizhneyablochny&amp;oldid=921336271</a>"</div>
+		<div class="printfooter">Retrieved from "<a dir="ltr" href="https://en.wikipedia.org/w/index.php?title=Grzegorz_Guzik&amp;oldid=917001373">https://en.wikipedia.org/w/index.php?title=Grzegorz_Guzik&amp;oldid=917001373</a>"</div>
 		
-		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Help:Category" title="Help:Category">Categories</a>: <ul><li><a href="/wiki/Category:Rural_localities_in_Volgograd_Oblast" title="Category:Rural localities in Volgograd Oblast">Rural localities in Volgograd Oblast</a></li><li><a href="/wiki/Category:Southern_Russia_geography_stubs" title="Category:Southern Russia geography stubs">Southern Russia geography stubs</a></li></ul></div><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden categories: <ul><li><a href="/wiki/Category:Articles_with_short_description" title="Category:Articles with short description">Articles with short description</a></li><li><a href="/wiki/Category:Articles_containing_Russian-language_text" title="Category:Articles containing Russian-language text">Articles containing Russian-language text</a></li><li><a href="/wiki/Category:All_stub_articles" title="Category:All stub articles">All stub articles</a></li></ul></div></div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Help:Category" title="Help:Category">Categories</a>: <ul><li><a href="/wiki/Category:1991_births" title="Category:1991 births">1991 births</a></li><li><a href="/wiki/Category:Living_people" title="Category:Living people">Living people</a></li><li><a href="/wiki/Category:Polish_male_biathletes" title="Category:Polish male biathletes">Polish male biathletes</a></li><li><a href="/wiki/Category:Biathletes_at_the_2014_Winter_Olympics" title="Category:Biathletes at the 2014 Winter Olympics">Biathletes at the 2014 Winter Olympics</a></li><li><a href="/wiki/Category:Biathletes_at_the_2018_Winter_Olympics" title="Category:Biathletes at the 2018 Winter Olympics">Biathletes at the 2018 Winter Olympics</a></li><li><a href="/wiki/Category:Olympic_biathletes_of_Poland" title="Category:Olympic biathletes of Poland">Olympic biathletes of Poland</a></li><li><a href="/wiki/Category:People_from_Sucha_County" title="Category:People from Sucha County">People from Sucha County</a></li><li><a href="/wiki/Category:European_biathlon_biography_stubs" title="Category:European biathlon biography stubs">European biathlon biography stubs</a></li><li><a href="/wiki/Category:Polish_winter_sports_biography_stubs" title="Category:Polish winter sports biography stubs">Polish winter sports biography stubs</a></li></ul></div><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden categories: <ul><li><a href="/wiki/Category:All_stub_articles" title="Category:All stub articles">All stub articles</a></li></ul></div></div>
 		<div class="visualClear"></div>
 		
 	</div>
@@ -122,13 +284,13 @@ Transclusion expansion time report (%,ms,calls,template)
 									<div id="p-personal" role="navigation" aria-labelledby="p-personal-label">
 						<h3 id="p-personal-label">Personal tools</h3>
 						<ul>
-							<li id="pt-anonuserpage">Not logged in</li><li id="pt-anontalk"><a href="/wiki/Special:MyTalk" title="Discussion about edits from this IP address [n]" accesskey="n">Talk</a></li><li id="pt-anoncontribs"><a href="/wiki/Special:MyContributions" title="A list of edits made from this IP address [y]" accesskey="y">Contributions</a></li><li id="pt-createaccount"><a href="/w/index.php?title=Special:CreateAccount&amp;returnto=Nizhneyablochny" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Nizhneyablochny" title="You&#039;re encouraged to log in; however, it&#039;s not mandatory. [o]" accesskey="o">Log in</a></li>						</ul>
+							<li id="pt-anonuserpage">Not logged in</li><li id="pt-anontalk"><a href="/wiki/Special:MyTalk" title="Discussion about edits from this IP address [n]" accesskey="n">Talk</a></li><li id="pt-anoncontribs"><a href="/wiki/Special:MyContributions" title="A list of edits made from this IP address [y]" accesskey="y">Contributions</a></li><li id="pt-createaccount"><a href="/w/index.php?title=Special:CreateAccount&amp;returnto=Grzegorz+Guzik" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Grzegorz+Guzik" title="You&#039;re encouraged to log in; however, it&#039;s not mandatory. [o]" accesskey="o">Log in</a></li>						</ul>
 					</div>
 									<div id="left-navigation">
 										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
 						<h3 id="p-namespaces-label">Namespaces</h3>
 						<ul>
-							<li id="ca-nstab-main" class="selected"><a href="/wiki/Nizhneyablochny" title="View the content page [c]" accesskey="c">Article</a></li><li id="ca-talk"><a href="/wiki/Talk:Nizhneyablochny" rel="discussion" title="Discussion about the content page [t]" accesskey="t">Talk</a></li>						</ul>
+							<li id="ca-nstab-main" class="selected"><a href="/wiki/Grzegorz_Guzik" title="View the content page [c]" accesskey="c">Article</a></li><li id="ca-talk"><a href="/wiki/Talk:Grzegorz_Guzik" rel="discussion" title="Discussion about the content page [t]" accesskey="t">Talk</a></li>						</ul>
 					</div>
 										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
 												<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-variants-label" />
@@ -143,7 +305,7 @@ Transclusion expansion time report (%,ms,calls,template)
 										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
 						<h3 id="p-views-label">Views</h3>
 						<ul>
-							<li id="ca-view" class="collapsible selected"><a href="/wiki/Nizhneyablochny">Read</a></li><li id="ca-edit" class="collapsible"><a href="/w/index.php?title=Nizhneyablochny&amp;action=edit" title="Edit this page [e]" accesskey="e">Edit</a></li><li id="ca-history" class="collapsible"><a href="/w/index.php?title=Nizhneyablochny&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li>						</ul>
+							<li id="ca-view" class="collapsible selected"><a href="/wiki/Grzegorz_Guzik">Read</a></li><li id="ca-edit" class="collapsible"><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=edit" title="Edit this page [e]" accesskey="e">Edit</a></li><li id="ca-history" class="collapsible"><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li>						</ul>
 					</div>
 										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
 						<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
@@ -182,28 +344,35 @@ Transclusion expansion time report (%,ms,calls,template)
 			<h3 id="p-tb-label">Tools</h3>
 			<div class="body">
 								<ul>
-					<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Nizhneyablochny" title="List of all English Wikipedia pages containing links to this page [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Nizhneyablochny" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-upload"><a href="/wiki/Wikipedia:File_Upload_Wizard" title="Upload files [u]" accesskey="u">Upload file</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-permalink"><a href="/w/index.php?title=Nizhneyablochny&amp;oldid=921336271" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/w/index.php?title=Nizhneyablochny&amp;action=info" title="More information about this page">Page information</a></li><li id="t-wikibase"><a href="https://www.wikidata.org/wiki/Special:EntityPage/Q19691692" title="Link to connected data repository item [g]" accesskey="g">Wikidata item</a></li><li id="t-cite"><a href="/w/index.php?title=Special:CiteThisPage&amp;page=Nizhneyablochny&amp;id=921336271" title="Information on how to cite this page">Cite this page</a></li>				</ul>
+					<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Grzegorz_Guzik" title="List of all English Wikipedia pages containing links to this page [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Grzegorz_Guzik" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-upload"><a href="/wiki/Wikipedia:File_Upload_Wizard" title="Upload files [u]" accesskey="u">Upload file</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-permalink"><a href="/w/index.php?title=Grzegorz_Guzik&amp;oldid=917001373" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/w/index.php?title=Grzegorz_Guzik&amp;action=info" title="More information about this page">Page information</a></li><li id="t-wikibase"><a href="https://www.wikidata.org/wiki/Special:EntityPage/Q1235736" title="Link to connected data repository item [g]" accesskey="g">Wikidata item</a></li><li id="t-cite"><a href="/w/index.php?title=Special:CiteThisPage&amp;page=Grzegorz_Guzik&amp;id=917001373" title="Information on how to cite this page">Cite this page</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-wikibase-otherprojects" aria-labelledby="p-wikibase-otherprojects-label">
+			<h3 id="p-wikibase-otherprojects-label">In other projects</h3>
+			<div class="body">
+								<ul>
+					<li class="wb-otherproject-link wb-otherproject-commons"><a href="https://commons.wikimedia.org/wiki/Category:Grzegorz_Guzik" hreflang="en">Wikimedia Commons</a></li>				</ul>
 							</div>
 		</div>
 			<div class="portal" role="navigation" id="p-coll-print_export" aria-labelledby="p-coll-print_export-label">
 			<h3 id="p-coll-print_export-label">Print/export</h3>
 			<div class="body">
 								<ul>
-					<li id="coll-create_a_book"><a href="/w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=Nizhneyablochny">Create a book</a></li><li id="coll-download-as-rl"><a href="/w/index.php?title=Special:ElectronPdf&amp;page=Nizhneyablochny&amp;action=show-download-screen">Download as PDF</a></li><li id="t-print"><a href="/w/index.php?title=Nizhneyablochny&amp;printable=yes" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>				</ul>
+					<li id="coll-create_a_book"><a href="/w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=Grzegorz+Guzik">Create a book</a></li><li id="coll-download-as-rl"><a href="/w/index.php?title=Special:ElectronPdf&amp;page=Grzegorz+Guzik&amp;action=show-download-screen">Download as PDF</a></li><li id="t-print"><a href="/w/index.php?title=Grzegorz_Guzik&amp;printable=yes" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>				</ul>
 							</div>
 		</div>
 			<div class="portal" role="navigation" id="p-lang" aria-labelledby="p-lang-label">
 			<h3 id="p-lang-label">Languages</h3>
 			<div class="body">
 								<ul>
-					<li class="interlanguage-link interwiki-ce"><a href="https://ce.wikipedia.org/wiki/%D0%9D%D0%B8%D0%B6%D0%BD%D0%B5%D1%8F%D0%B1%D0%BB%D0%BE%D1%87%D0%BD%D0%B8" title="Нижнеяблочни – Chechen" lang="ce" hreflang="ce" class="interlanguage-link-target">Нохчийн</a></li><li class="interlanguage-link interwiki-ru"><a href="https://ru.wikipedia.org/wiki/%D0%9D%D0%B8%D0%B6%D0%BD%D0%B5%D1%8F%D0%B1%D0%BB%D0%BE%D1%87%D0%BD%D1%8B%D0%B9" title="Нижнеяблочный – Russian" lang="ru" hreflang="ru" class="interlanguage-link-target">Русский</a></li>				</ul>
-				<div class="after-portlet after-portlet-lang"><span class="wb-langlinks-edit wb-langlinks-link"><a href="https://www.wikidata.org/wiki/Special:EntityPage/Q19691692#sitelinks-wikipedia" title="Edit interlanguage links" class="wbc-editpage">Edit links</a></span></div>			</div>
+					<li class="interlanguage-link interwiki-de"><a href="https://de.wikipedia.org/wiki/Grzegorz_Guzik" title="Grzegorz Guzik – German" lang="de" hreflang="de" class="interlanguage-link-target">Deutsch</a></li><li class="interlanguage-link interwiki-es"><a href="https://es.wikipedia.org/wiki/Grzegorz_Guzik" title="Grzegorz Guzik – Spanish" lang="es" hreflang="es" class="interlanguage-link-target">Español</a></li><li class="interlanguage-link interwiki-fr"><a href="https://fr.wikipedia.org/wiki/Grzegorz_Guzik" title="Grzegorz Guzik – French" lang="fr" hreflang="fr" class="interlanguage-link-target">Français</a></li><li class="interlanguage-link interwiki-no"><a href="https://no.wikipedia.org/wiki/Grzegorz_Guzik" title="Grzegorz Guzik – Norwegian" lang="no" hreflang="no" class="interlanguage-link-target">Norsk</a></li><li class="interlanguage-link interwiki-pl"><a href="https://pl.wikipedia.org/wiki/Grzegorz_Guzik" title="Grzegorz Guzik – Polish" lang="pl" hreflang="pl" class="interlanguage-link-target">Polski</a></li><li class="interlanguage-link interwiki-ru"><a href="https://ru.wikipedia.org/wiki/%D0%93%D1%83%D0%B7%D0%B8%D0%BA,_%D0%93%D0%B6%D0%B5%D0%B3%D0%BE%D0%B6" title="Гузик, Гжегож – Russian" lang="ru" hreflang="ru" class="interlanguage-link-target">Русский</a></li>				</ul>
+				<div class="after-portlet after-portlet-lang"><span class="wb-langlinks-edit wb-langlinks-link"><a href="https://www.wikidata.org/wiki/Special:EntityPage/Q1235736#sitelinks-wikipedia" title="Edit interlanguage links" class="wbc-editpage">Edit links</a></span></div>			</div>
 		</div>
 				</div>
 		</div>
 				<div id="footer" role="contentinfo">
 						<ul id="footer-info">
-								<li id="footer-info-lastmod"> This page was last edited on 15 October 2019, at 05:32<span class="anonymous-show">&#160;(UTC)</span>.</li>
+								<li id="footer-info-lastmod"> This page was last edited on 21 September 2019, at 19:58<span class="anonymous-show">&#160;(UTC)</span>.</li>
 								<li id="footer-info-copyright">Text is available under the <a rel="license" href="//en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">Creative Commons Attribution-ShareAlike License</a><a rel="license" href="//creativecommons.org/licenses/by-sa/3.0/" style="display:none;"></a>;
 additional terms may apply.  By using this site, you agree to the <a href="//foundation.wikimedia.org/wiki/Terms_of_Use">Terms of Use</a> and <a href="//foundation.wikimedia.org/wiki/Privacy_policy">Privacy Policy</a>. Wikipedia® is a registered trademark of the <a href="//www.wikimediafoundation.org/">Wikimedia Foundation, Inc.</a>, a non-profit organization.</li>
 							</ul>
@@ -214,7 +383,7 @@ additional terms may apply.  By using this site, you agree to the <a href="//fou
 								<li id="footer-places-contact"><a href="//en.wikipedia.org/wiki/Wikipedia:Contact_us">Contact Wikipedia</a></li>
 								<li id="footer-places-developers"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/How_to_contribute">Developers</a></li>
 								<li id="footer-places-cookiestatement"><a href="https://foundation.wikimedia.org/wiki/Cookie_statement">Cookie statement</a></li>
-								<li id="footer-places-mobileview"><a href="//en.m.wikipedia.org/w/index.php?title=Nizhneyablochny&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
+								<li id="footer-places-mobileview"><a href="//en.m.wikipedia.org/w/index.php?title=Grzegorz_Guzik&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
 							</ul>
 										<ul id="footer-icons" class="noprint">
 										<li id="footer-copyrightico">
@@ -226,8 +395,8 @@ additional terms may apply.  By using this site, you agree to the <a href="//fou
 		</div>
 		
 
-<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.460","walltime":"0.554","ppvisitednodes":{"value":2579,"limit":1000000},"ppgeneratednodes":{"value":0,"limit":1500000},"postexpandincludesize":{"value":24026,"limit":2097152},"templateargumentsize":{"value":4406,"limit":2097152},"expansiondepth":{"value":14,"limit":40},"expensivefunctioncount":{"value":2,"limit":500},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":1092,"limit":5000000},"entityaccesscount":{"value":0,"limit":400},"timingprofile":["100.00%  528.885      1 -total"," 65.02%  343.866      1 Template:Infobox_settlement"," 49.01%  259.225      1 Template:Infobox"," 30.59%  161.785      1 Template:Lang-ru"," 10.55%   55.783      3 Template:Main_other","  4.34%   22.944      1 Template:Pagetype","  3.99%   21.091      5 Template:Both","  3.36%   17.791      1 Template:Location_map","  2.75%   14.519      1 Template:VolgogradOblast-geo-stub","  2.71%   14.309      4 Template:If_empty"]},"scribunto":{"limitreport-timeusage":{"value":"0.318","limit":"10.000"},"limitreport-memusage":{"value":10669705,"limit":52428800}},"cachereport":{"origin":"mw1332","timestamp":"20191104173426","ttl":2592000,"transientcontent":false}}});});</script>
-<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"Article","name":"Nizhneyablochny","url":"https:\/\/en.wikipedia.org\/wiki\/Nizhneyablochny","sameAs":"http:\/\/www.wikidata.org\/entity\/Q19691692","mainEntity":"http:\/\/www.wikidata.org\/entity\/Q19691692","author":{"@type":"Organization","name":"Contributors to Wikimedia projects"},"publisher":{"@type":"Organization","name":"Wikimedia Foundation, Inc.","logo":{"@type":"ImageObject","url":"https:\/\/www.wikimedia.org\/static\/images\/wmf-hor-googpub.png"}},"datePublished":"2019-10-14T08:00:42Z","dateModified":"2019-10-15T05:32:16Z","image":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/e\/e6\/Outline_Map_of_Volgograd_Oblast.svg","headline":"human settlement in Kotelnikovsky District, Volgograd Oblast, Russia"}</script>
-<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":702,"wgHostname":"mw1332"});});</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.252","walltime":"0.364","ppvisitednodes":{"value":950,"limit":1000000},"ppgeneratednodes":{"value":0,"limit":1500000},"postexpandincludesize":{"value":9431,"limit":2097152},"templateargumentsize":{"value":693,"limit":2097152},"expansiondepth":{"value":10,"limit":40},"expensivefunctioncount":{"value":0,"limit":500},"unstrip-depth":{"value":1,"limit":20},"unstrip-size":{"value":5893,"limit":5000000},"entityaccesscount":{"value":0,"limit":400},"timingprofile":["100.00%  280.211      1 -total"," 52.74%  147.786      1 Template:Reflist"," 46.23%  129.550      2 Template:Cite_web"," 31.97%   89.589      7 Template:Flagicon"," 13.12%   36.761      1 Template:Poland-biathlon-bio-stub"," 10.72%   30.032      1 Template:Asbox","  6.80%   19.053      7 Template:Yesno-no","  4.64%   13.005      7 Template:Flagicon/core","  3.85%   10.795      1 Template:Country_data_Russia","  3.52%    9.860      1 Template:Country_data_AUT"]},"scribunto":{"limitreport-timeusage":{"value":"0.075","limit":"10.000"},"limitreport-memusage":{"value":2078923,"limit":52428800}},"cachereport":{"origin":"mw1246","timestamp":"20191023150401","ttl":2592000,"transientcontent":false}}});});</script>
+<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"Article","name":"Grzegorz Guzik","url":"https:\/\/en.wikipedia.org\/wiki\/Grzegorz_Guzik","sameAs":"http:\/\/www.wikidata.org\/entity\/Q1235736","mainEntity":"http:\/\/www.wikidata.org\/entity\/Q1235736","author":{"@type":"Organization","name":"Contributors to Wikimedia projects"},"publisher":{"@type":"Organization","name":"Wikimedia Foundation, Inc.","logo":{"@type":"ImageObject","url":"https:\/\/www.wikimedia.org\/static\/images\/wmf-hor-googpub.png"}},"datePublished":"2014-02-18T18:51:20Z","dateModified":"2019-09-21T19:58:57Z","image":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/c\/c4\/Biathlon_European_Championships_2017_Sprint_Men_0771.JPG","headline":"Polish biathlete"}</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":102,"wgHostname":"mw1244"});});</script>
 </body>
 </html>
