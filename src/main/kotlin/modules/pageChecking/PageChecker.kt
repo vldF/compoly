@@ -38,7 +38,7 @@ class PageChecker : Module {
                 return inputStream.bufferedReader().readText()
             }
         } catch (e: Exception) {
-            log.warning("Can not get $address")
+            log.warning("Unable to get $address")
             return null
         }
     }
@@ -56,18 +56,9 @@ class PageChecker : Module {
             }
         } catch (e: FileNotFoundException) {
             log.warning("File $path not found")
+            File(path).writeText(newPage)
+            log.info("File $path was created")
             null
-        }
-    }
-
-    fun createFiles() { //Следует запускать после добавления новых страниц
-        for (page in pages) {
-            val path = getPath(page.trueUrl)
-            val text = sendGet(page.trueUrl)
-            if (text != null) {
-                File(path).writeText(text)
-                log.info("File $path was created")
-            }
         }
     }
 
@@ -75,7 +66,7 @@ class PageChecker : Module {
         for (page in pages) {
             if (isUpdated(page.trueUrl) == true) {
                 log.info("Page ${page.showingUrl} was updated")
-                Vk().send("Обновление страницы ${page.showingUrl}", chatIds)
+                Vk().send("Страница ${page.showingUrl} была обновлена", chatIds)
             }
         }
     }
