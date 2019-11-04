@@ -1,4 +1,4 @@
-import modules.IcsEvents.IcsEvents
+import modules.icsEvents.IcsEvents
 import modules.Module
 import kotlin.concurrent.timer
 

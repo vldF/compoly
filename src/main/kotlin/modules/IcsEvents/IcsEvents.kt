@@ -1,4 +1,4 @@
-package modules.IcsEvents
+package modules.icsEvents
 
 import api.Vk
 import vkApiToken
