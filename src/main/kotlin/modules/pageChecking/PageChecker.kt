@@ -20,17 +20,6 @@ class PageChecker : Module {
         return Paths.get("").toAbsolutePath().toString() + filePath
     }
 
-    fun init() { //Следует запускать после добавления новой страницы
-        for (page in pages) {
-            val path = getPath(page)
-            val text = sendGet(page)
-            if (text != null) {
-                File(path).writeText(text)
-                println("Файл $path был создан")
-            }
-        }
-    }
-
     private fun sendGet(address: String): String? {
         try {
             val url = URL(address)
@@ -59,6 +48,17 @@ class PageChecker : Module {
         } catch (e: FileNotFoundException) {
             println("Файл $path не найден")
             null
+        }
+    }
+
+    fun init() { //Следует запускать после добавления новых страниц
+        for (page in pages) {
+            val path = getPath(page)
+            val text = sendGet(page)
+            if (text != null) {
+                File(path).writeText(text)
+                println("Файл $path был создан")
+            }
         }
     }
 
