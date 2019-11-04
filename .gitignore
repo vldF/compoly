@@ -2,3 +2,5 @@
 /META-INF/
 /build/
 /.gradle/
+/main.log
+/main.log.lck
