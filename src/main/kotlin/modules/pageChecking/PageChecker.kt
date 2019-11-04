@@ -12,6 +12,7 @@ class PageChecker : Module {
     override val millis = 7 * 60 * 60L
     override val name = "Проверка обновления страницы"
     override var lastCalling = System.currentTimeMillis() + 3 * 60 * 60 * 1000L
+
     private val pages = listOf("http://sergei-sabonis.ru/Student/20192020/dm2019.htm") //Можно добавить сюда другие сайты
 
     private fun getPath(page: String): String {
@@ -19,7 +20,7 @@ class PageChecker : Module {
         return Paths.get("").toAbsolutePath().toString() + filePath
     }
 
-    fun init() {
+    fun init() { //Следует запускать после добавления новой страницы
         for (page in pages) {
             val path = getPath(page)
             val text = sendGet(page)
