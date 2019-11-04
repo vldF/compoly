@@ -1,11 +1,13 @@
 package modules.icsEvents
 
 import api.Vk
-import vkApiToken
+import chatIds
+import getLogger
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
 class IcsEvents : modules.Module {
+    val log = getLogger("icalendar events")
     override val callingType = 0
     override val millis = 7 * 60 * 60L
     override val name = "Проверка ивентов в расписаниях"
@@ -33,6 +35,6 @@ class IcsEvents : modules.Module {
         msg.append("\n\uD83D\uDDD3Ближайшие ивенты (3 дня):\n")
         if (nextEvents.isEmpty()) msg.append("Пусто\n")
         msg.append(nextEvents.joinToString(separator = "\n"))
-        Vk(vkApiToken).send(msg.toString(), "1")
+        Vk().send(msg.toString(), chatIds)
     }
 }

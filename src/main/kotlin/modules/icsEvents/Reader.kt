@@ -1,10 +1,12 @@
 package modules.icsEvents
 
+import getLogger
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.component.VEvent
 
 val calendarFiles = listOf("English.ics", "Main.ics")
+val log = getLogger("Events reader")
 class Reader {
     fun read(): List<Event> {
         val res = mutableListOf<Event>()
@@ -25,6 +27,7 @@ class Reader {
                 res.add(e)
             }
         }
+        log.info("read: ${res.size} events")
         return res
     }
 }

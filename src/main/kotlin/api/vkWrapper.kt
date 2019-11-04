@@ -1,5 +1,8 @@
 package api
 
+import chatIds
+import getLogger
+import testMode
 import vkApiToken
 import java.lang.StringBuilder
 import java.net.URI
@@ -10,10 +13,15 @@ import kotlin.random.Random
 import java.net.http.HttpResponse
 
 
-class Vk (private val token: String) {
-    fun post(methodName: String, params: MutableMap<String, String>) {
+class Vk {
+    @Suppress("SameParameterValue")
+    private val log = getLogger("vk wrapper")
+    private fun post(methodName: String, params: MutableMap<String, String>) {
+        if (testMode) {
+            return
+        }
         val reqParams = StringBuilder()
-        reqParams.append("access_token=$token&")
+        reqParams.append("access_token=$vkApiToken&")
         reqParams.append("v=5.103&")
         reqParams.append("random_id=${Random(System.currentTimeMillis()).nextInt()}&")
         for ((p, v) in params) {
@@ -29,23 +37,26 @@ class Vk (private val token: String) {
             request,
             HttpResponse.BodyHandlers.ofString()
         )
-        println(response.body())
+        log.info("response: ${response.body()}")
     }
 
-    fun send(message: String, chatId: String) {
-        this.post("messages.send", mutableMapOf(
-            "message" to message,
-            "chat_id" to chatId
-        ))
+    fun send(message: String, chatId: List<String>) {
+        for (id in chatId) {
+            log.info("message: $message, char_id: $id")
+            this.post(
+                "messages.send", mutableMapOf(
+                    "message" to message,
+                    "chat_id" to id
+                )
+            )
+        }
     }
+
 }
 
 fun main() {
-    Vk(vkApiToken).post(
-        "messages.send",
-        mutableMapOf(
-            "message" to "test",
-            "chat_id" to "1"
-            )
-        )
+    Vk().send(
+        "test",
+        chatIds
+    )
 }

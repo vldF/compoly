@@ -23,10 +23,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile group: 'org.mnode.ical4j', name: 'ical4j', version: '1.0.3'
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
+    compile 'io.github.microutils:kotlin-logging:1.7.6'
 }
 
-jar {
-    manifest { attributes 'Main-Class': 'demo.HelloWorldKt' }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
