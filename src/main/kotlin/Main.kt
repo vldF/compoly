@@ -30,9 +30,9 @@ fun main() {
 
     while (true) {
         for (module in modules) {
-            val time = System.currentTimeMillis()
+            val time = System.currentTimeMillis() + 1000L * 60 * 60 * 3
             val currentTimeSinceDayStart = (time / 1000L) % (60 * 60 * 24)
-            if (currentTimeSinceDayStart - module.millis in 0..60 * 10 && time - module.lastCalling > 1000L * 60 * 60 * 24) {
+            if (currentTimeSinceDayStart - module.millis in 0..60 * 60 && time - module.lastCalling > 1000L * 60 * 60 * 24) {
                 module.lastCalling = time
                 module.call()
             }

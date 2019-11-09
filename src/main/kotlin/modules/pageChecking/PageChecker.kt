@@ -18,10 +18,7 @@ class PageChecker : Module {
 
     // Можно добавить сюда другие сайты
     private val pages = listOf(
-        Link("Практика по дискретке [Сабонис]", "http://sergei-sabonis.ru/Student/20192020/dm2019.htm"),
-        Link("Практика по вышмату [Давыдов]",
-            "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op/export?format=tsv&gid=693072555",
-            "https://docs.google.com/spreadsheets/d/1r0US74YCVioZE0jf9-clpDmTQfO8q7Op")
+        Link("Практика по дискретке [Сабонис]", "http://sergei-sabonis.ru/Student/20192020/dm2019.pdf")
     )
 
     private fun getPath(page: String): String {
