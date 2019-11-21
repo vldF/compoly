@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.google.code.gson:gson:2.8.5'
     compile group: 'org.mnode.ical4j', name: 'ical4j', version: '1.0.3'
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
     compile 'io.github.microutils:kotlin-logging:1.7.6'
