@@ -53,10 +53,10 @@ class Weather : Module {
                 log.info("Weather casting...")
                 val text =
                     """
-                        ☀Погода сейчас☀
-                        Температура: ${info.main.temp} °C
-                        Описание: ${info.weather.first().description}
-                        Ветер: ${info.wind.speed} м/с
+                        ℹПогода сейчас: ${info.weather.first().description}
+                        🌡Температура: ${info.main.temp} °C
+                        🌬Ветер: ${info.wind.speed} м/с
+                        ☁Облачность: ${info.clouds.all} %
                     """.trimIndent()
                 Vk().send(text, chatIds)
             } catch (e: Exception) {
