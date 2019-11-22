@@ -1,12 +1,13 @@
 import modules.icsEvents.IcsEvents
 import modules.Module
 import modules.pageChecking.PageChecker
+import modules.weather.Weather
 import kotlin.concurrent.timer
 
 fun main() {
     log.info("Starting")
 
-    val modules = listOf(IcsEvents(), PageChecker())
+    val modules = listOf(IcsEvents(), PageChecker(), Weather())
     val timedModules = mutableListOf<Module>()
     val periodicalModules = mutableListOf<Module>()
 
@@ -23,16 +24,18 @@ fun main() {
     log.info("Initialization done")
 
     for (module in periodicalModules) {
-        timer("main loop", false, 0L, module.millis) {
-            module.call()
+        module.millis.forEach {
+            timer("main loop", false, 0L, it) {
+                module.call()
+            }
         }
     }
 
     while (true) {
-        for (module in modules) {
+        for (module in timedModules) {
             val time = System.currentTimeMillis() + 1000L * 60 * 60 * 3
             val currentTimeSinceDayStart = (time / 1000L) % (60 * 60 * 24)
-            if (currentTimeSinceDayStart - module.millis in 0..60 * 60 && time - module.lastCalling > 1000L * 60 * 60 * 24) {
+            if (module.millis.any { currentTimeSinceDayStart - it  in 0..60 * 60} && time - module.lastCalling > 1000L * 60 * 60) {
                 module.lastCalling = time
                 module.call()
             }

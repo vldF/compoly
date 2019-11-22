@@ -2,22 +2,19 @@ package modules.weather
 import api.Vk
 import chatIds
 import com.google.gson.Gson
+import key
 import log
 import modules.Module
 import sendGet
 
-const val key = "141ef67be66f26e2a199e2a98f0f34fd"
 const val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$key"
 
 class Weather : Module {
 
-    override val callingType = 1
-    override val millis = 7 * 60 * 60L
+    override val callingType = 0
+    override val millis = arrayOf(8 * 60 * 60L, 12 * 60 * 60L, 16 * 60 * 60L, 20 * 60 * 60L, 18 * 60 * 60L)
     override val name = "Погода сейчас"
     override var lastCalling = 0L
-
-    private val key = "141ef67be66f26e2a199e2a98f0f34fd"
-    private val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$key"
 
     private class Coord(val lon: Double, val lat: Double)
     private class Weather(val id: Int, val main: String, val description: String, val icon: String)

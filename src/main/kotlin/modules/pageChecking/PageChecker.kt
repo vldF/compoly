@@ -11,7 +11,7 @@ import sendGet
 
 class PageChecker : Module {
     override val callingType = 1
-    override val millis = 10 * 1000L
+    override val millis = arrayOf(10 * 1000L)
     override val name = "Проверка обновления страницы"
     override var lastCalling = 0L
 
