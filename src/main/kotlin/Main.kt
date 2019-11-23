@@ -26,7 +26,7 @@ fun main() {
 
     for (module in periodicalModules) {
         module.millis.forEach {
-            timer("main loop", false, it, period=200L) {
+            timer("main loop", false, 0L, period=it) {
                 module.call()
             }
         }
