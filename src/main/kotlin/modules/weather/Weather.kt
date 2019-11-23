@@ -12,7 +12,7 @@ const val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&un
 class Weather : Module {
 
     override val callingType = 0
-    override val millis = arrayOf(8 * 60 * 60L, 12 * 60 * 60L, 16 * 60 * 60L, 20 * 60 * 60L, 18 * 60 * 60L)
+    override val millis = arrayOf(8 * 60 * 60L, 12 * 60 * 60L, 16 * 60 * 60L, 20 * 60 * 60L)
     override val name = "Погода сейчас"
     override var lastCalling = 0L
 

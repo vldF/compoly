@@ -7,4 +7,4 @@ val chatIds = if (!testChatId) listOf(
     "2",
     "3"
 ) else listOf("3")
-val testMode = true
+val testMode = false
