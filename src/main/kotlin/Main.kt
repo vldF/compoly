@@ -2,7 +2,7 @@ import modules.icsEvents.IcsEvents
 import modules.Module
 import modules.pageChecking.PageChecker
 import modules.weather.Weather
-import java.util.*
+import java.lang.Thread.sleep
 import kotlin.concurrent.timer
 
 fun main() {
@@ -41,5 +41,6 @@ fun main() {
                 module.call()
             }
         }
+        sleep(500L)
     }
 }
