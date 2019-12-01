@@ -5,7 +5,7 @@ import modules.Module
 import chatIds
 import com.google.gson.Gson
 
-const val PEER_ID = "2000000002"
+const val PEER_ID = "2000000003"
 
 class HappyBirthday : Module {
     override val callingType = 0
@@ -39,7 +39,7 @@ class HappyBirthday : Module {
         val is_closed: Boolean,
         val can_access_closed: Boolean,
         val domain: String,
-        val bdate: String
+        val bdate: String?
     )
 
     private data class Group(
@@ -67,7 +67,7 @@ class HappyBirthday : Module {
         val currentDate = "${time.day + 1}.${time.month + 1}"
         val needToCongratulate = mutableListOf<String>()
         for (profile in profiles) {
-            var date = profile.bdate
+            var date: String = profile.bdate ?: continue
             date = date.split(".").subList(0, 2).joinToString(separator = ".")
             if (date == currentDate) needToCongratulate.add("@${profile.domain}")
         }
@@ -75,12 +75,12 @@ class HappyBirthday : Module {
             val message = when (needToCongratulate.size) {
                 1 -> """
 
-                    🎁🎁🎁Вся партия поздравляет нашего товарища ${needToCongratulate[0]} c Днём его рождения!!!
+                    🎁🎁🎁Вся партия поздравляет нашего товарища ${needToCongratulate[0]} c Днём Рождения!!!
                     Желаем ему благополучия и такого же упорства в развитии нашей Великой Партии!🎉🎉🎉
                 """.trimIndent()
                 else -> """
 
-                    🎁🎁🎁Вся партия поздравляет наших товарищей ${needToCongratulate.joinToString(separator = ", ")} c Днём их рождения!!!
+                    🎁🎁🎁Вся партия поздравляет наших товарищей ${needToCongratulate.joinToString(separator = ", ")} c Днём Рождения!!!
                     Желаем им благополучия и такого же упорства в развитии нашей Великой Партии!🎉🎉🎉
                 """.trimIndent()
             }
