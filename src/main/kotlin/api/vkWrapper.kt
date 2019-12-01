@@ -15,9 +15,9 @@ import java.net.http.HttpResponse
 
 class Vk {
     @Suppress("SameParameterValue")
-    private fun post(methodName: String, params: MutableMap<String, String>) {
+    private fun post(methodName: String, params: MutableMap<String, String>): HttpResponse<String>? {
         if (testMode) {
-            return
+            return null
         }
         val reqParams = StringBuilder()
         reqParams.append("access_token=$vkApiToken&")
@@ -37,6 +37,7 @@ class Vk {
             HttpResponse.BodyHandlers.ofString()
         )
         log.info("response: ${response.body()}")
+        return response
     }
 
     fun send(message: String, chatId: List<String>) {
@@ -51,6 +52,14 @@ class Vk {
         }
     }
 
+    fun getConversationMembersByPeerID(peer_id: String, fields: List<String>) =
+        Vk().post(
+            "messages.getConversationMembers",
+            mutableMapOf(
+                "peer_id" to peer_id,
+                "fields" to fields.joinToString(separator = ",")
+            )
+        )?.body()
 }
 
 fun main() {
