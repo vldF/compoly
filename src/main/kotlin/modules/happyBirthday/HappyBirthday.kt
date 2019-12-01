@@ -39,7 +39,7 @@ class HappyBirthday : Module {
         val is_closed: Boolean,
         val can_access_closed: Boolean,
         val domain: String,
-        val bdate: String
+        val bdate: String?
     )
 
     private data class Group(
@@ -67,7 +67,7 @@ class HappyBirthday : Module {
         val currentDate = "${time.day + 1}.${time.month + 1}"
         val needToCongratulate = mutableListOf<String>()
         for (profile in profiles) {
-            var date = profile.bdate
+            var date = profile.bdate ?: continue
             date = date.split(".").subList(0, 2).joinToString(separator = ".")
             if (date == currentDate) needToCongratulate.add("@${profile.domain}")
         }
