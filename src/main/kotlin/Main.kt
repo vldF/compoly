@@ -1,5 +1,6 @@
 import modules.icsEvents.IcsEvents
 import modules.Module
+import modules.happyBirthday.HappyBirthday
 import modules.pageChecking.PageChecker
 import modules.weather.Weather
 import java.lang.Thread.sleep
@@ -8,7 +9,7 @@ import kotlin.concurrent.timer
 fun main() {
     log.info("Starting")
 
-    val modules = listOf(IcsEvents(), PageChecker(), Weather())
+    val modules = listOf(IcsEvents(), PageChecker(), Weather(), HappyBirthday())
     val timedModules = mutableListOf<Module>()
     val periodicalModules = mutableListOf<Module>()
 

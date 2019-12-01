@@ -1,12 +1,11 @@
 package modules.happyBirthday
 
 import api.Vk
-import log
 import modules.Module
 import chatIds
 import com.google.gson.Gson
 
-val PEER_ID = "2000000002"
+const val PEER_ID = "2000000002"
 
 class HappyBirthday : Module {
     override val callingType = 0
@@ -65,13 +64,12 @@ class HappyBirthday : Module {
     override fun call() {
         val profiles = getProfiles()
         val time = java.util.Calendar.getInstance().time
-        val current_date = "${time.day + 1}.${time.month + 1}"
+        val currentDate = "${time.day + 1}.${time.month + 1}"
         val needToCongratulate = mutableListOf<String>()
         for (profile in profiles) {
             var date = profile.bdate
-            if (date == null) continue
             date = date.split(".").subList(0, 2).joinToString(separator = ".")
-            if (date == current_date) needToCongratulate.add("@${profile.domain}")
+            if (date == currentDate) needToCongratulate.add("@${profile.domain}")
         }
         if (needToCongratulate.size >= 1) {
             val message = when (needToCongratulate.size) {
