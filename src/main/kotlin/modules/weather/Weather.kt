@@ -6,6 +6,7 @@ import key
 import log
 import modules.Module
 import sendGet
+import kotlin.math.exp
 
 const val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$key"
 
@@ -15,6 +16,11 @@ class Weather : Module {
     override val millis = arrayOf(8 * 60 * 60L, 12 * 60 * 60L, 16 * 60 * 60L, 20 * 60 * 60L)
     override val name = "Погода сейчас"
     override var lastCalling = 0L
+
+    private fun apparentTemperature(temperature: Double, wind: Double, humidity: Double): String {
+        val e = (humidity / 100) * 6.105 * exp((17.27 * temperature) / (237.7 + temperature))
+        return String.format("%.1f", temperature + 0.348 * e - 0.7 * wind - 4.25)
+    }
 
     private class Coord(val lon: Double, val lat: Double)
     private class Weather(val id: Int, val main: String, val description: String, val icon: String)
@@ -50,10 +56,11 @@ class Weather : Module {
                 log.info("Weather casting...")
                 val text =
                     """
-                        ℹПогода сейчас: ${info.weather.first().description}
-                        🌡Температура: ${info.main.temp} °C
-                        🌬Ветер: ${info.wind.speed} м/с
+                        🌤Погода сейчас: ${info.weather.first().description}
+                        🌬Ветер: ${info.wind.speed.toInt()} м/с
                         ☁Облачность: ${info.clouds.all} %
+                        🌡Температура: ${info.main.temp} °C
+                        🖐Ощущается как: ${apparentTemperature(info.main.temp, info.main.temp, info.main.humidity.toDouble())} °C
                     """.trimIndent()
                 Vk().send(text, chatIds)
             } catch (e: Exception) {
