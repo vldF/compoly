@@ -16,7 +16,7 @@ import java.net.http.HttpResponse
 class Vk {
     @Suppress("SameParameterValue")
     private fun post(methodName: String, params: MutableMap<String, String>): HttpResponse<String>? {
-        if (testMode) {
+        if (testMode && methodName == "messages.send") {
             return null
         }
         val reqParams = StringBuilder()
