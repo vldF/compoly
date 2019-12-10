@@ -9,7 +9,7 @@ import kotlin.concurrent.timer
 fun main() {
     log.info("Starting")
 
-    val modules = listOf(IcsEvents(), PageChecker(), Weather(), HappyBirthday())
+    val modules = listOf(IcsEvents(), PageChecker(), HappyBirthday())
     val timedModules = mutableListOf<Module>()
     val periodicalModules = mutableListOf<Module>()
 
