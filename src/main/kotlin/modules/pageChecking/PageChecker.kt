@@ -16,8 +16,8 @@ class PageChecker : Module {
     override var lastCalling = 0L
 
     // Можно добавить сюда другие сайты
-    private val pages = listOf(
-        Link("Практика по дискретке [Сабонис]", "http://sergei-sabonis.ru/Student/20192020/dm2019.pdf")
+    private val pages = listOf<Link>(
+
     )
 
     private fun getPath(page: String): String {

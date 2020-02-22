@@ -5,7 +5,7 @@ import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.component.VEvent
 
-val calendarFiles = listOf("English.ics", "Main.ics")
+val calendarFiles = listOf("lms.ics") //TODO
 class Reader {
     fun read(): List<Event> {
         val res = mutableListOf<Event>()
