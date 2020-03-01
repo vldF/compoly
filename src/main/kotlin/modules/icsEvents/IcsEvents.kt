@@ -22,7 +22,7 @@ class IcsEvents : modules.Module {
         for (evn in reader.read()) {
             val s = "[${evn.category}] ${evn.name}:\n${formatter.format(evn.dateStart)}\n"
             // todo: refactor next code
-            (if (abs(currentTime / (1000 * 60 * 60 * 24) - evn.dateStart / (1000 * 60 * 60 * 24)) <= 1L) currentEvents else if (evn.dateStart - currentTime in 0..5 * 24 * 60 * 60 * 1000) nextEvents else mutableListOf()).add(
+            (if (abs(currentTime / (1000 * 60 * 60 * 24) - evn.dateStart / (1000 * 60 * 60 * 24)) < 1L) currentEvents else if (evn.dateStart - currentTime in 0..5 * 24 * 60 * 60 * 1000) nextEvents else mutableListOf()).add(
                 s
             )
         }
