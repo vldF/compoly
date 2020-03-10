@@ -5,7 +5,11 @@ import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.component.VEvent
 
-val calendarFiles = listOf("lms.ics") //TODO
+val calendarFiles = listOf("lms.ics") //TODO Сейчас есть только на lms, спасибо гуманитариям за календарь
+
+/**
+ * Считывает все записи из файлов в директории
+ */
 class Reader {
     fun read(): List<Event> {
         val res = mutableListOf<Event>()
