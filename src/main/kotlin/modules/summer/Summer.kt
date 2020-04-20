@@ -23,11 +23,7 @@ class Summer : modules.Module {
     }
 
     private fun getDifferenceDays(d1: Date, d2: Date): Long {
-        val diff: Long = d2.getTime() - d1.getTime()
+        val diff: Long = d2.time - d1.time
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
     }
-}
-
-fun main() {
-    Summer().call()
 }
