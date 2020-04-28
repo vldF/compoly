@@ -1,12 +1,13 @@
-package modules.summer
+package modules.events.summer
 
 import api.Vk
 import chatIds
+import modules.events.Module
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class Summer : modules.Module {
+class Summer : Module {
     override val callingType = 0
     override val millis = arrayOf(8 * 60 * 60L)
     override val name = "Дней до лета"

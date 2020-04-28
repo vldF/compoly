@@ -1,4 +1,4 @@
-package modules.pageChecking
+package modules.loops.pageChecking
 
 import api.Vk
 import chatIds
@@ -6,8 +6,8 @@ import log
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Paths
-import modules.Module
-import sendGet
+import modules.events.Module
+import modules.sendGet
 
 class PageChecker : Module {
     override val callingType = 1

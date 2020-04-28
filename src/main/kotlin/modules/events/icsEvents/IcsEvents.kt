@@ -1,11 +1,12 @@
-package modules.icsEvents
+package modules.events.icsEvents
 
 import api.Vk
 import chatIds
+import modules.events.Module
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
-class IcsEvents : modules.Module {
+class IcsEvents : Module {
     override val callingType = 0
     override val millis = arrayOf(8 * 60 * 60L)
     override val name = "Проверка ивентов в расписаниях"

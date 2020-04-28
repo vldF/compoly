@@ -1,11 +1,11 @@
-package modules.weather
+package modules.events.weather
 import api.Vk
 import chatIds
 import com.google.gson.Gson
 import key
 import log
-import modules.Module
-import sendGet
+import modules.events.Module
+import modules.sendGet
 import kotlin.math.exp
 
 const val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$key"

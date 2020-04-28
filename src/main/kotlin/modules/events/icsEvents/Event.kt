@@ -1,4 +1,4 @@
-package modules.icsEvents
+package modules.events.icsEvents
 
 class Event(val name: String, val dateStart: Long, val dateEnd: Long, _category: String){
     var category = when(_category) {

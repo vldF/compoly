@@ -1,8 +1,8 @@
-import modules.icsEvents.IcsEvents
-import modules.Module
-import modules.happyBirthday.HappyBirthday
-import modules.pageChecking.PageChecker
-import modules.summer.Summer
+import modules.events.icsEvents.IcsEvents
+import modules.events.Module
+import modules.events.happyBirthday.HappyBirthday
+import modules.loops.pageChecking.PageChecker
+import modules.events.summer.Summer
 import java.lang.Thread.sleep
 import kotlin.concurrent.timer
 

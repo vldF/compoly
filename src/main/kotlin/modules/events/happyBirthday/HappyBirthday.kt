@@ -1,7 +1,7 @@
-package modules.happyBirthday
+package modules.events.happyBirthday
 
 import api.Vk
-import modules.Module
+import modules.events.Module
 import chatIds
 import com.google.gson.Gson
 import java.util.*
