@@ -3,12 +3,11 @@ package modules.events
 import io.github.classgraph.ClassGraph
 import log
 
-
 class EventStream : Thread() {
 
     private data class Pass(val event: Event, val time: Long) //time in milliseconds
 
-    private val schedule: MutableList<Pass> = mutableListOf()
+    private val schedule: List<Pass>
 
     init {
         log.info("Initialising EventStream...")
@@ -25,6 +24,7 @@ class EventStream : Thread() {
                     .map { it.getConstructor().newInstance() } as List<Event>
             }
 
+        val schedule = mutableListOf<Pass>()
         events.map {
             event ->
             schedule.addAll(
@@ -32,6 +32,7 @@ class EventStream : Thread() {
             )
         }
         schedule.sortBy { it.time }
+        this.schedule = schedule
     }
 
     override fun run() {
