@@ -33,6 +33,7 @@ class EventStream : Thread() {
         }
         schedule.sortBy { it.time }
         this.schedule = schedule
+        log.info("EventStream is initialised")
     }
 
     override fun run() {
@@ -43,6 +44,7 @@ class EventStream : Thread() {
                 val localTime = System.currentTimeMillis() + 1000L * 60 * 60 * 3 //Moscow timezone
                 val timeSinceDayStart = localTime % (60 * 60 * 24)
                 if (timeSinceDayStart > pass.time) {
+                    log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
                     pass.event.call()
                     i++
                     if (i >= schedule.size) {
