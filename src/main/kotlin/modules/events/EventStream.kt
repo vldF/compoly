@@ -1,36 +1,46 @@
 package modules.events
 
+import io.github.classgraph.ClassGraph
 import log
-import org.reflections.Reflections
 
-class EventStream : Runnable {
 
-    private val schedule: MutableList<Pair<Event, Time>> = mutableListOf()
+class EventStream : Thread() {
+
+    private data class Pass(val event: Event, val time: Long) //time in milliseconds
+
+    private val schedule: MutableList<Pass> = mutableListOf()
 
     init {
         log.info("Initialising EventStream...")
 
-        @Suppress("UNCHECKED_CAST")
-        val events = Reflections("modules.events").getTypesAnnotatedWith(ActiveEvent::class.java)
-            .filter { it.superclass is Event }
-            .map {
-                it.getDeclaredConstructor().newInstance()
-            } as List<Event>
+        val events: List<Event> = TODO()
 
         events.map {
             event ->
             schedule.addAll(
-                event.schedule.map { time -> Pair(event, time) }
+                event.schedule.map { time -> Pass(event, time.time) }
             )
         }
-        schedule.sortBy { it.second.time }
-        if (schedule.isNotEmpty()) {
-
-        }
+        schedule.sortBy { it.time }
     }
 
     override fun run() {
-        while (true) {
+        if (schedule.isNotEmpty()) {
+            var i = 0
+            var pass = schedule.first()
+            while (true) {
+                val localTime = System.currentTimeMillis() + 1000L * 60 * 60 * 3 //Moscow timezone
+                val timeSinceDayStart = localTime % (60 * 60 * 24)
+                if (timeSinceDayStart > pass.time) {
+                    pass.event.call()
+                    i++
+                    if (i >= schedule.size) {
+                        i = 0
+                    }
+                    pass = schedule[i]
+                }
+                sleep(60 * 1000L)
+            }
         }
     }
 }
