@@ -1,18 +1,18 @@
 package modules.events.happyBirthday
 
 import api.Vk
-import modules.events.Module
 import chatIds
 import com.google.gson.Gson
+import modules.events.Event
+import modules.events.Time
 import java.util.*
 
 const val PEER_ID = "2000000002"
 
-class HappyBirthday : Module {
-    override val callingType = 0
-    override val millis = arrayOf(46189L) //arrayOf(15 * 60 * 60L)
-    override val name = "Дни рождения сегодня"
-    override var lastCalling = 0L
+class HappyBirthday : Event {
+
+    override val schedule = listOf(Time(9, 0))
+    override val name = "Birthday today"
 
     private data class JsonVK(val response: Response)
     private data class Response(
@@ -59,13 +59,12 @@ class HappyBirthday : Module {
 
     private fun getProfiles(): List<Profile> {
         val json = Vk().getConversationMembersByPeerID(PEER_ID, listOf("bdate", "domain"))
-        return Gson().fromJson<JsonVK>(json, JsonVK::class.java).response.profiles
+        return Gson().fromJson(json, JsonVK::class.java).response.profiles
     }
 
     override fun call() {
         val cal = Calendar.getInstance()
         val profiles = getProfiles()
-        val time = java.util.Calendar.getInstance().time
         val currentDate = "${cal.get(Calendar.DAY_OF_MONTH)}.${cal.get(Calendar.MONTH) + 1}"
         val needToCongratulate = mutableListOf<String>()
         for (profile in profiles) {

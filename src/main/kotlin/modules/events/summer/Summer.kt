@@ -2,16 +2,16 @@ package modules.events.summer
 
 import api.Vk
 import chatIds
-import modules.events.Module
+import modules.events.Event
+import modules.events.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class Summer : Module {
-    override val callingType = 0
-    override val millis = arrayOf(8 * 60 * 60L)
+class Summer : Event {
+
+    override val schedule = listOf(Time(8, 1))
     override val name = "Дней до лета"
-    override var lastCalling = 0L
 
     private val myFormat = SimpleDateFormat("dd MM yyyy")
     private val summerBegins = myFormat.parse("01 06 2020")

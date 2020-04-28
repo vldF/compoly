@@ -1,5 +1,4 @@
 import modules.events.icsEvents.IcsEvents
-import modules.events.Module
 import modules.events.happyBirthday.HappyBirthday
 import modules.loops.pageChecking.PageChecker
 import modules.events.summer.Summer

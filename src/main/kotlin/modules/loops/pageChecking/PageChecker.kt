@@ -6,16 +6,14 @@ import log
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Paths
-import modules.events.Module
+import modules.loops.Loop
 import modules.sendGet
 
-class PageChecker : Module {
-    override val callingType = 1
-    override val millis = arrayOf(30 * 1000L)
-    override val name = "Проверка обновления страницы"
-    override var lastCalling = 0L
+class PageChecker : Loop {
 
-    // Можно добавить сюда другие сайты
+    override val delay = 60000L
+    override val name = "Проверка обновления страницы"
+
     private val pages = listOf<Link>(
 
     )

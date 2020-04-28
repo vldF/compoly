@@ -2,15 +2,16 @@ package modules.events.icsEvents
 
 import api.Vk
 import chatIds
-import modules.events.Module
+import modules.events.Event
+import modules.events.Time
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
-class IcsEvents : Module {
-    override val callingType = 0
-    override val millis = arrayOf(8 * 60 * 60L)
-    override val name = "Проверка ивентов в расписаниях"
-    override var lastCalling = 0L
+class IcsEvents : Event {
+
+    override val name = "Check icsEvents from schedule"
+    override val schedule = listOf(Time(8, 0))
+
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
 
     override fun call() {

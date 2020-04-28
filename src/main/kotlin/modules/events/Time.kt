@@ -1,7 +1,8 @@
 package modules.events
 
-/** Stores time in milliseconds
- *  @throws IllegalArgumentException on invalid time
+/**
+ * Stores time in milliseconds
+ * @throws IllegalArgumentException on invalid time
  */
 class Time(hour: Int, minute: Int) {
 
