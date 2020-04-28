@@ -1,6 +1,7 @@
 package modules.events
 
 import io.github.classgraph.ClassGraph
+import io.github.classgraph.ClassInfo
 import log
 
 
@@ -13,7 +14,17 @@ class EventStream : Thread() {
     init {
         log.info("Initialising EventStream...")
 
-        val events: List<Event> = TODO()
+        var events: List<Event> = emptyList()
+        ClassGraph().enableAllInfo().whitelistPackages("modules.events")
+            .scan().use { scanResult ->
+                val filtered = scanResult.allClasses
+                    .filter { classInfo ->
+                        classInfo.hasAnnotation("modules.events.ActiveEvent")
+                                && classInfo.implementsInterface("modules.events.Event")
+
+                    }
+                events = filtered.loadClasses().map { it.getConstructor().newInstance() } as List<Event>
+            }
 
         events.map {
             event ->
