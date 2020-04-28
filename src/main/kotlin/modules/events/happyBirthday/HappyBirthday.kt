@@ -3,12 +3,14 @@ package modules.events.happyBirthday
 import api.Vk
 import chatIds
 import com.google.gson.Gson
+import modules.events.ActiveEvent
 import modules.events.Event
 import modules.events.Time
 import java.util.*
 
 const val PEER_ID = "2000000002"
 
+@ActiveEvent
 class HappyBirthday : Event {
 
     override val schedule = listOf(Time(9, 0))

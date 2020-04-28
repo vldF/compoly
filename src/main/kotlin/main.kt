@@ -1,50 +1,6 @@
-import modules.events.icsEvents.IcsEvents
-import modules.events.happyBirthday.HappyBirthday
-import modules.loops.pageChecking.PageChecker
-import modules.events.summer.Summer
-import java.lang.Thread.sleep
-import kotlin.concurrent.timer
+import modules.events.EventStream
 
 fun main() {
-    log.info("Starting")
-
-    val modules = listOf(Summer(), IcsEvents(), PageChecker(), HappyBirthday())
-    val timedModules = mutableListOf<Module>()
-    val periodicalModules = mutableListOf<Module>()
-
-    for (module in modules) {
-        when {
-            module.callingType == 0 -> timedModules.add(module)
-            module.callingType == 1 -> periodicalModules.add(module)
-            else -> {
-                log.warning("${module.name} wrong! callingType is not valid")
-            }
-        }
-    }
-    log.info("${modules.size} linked")
-    log.info("Initialization done")
-
-    for (module in periodicalModules) {
-        module.millis.forEach {
-            timer("main loop", false, 0L, period=it) {
-                module.call()
-            }
-        }
-    }
-
-    while (true) {
-        for (module in timedModules) {
-            val time = System.currentTimeMillis() + 1000L * 60 * 60 * 3
-            val currentTimeSinceDayStart = (time / 1000L) % (60 * 60 * 24)
-            if (module.millis.any { currentTimeSinceDayStart - it  in 0 until 10 * 60} && time - module.lastCalling > 1000L * 60 * 60) {
-                log.info("Calling ${module.name}.")
-                log.info("time = $time")
-                log.info("currentTimeSinceDayStart = $currentTimeSinceDayStart")
-                log.info("lastCalling = ${module.lastCalling}")
-                module.lastCalling = time
-                module.call()
-            }
-        }
-        sleep(500L)
-    }
+    val eventStream = EventStream()
+    eventStream.run()
 }
