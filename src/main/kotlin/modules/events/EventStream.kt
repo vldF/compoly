@@ -20,7 +20,9 @@ class EventStream : Thread() {
                     .filter { classInfo ->
                         classInfo.hasAnnotation("modules.events.ActiveEvent")
                     }
-                events = filtered.loadClasses().map { it.getConstructor().newInstance() } as List<Event>
+                events = filtered
+                    .map { it.loadClass() }
+                    .map { it.getConstructor().newInstance() } as List<Event>
             }
 
         events.map {
