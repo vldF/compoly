@@ -32,6 +32,7 @@ class EventStream : Thread() {
             )
         }
         schedule.sortBy { it.time }
+        
         this.schedule = schedule
         log.info("EventStream is initialised")
     }
