@@ -23,11 +23,13 @@ class LoopStream : Runnable {
                     .map { it.getConstructor().newInstance() } as List<Loop>
             }
         loops = loaded
+        log.info("Loops: ${loops.map { it.javaClass } }")
         log.info("LoopStream is initialised")
     }
 
     override fun run() {
         thread {
+            log.info("LoopStream is running...")
             runBlocking {
                 val jobs = mutableListOf<Job>()
                 for (loop in loops) {

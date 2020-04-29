@@ -9,7 +9,7 @@ import modules.events.daysUntil
 import java.text.SimpleDateFormat
 import java.util.*
 
-//@Active
+@Active
 class IcsEvents : Event {
 
     override val name = "Checks icsEvents from the calendar"

@@ -39,11 +39,13 @@ class EventStream : Runnable {
         schedule.sortBy { it.time }
         
         this.schedule = schedule
+        log.info("Events: ${schedule.map { it.event.javaClass } }")
         log.info("EventStream is initialised")
     }
 
     override fun run() {
         thread {
+            log.info("EventStream is running...")
             if (schedule.isNotEmpty()) {
                 val delta = 15 * minute
                 var i = 0
@@ -59,7 +61,9 @@ class EventStream : Runnable {
                         i++
                         if (i >= schedule.size) {
                             i = 0
+                            log.info("EventStream: End of schedule, sleeping...")
                             sleep(millisecondInDay - timeSinceDayStart)
+                            log.info("EventStream: Awakening...")
                         }
                         pass = schedule[i]
                     }
