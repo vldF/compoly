@@ -32,7 +32,7 @@ class IcsEvents : Event {
             val daysUntilEnd = daysUntil(currentTime, Date(localEvent.dateEnd))
             if (daysUntilStart <= 0 && daysUntilEnd >= 0) {
                 currentEvents.add(info)
-            } else if (daysUntilStart <= scope) {
+            } else if (daysUntilStart in 1..scope) {
                 nextEvents.add(info)
             }
         }

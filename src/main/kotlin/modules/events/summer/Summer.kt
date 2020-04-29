@@ -23,6 +23,6 @@ class Summer : Event {
         val days = daysUntil(Date(), summerBegins)
         if (days > 0) {
             Vk().send("☀Дней до начала лета: $days", chatIds)
-        }
+        } else if (days == 0L) Vk().send("☀".repeat(10000), chatIds)
     }
 }
