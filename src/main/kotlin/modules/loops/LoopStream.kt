@@ -29,14 +29,12 @@ class LoopStream : Thread() {
         runBlocking {
             val jobs = mutableListOf<Job>()
             for (loop in loops) {
-                val job = coroutineScope {
-                    launch {
-                        while(true) {
+                val job = async {
+                        while (true) {
                             loop.call()
                             delay(loop.delay)
                         }
                     }
-                }
                 jobs.add(job)
             }
         }

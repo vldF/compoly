@@ -8,7 +8,6 @@ import modules.events.Time
 import modules.events.daysUntil
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 @Active
 class Summer : Event {

@@ -3,6 +3,7 @@ package modules.events
 import io.github.classgraph.ClassGraph
 import log
 import modules.millisecondInDay
+import modules.minute
 import modules.timeZone
 
 class EventStream : Thread() {
@@ -41,14 +42,17 @@ class EventStream : Thread() {
 
     override fun run() {
         if (schedule.isNotEmpty()) {
+            val delta = 15 * minute
             var i = 0
             var pass = schedule.first()
             while (true) {
                 val localTime = System.currentTimeMillis() + timeZone
                 val timeSinceDayStart = localTime % (millisecondInDay)
-                if (timeSinceDayStart > pass.time) {
-                    log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
-                    pass.event.call()
+                while (timeSinceDayStart > pass.time) {
+                    if (timeSinceDayStart - pass.time < delta) {
+                        log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
+                        pass.event.call()
+                    }
                     i++
                     if (i >= schedule.size) {
                         i = 0
@@ -56,7 +60,7 @@ class EventStream : Thread() {
                     }
                     pass = schedule[i]
                 }
-                sleep(60 * 1000L)
+                sleep(minute)
             }
         }
     }
