@@ -15,7 +15,7 @@ class LoopStream : Thread() {
             .scan().use { scanResult ->
                 val filtered = scanResult.getClassesImplementing("modules.loops.Loop")
                     .filter { classInfo ->
-                        classInfo.hasAnnotation("modules.loops.ActiveLoop")
+                        classInfo.hasAnnotation("modules.Active")
                     }
                 loaded = filtered
                     .map { it.loadClass() }

@@ -2,14 +2,14 @@ package modules.events.summer
 
 import api.Vk
 import chatIds
-import modules.events.ActiveEvent
+import modules.Active
 import modules.events.Event
 import modules.events.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-@ActiveEvent
+@Active
 class Summer : Event {
 
     override val schedule = listOf(Time(8, 1))

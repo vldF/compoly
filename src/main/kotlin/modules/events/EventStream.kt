@@ -2,6 +2,8 @@ package modules.events
 
 import io.github.classgraph.ClassGraph
 import log
+import modules.millisecondInDay
+import modules.timeZone
 
 class EventStream : Thread() {
 
@@ -17,7 +19,7 @@ class EventStream : Thread() {
             .scan().use { scanResult ->
                 val filtered = scanResult.getClassesImplementing("modules.events.Event")
                     .filter { classInfo ->
-                        classInfo.hasAnnotation("modules.events.ActiveEvent")
+                        classInfo.hasAnnotation("modules.Active")
                     }
                 events = filtered
                     .map { it.loadClass() }
@@ -42,14 +44,15 @@ class EventStream : Thread() {
             var i = 0
             var pass = schedule.first()
             while (true) {
-                val localTime = System.currentTimeMillis() + 1000L * 60 * 60 * 3 //Moscow timezone
-                val timeSinceDayStart = localTime % (60 * 60 * 24)
+                val localTime = System.currentTimeMillis() + timeZone
+                val timeSinceDayStart = localTime % (millisecondInDay)
                 if (timeSinceDayStart > pass.time) {
                     log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
                     pass.event.call()
                     i++
                     if (i >= schedule.size) {
                         i = 0
+                        sleep(millisecondInDay - timeSinceDayStart)
                     }
                     pass = schedule[i]
                 }

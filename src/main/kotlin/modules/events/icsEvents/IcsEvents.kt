@@ -2,13 +2,13 @@ package modules.events.icsEvents
 
 import api.Vk
 import chatIds
-import modules.events.ActiveEvent
+import modules.Active
 import modules.events.Event
 import modules.events.Time
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
-@ActiveEvent
+@Active
 class IcsEvents : Event {
 
     override val name = "Check icsEvents from schedule"
