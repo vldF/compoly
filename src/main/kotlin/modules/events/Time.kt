@@ -18,9 +18,11 @@ class Time(hour: Int, minute: Int) {
 }
 
 /**
- * returns amount of days between 2 dates. May be negative.
+ * Returns amount of days between 2 dates.
+ * Returns zero if days are the same.
+ * Returns negative number if first day is after second day.
  */
-fun daysUntil(day1: Date, day2: Date): Long {
-    val diff: Long = day2.time - day1.time
+fun daysUntil(firstDay: Date, secondDay: Date): Long {
+    val diff: Long = secondDay.time - firstDay.time
     return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
 }

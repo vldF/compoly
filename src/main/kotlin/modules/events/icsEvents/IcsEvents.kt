@@ -27,6 +27,7 @@ class IcsEvents : Event {
 
         for (localEvent in reader.read()) {
             val info = "[${localEvent.category}] ${localEvent.name}:\n${formatter.format(localEvent.dateStart)}\n"
+
             val daysUntilStart = daysUntil(currentTime, Date(localEvent.dateStart))
             val daysUntilEnd = daysUntil(currentTime, Date(localEvent.dateEnd))
             if (daysUntilStart <= 0 && daysUntilEnd >= 0) {
