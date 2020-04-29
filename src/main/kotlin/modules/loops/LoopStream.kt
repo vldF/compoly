@@ -31,7 +31,7 @@ class LoopStream : Runnable {
             runBlocking {
                 val jobs = mutableListOf<Job>()
                 for (loop in loops) {
-                    val job = async {
+                    val job = launch {
                         while (true) {
                             loop.call()
                             delay(loop.delay)

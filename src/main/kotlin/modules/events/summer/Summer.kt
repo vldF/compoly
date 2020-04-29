@@ -12,7 +12,7 @@ import java.util.*
 @Active
 class Summer : Event {
 
-    override val schedule = listOf(Time(8, 1))
+    override val schedule = listOf(Time(8, 30))
     override val name = "Days until summer"
 
     private val myFormat = SimpleDateFormat("dd MM yyyy")
