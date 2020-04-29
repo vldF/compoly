@@ -7,7 +7,7 @@ jdk: oraclejdk12
 
 script:
   - chmod 777 ./gradlew
-  - ./gradlew fatJar
+  - ./gradlew jar
 deploy:
   provider: releases
   api_key: ${GH_TOKEN}
