@@ -1,21 +1,20 @@
-package modules.weather
+package modules.events.weather
 import api.Vk
 import chatIds
 import com.google.gson.Gson
 import key
 import log
-import modules.Module
-import sendGet
+import modules.events.Event
+import modules.events.Time
+import modules.sendGet
 import kotlin.math.exp
 
 const val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$key"
 
-class Weather : Module {
+class Weather : Event {
 
-    override val callingType = 0
-    override val millis = arrayOf(8 * 60 * 60L, 12 * 60 * 60L, 16 * 60 * 60L, 20 * 60 * 60L)
+    override val schedule = listOf<Time>()
     override val name = "Погода сейчас"
-    override var lastCalling = 0L
 
     private fun apparentTemperature(temperature: Double, wind: Double, humidity: Double): String {
         val e = (humidity / 100) * 6.105 * exp((17.27 * temperature) / (237.7 + temperature))
