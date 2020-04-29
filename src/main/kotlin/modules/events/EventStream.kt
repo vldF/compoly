@@ -5,8 +5,10 @@ import log
 import modules.millisecondInDay
 import modules.minute
 import modules.timeZone
+import java.lang.Thread.sleep
+import kotlin.concurrent.thread
 
-class EventStream : Thread() {
+class EventStream : Runnable {
 
     private data class Pass(val event: Event, val time: Long) //time in milliseconds
 
@@ -41,26 +43,28 @@ class EventStream : Thread() {
     }
 
     override fun run() {
-        if (schedule.isNotEmpty()) {
-            val delta = 15 * minute
-            var i = 0
-            var pass = schedule.first()
-            while (true) {
-                val localTime = System.currentTimeMillis() + timeZone
-                val timeSinceDayStart = localTime % (millisecondInDay)
-                while (timeSinceDayStart > pass.time) {
-                    if (timeSinceDayStart - pass.time < delta) {
-                        log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
-                        pass.event.call()
+        thread {
+            if (schedule.isNotEmpty()) {
+                val delta = 15 * minute
+                var i = 0
+                var pass = schedule.first()
+                while (true) {
+                    val localTime = System.currentTimeMillis() + timeZone
+                    val timeSinceDayStart = localTime % (millisecondInDay)
+                    while (timeSinceDayStart > pass.time) {
+                        if (timeSinceDayStart - pass.time < delta) {
+                            log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
+                            pass.event.call()
+                        }
+                        i++
+                        if (i >= schedule.size) {
+                            i = 0
+                            sleep(millisecondInDay - timeSinceDayStart)
+                        }
+                        pass = schedule[i]
                     }
-                    i++
-                    if (i >= schedule.size) {
-                        i = 0
-                        sleep(millisecondInDay - timeSinceDayStart)
-                    }
-                    pass = schedule[i]
+                    sleep(minute)
                 }
-                sleep(minute)
             }
         }
     }

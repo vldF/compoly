@@ -3,8 +3,9 @@ package modules.loops
 import io.github.classgraph.ClassGraph
 import kotlinx.coroutines.*
 import log
+import kotlin.concurrent.thread
 
-class LoopStream : Thread() {
+class LoopStream : Runnable {
 
     private val loops: List<Loop>
 
@@ -26,16 +27,18 @@ class LoopStream : Thread() {
     }
 
     override fun run() {
-        runBlocking {
-            val jobs = mutableListOf<Job>()
-            for (loop in loops) {
-                val job = async {
+        thread {
+            runBlocking {
+                val jobs = mutableListOf<Job>()
+                for (loop in loops) {
+                    val job = async {
                         while (true) {
                             loop.call()
                             delay(loop.delay)
                         }
                     }
-                jobs.add(job)
+                    jobs.add(job)
+                }
             }
         }
     }
