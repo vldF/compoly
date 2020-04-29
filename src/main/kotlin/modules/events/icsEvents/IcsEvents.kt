@@ -27,10 +27,11 @@ class IcsEvents : Event {
 
         for (localEvent in reader.read()) {
             val info = "[${localEvent.category}] ${localEvent.name}:\n${formatter.format(localEvent.dateStart)}\n"
-            val daysUntil = daysUntil(currentTime, Date(localEvent.dateEnd))
-            if (daysUntil == 0L) {
+            val daysUntilStart = daysUntil(currentTime, Date(localEvent.dateStart))
+            val daysUntilEnd = daysUntil(currentTime, Date(localEvent.dateEnd))
+            if (daysUntilStart <= 0 && daysUntilEnd >= 0) {
                 currentEvents.add(info)
-            } else if (daysUntil <= scope) {
+            } else if (daysUntilStart <= scope) {
                 nextEvents.add(info)
             }
         }
