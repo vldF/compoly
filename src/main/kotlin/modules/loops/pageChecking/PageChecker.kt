@@ -1,4 +1,4 @@
-package modules.pageChecking
+package modules.loops.pageChecking
 
 import api.Vk
 import chatIds
@@ -6,16 +6,14 @@ import log
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Paths
-import modules.Module
-import sendGet
+import modules.loops.Loop
+import modules.sendGet
 
-class PageChecker : Module {
-    override val callingType = 1
-    override val millis = arrayOf(30 * 1000L)
+class PageChecker : Loop {
+
+    override val delay = 60000L
     override val name = "Проверка обновления страницы"
-    override var lastCalling = 0L
 
-    // Можно добавить сюда другие сайты
     private val pages = listOf<Link>(
 
     )
