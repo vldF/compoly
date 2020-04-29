@@ -4,4 +4,5 @@
 /.gradle/
 /main.log
 /main.log.lck
+/gradle/
 /.idea/
