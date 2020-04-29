@@ -5,6 +5,7 @@ import chatIds
 import modules.Active
 import modules.events.Event
 import modules.events.Time
+import modules.events.daysUntil
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -19,14 +20,9 @@ class Summer : Event {
     private val summerBegins = myFormat.parse("01 06 2020")
 
     override fun call() {
-        val days = getDifferenceDays(Date(), summerBegins)
+        val days = daysUntil(Date(), summerBegins)
         if (days > 0) {
             Vk().send("☀Дней до начала лета: $days", chatIds)
         }
-    }
-
-    private fun getDifferenceDays(d1: Date, d2: Date): Long {
-        val diff: Long = d2.time - d1.time
-        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
     }
 }
