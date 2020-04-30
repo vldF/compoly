@@ -12,7 +12,7 @@ import java.util.*
 @Active
 class IcsEvents : Event {
 
-    override val name = "Checks icsEvents from the calendar"
+    override val name = "ICS calendar checking"
     override val schedule = listOf(Time(8, 0))
 
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")

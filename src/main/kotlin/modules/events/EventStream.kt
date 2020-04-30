@@ -39,7 +39,7 @@ class EventStream : Runnable {
         schedule.sortBy { it.time }
         
         this.schedule = schedule
-        log.info("Events: ${schedule.map { it.event.javaClass } }")
+        log.info("Events: ${schedule.map { it.event.javaClass.toString() + ":" + it.time.toString() } }")
         log.info("EventStream is initialised")
     }
 
@@ -59,8 +59,10 @@ class EventStream : Runnable {
                     if (isActive) {
                         while (timeSinceDayStart > pass.time) {
                             if (timeSinceDayStart - pass.time < delta) {
-                                log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
+                                log.info("EventStream: Time is $timeSinceDayStart; Event time is ${pass.time}; Calling <${pass.event.name}>")
                                 pass.event.call()
+                            } else {
+                                log.info("EventStream: Outdated Event <${pass.event.name}>")
                             }
                             i++
                             if (i >= schedule.size) {
@@ -70,6 +72,7 @@ class EventStream : Runnable {
                                 break
                             }
                             pass = schedule[i]
+                            log.info("EventStream: Next event is <${pass.event.name}>")
                         }
                     } else {
                         if (timeSinceDayStart < delta) {
