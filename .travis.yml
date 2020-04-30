@@ -1,0 +1,15 @@
+language: java
+install: true
+
+os: linux
+dist: trusty
+jdk: oraclejdk12
+
+script:
+  - chmod 777 ./gradlew
+  - ./gradlew jar
+deploy:
+  provider: releases
+  api_key: ${GH_TOKEN}
+  file: "./build/libs/vkBot.jar"
+  skip_cleanup: true
