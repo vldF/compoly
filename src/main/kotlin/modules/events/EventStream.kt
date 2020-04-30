@@ -47,25 +47,35 @@ class EventStream : Runnable {
         thread {
             log.info("EventStream is running...")
             if (schedule.isNotEmpty()) {
-                val delta = 15 * minute
+
+                val delta = 5 * minute
+                var isActive = true
                 var i = 0
+
                 var pass = schedule.first()
                 while (true) {
                     val localTime = System.currentTimeMillis() + timeZone
                     val timeSinceDayStart = localTime % (millisecondInDay)
-                    while (timeSinceDayStart > pass.time) {
-                        if (timeSinceDayStart - pass.time < delta) {
-                            log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
-                            pass.event.call()
+                    if (isActive) {
+                        while (timeSinceDayStart > pass.time) {
+                            if (timeSinceDayStart - pass.time < delta) {
+                                log.info("Time is $timeSinceDayStart, calling ${pass.event.name}")
+                                pass.event.call()
+                            }
+                            i++
+                            if (i >= schedule.size) {
+                                i = 0
+                                log.info("EventStream: End of schedule")
+                                isActive = false
+                                break
+                            }
+                            pass = schedule[i]
                         }
-                        i++
-                        if (i >= schedule.size) {
-                            i = 0
-                            log.info("EventStream: End of schedule, sleeping...")
-                            sleep(millisecondInDay - timeSinceDayStart)
-                            log.info("EventStream: Awakening...")
+                    } else {
+                        if (timeSinceDayStart < delta) {
+                            log.info("EventStream: Start of schedule")
+                            isActive = true
                         }
-                        pass = schedule[i]
                     }
                     sleep(minute)
                 }

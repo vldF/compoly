@@ -8,4 +8,4 @@ val chatIds = if (!testChatId) listOf(
     "3"
 ) else listOf("3")
 
-const val testMode = false //no logging, println() instead
+const val testMode = false //no logging, no messages, println() instead
