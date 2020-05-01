@@ -1,86 +1,88 @@
 package modules.events
 
 import io.github.classgraph.ClassGraph
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import log
 import modules.millisecondInDay
-import modules.minute
 import modules.timeZone
-import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 class EventStream : Runnable {
 
-    private data class Pass(val event: Event, val time: Long) //time in milliseconds
-
-    private val schedule: List<Pass>
+    private val events: List<Event>
 
     init {
         log.info("Initialising EventStream...")
 
-        var events: List<Event> = emptyList()
+        var loaded: List<Event> = emptyList()
         ClassGraph().enableAllInfo().whitelistPackages("modules.events")
             .scan().use { scanResult ->
                 val filtered = scanResult.getClassesImplementing("modules.events.Event")
                     .filter { classInfo ->
                         classInfo.hasAnnotation("modules.Active")
                     }
-                events = filtered
+                loaded = filtered
                     .map { it.loadClass() }
                     .map { it.getConstructor().newInstance() } as List<Event>
             }
 
-        val schedule = mutableListOf<Pass>()
-        events.map {
-            event ->
-            schedule.addAll(
-                event.schedule.map { time -> Pass(event, time.time) }
-            )
-        }
-        schedule.sortBy { it.time }
-        
-        this.schedule = schedule
-        log.info("Events: ${schedule.map { it.event.javaClass.toString() + ":" + it.time.toString() } }")
+        events = loaded.filter { it.schedule.isNotEmpty() }
+
+        log.info("Events: ${events.map { it.javaClass.toString() + ":" + it.schedule.toString() } }")
         log.info("EventStream is initialised")
     }
+
+    private fun calculateDelayTime(eventTime: Long, currentTime: Long) =
+            if (eventTime > currentTime) {
+                eventTime - currentTime
+            } else {
+                millisecondInDay - (currentTime - eventTime)
+            }
 
     override fun run() {
         thread {
             log.info("EventStream is running...")
-            if (schedule.isNotEmpty()) {
+            runBlocking {
+                val jobs = mutableListOf<Job>()
+                for (event in events) {
+                    val job = launch {
 
-                val delta = 5 * minute
-                var isActive = true
-                var i = 0
+                        val schedule = event.schedule
 
-                var pass = schedule.first()
-                while (true) {
-                    val localTime = System.currentTimeMillis() + timeZone
-                    val timeSinceDayStart = localTime % (millisecondInDay)
-                    if (isActive) {
-                        while (timeSinceDayStart > pass.time) {
-                            if (timeSinceDayStart - pass.time < delta) {
-                                log.info("EventStream: Time is $timeSinceDayStart; Event time is ${pass.time}; Calling <${pass.event.name}>")
-                                pass.event.call()
-                            } else {
-                                log.info("EventStream: Outdated Event <${pass.event.name}>")
-                            }
-                            i++
-                            if (i >= schedule.size) {
-                                i = 0
-                                log.info("EventStream: End of schedule")
-                                isActive = false
+                        var localTime = System.currentTimeMillis() + timeZone
+                        var timeSinceDayStart = localTime % (millisecondInDay)
+
+                        var i = 0
+                        for (call in schedule.indices) {
+                            if (timeSinceDayStart < schedule[call].time) {
+                                i = call
                                 break
                             }
-                            pass = schedule[i]
-                            log.info("EventStream: Next event is <${pass.event.name}>")
                         }
-                    } else {
-                        if (timeSinceDayStart < delta) {
-                            log.info("EventStream: Start of schedule")
-                            isActive = true
+
+                        var time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
+                        log.info("Sleeping for $time until next <${event.name}> call")
+                        delay(time)
+
+                        while (true) {
+                            log.info("Calling <${event.name}>")
+                            event.call()
+
+                            if (++i == schedule.size) {
+                                i = 0
+                            }
+
+                            localTime = System.currentTimeMillis() + timeZone
+                            timeSinceDayStart = localTime % (millisecondInDay)
+                            time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
+                            log.info("Sleeping for $time until next <${event.name}> call")
+                            delay(time)
                         }
                     }
-                    sleep(minute)
+                    jobs.add(job)
                 }
             }
         }

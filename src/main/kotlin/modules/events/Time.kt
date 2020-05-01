@@ -15,6 +15,8 @@ class Time(hour: Int, minute: Int) {
         require(hour in 0..23 && minute in 0..59)
         time = (hour * 60 + minute) * 60 * 1000L
     }
+
+    override fun toString() = time.toString()
 }
 
 /**
