@@ -1,13 +1,15 @@
 package modules.events
 
 import io.github.classgraph.ClassGraph
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import log
 import modules.millisecondInDay
 import modules.timeZone
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.lang.Exception
+import java.lang.NullPointerException
+import java.lang.Runnable
 import kotlin.concurrent.thread
 
 class EventStream : Runnable {
@@ -49,37 +51,47 @@ class EventStream : Runnable {
                 val jobs = mutableListOf<Job>()
                 for (event in events) {
                     val job = launch {
+                        try {
+                            val schedule = event.schedule
 
-                        val schedule = event.schedule
+                            var localTime = System.currentTimeMillis() + timeZone
+                            var timeSinceDayStart = localTime % (millisecondInDay)
 
-                        var localTime = System.currentTimeMillis() + timeZone
-                        var timeSinceDayStart = localTime % (millisecondInDay)
-
-                        var i = 0
-                        for (call in schedule.indices) {
-                            if (timeSinceDayStart < schedule[call].time) {
-                                i = call
-                                break
-                            }
-                        }
-
-                        var time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
-                        log.info("Sleeping for $time until next <${event.name}> call")
-                        delay(time)
-
-                        while (true) {
-                            log.info("Calling <${event.name}>")
-                            event.call()
-
-                            if (++i == schedule.size) {
-                                i = 0
+                            var i = 0
+                            for (call in schedule.indices) {
+                                if (timeSinceDayStart < schedule[call].time) {
+                                    i = call
+                                    break
+                                }
                             }
 
-                            localTime = System.currentTimeMillis() + timeZone
-                            timeSinceDayStart = localTime % (millisecondInDay)
-                            time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
+                            var time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
                             log.info("Sleeping for $time until next <${event.name}> call")
                             delay(time)
+
+                            while (true) {
+                                log.info("Calling <${event.name}>")
+                                event.call()
+
+                                if (++i == schedule.size) {
+                                    i = 0
+                                }
+
+                                localTime = System.currentTimeMillis() + timeZone
+                                timeSinceDayStart = localTime % (millisecondInDay)
+                                time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
+                                log.info("Sleeping for $time until next <${event.name}> call")
+                                delay(time)
+                            }
+                        } catch (e: Exception) {
+                            val sw = StringWriter()
+                            val pw = PrintWriter(sw)
+                            e.printStackTrace(pw)
+                            val sStackTrace = sw.toString()
+                            log.warning("Exception in <${event.name}>, aborting the event...")
+                            log.warning(sStackTrace)
+                        } finally {
+                            this.cancel()
                         }
                     }
                     jobs.add(job)
