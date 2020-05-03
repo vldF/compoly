@@ -4,7 +4,6 @@ import log
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.component.VEvent
-import java.io.FileInputStream
 
 val calendarFiles = listOf("lms.ics") //TODO Сейчас есть только на lms, спасибо гуманитариям за календарь
 
@@ -16,10 +15,8 @@ class Reader {
         val res = mutableListOf<LocalEvent>()
         val calendarBuilder = CalendarBuilder()
         for (fileName in calendarFiles) {
-            //val file = javaClass.getResourceAsStream("/$fileName")
-            val file = javaClass.getResource("/$fileName").file
-            //val calendar = calendarBuilder.build(file.reader)
-            val calendar = calendarBuilder.build(FileInputStream(file))
+            val file = javaClass.getResourceAsStream("/$fileName")
+            val calendar = calendarBuilder.build(file.reader())
 
             for (i in calendar.getComponents(Component.VEVENT)) {
                 val calendarEvent = i as VEvent
