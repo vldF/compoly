@@ -3,6 +3,8 @@ package modules.events.icsEvents
 import log
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Component
+import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.component.CalendarComponent
 import net.fortuna.ical4j.model.component.VEvent
 
 val calendarFiles = listOf("lms.ics") //TODO Сейчас есть только на lms, спасибо гуманитариям за календарь
@@ -18,14 +20,14 @@ class Reader {
             val file = javaClass.getResourceAsStream("/$fileName")
             val calendar = calendarBuilder.build(file.reader())
 
-            for (i in calendar.getComponents(Component.VEVENT)) {
+            for (i in calendar.getComponents<CalendarComponent>(Component.VEVENT)) {
                 val calendarEvent = i as VEvent
                 val summary = calendarEvent.summary
                 val e = LocalEvent(
                     summary.value,
                     calendarEvent.startDate.date.time,
                     calendarEvent.endDate.date.time,
-                    calendarEvent.getProperty("CATEGORIES").value
+                    calendarEvent.getProperty<Property>("CATEGORIES").value
                 )
                 res.add(e)
             }
@@ -33,8 +35,4 @@ class Reader {
         log.info("Read: ${res.size} events")
         return res
     }
-}
-
-fun main() {
-    Reader().read()
 }

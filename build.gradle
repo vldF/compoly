@@ -22,11 +22,12 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
-    compile group: 'org.mnode.ical4j', name: 'ical4j', version: '1.0.3'
+    compile group: 'org.mnode.ical4j', name: 'ical4j', version: '3.0.18'
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
-    compile 'io.github.microutils:kotlin-logging:1.7.6'
+    compile 'io.github.microutils:kotlin-logging:1.7.9'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5'
     implementation('io.github.classgraph:classgraph:4.8.77')
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.29'
 }
 
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
