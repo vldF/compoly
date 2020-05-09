@@ -3,6 +3,23 @@ METHOD:PUBLISH
 PRODID:-//Moodle Pty Ltd//NONSGML Moodle Version 2018051701.03//EN
 VERSION:2.0
 BEGIN:VEVENT
+UID:8063@lms.spbstu.ru
+SUMMARY:Итоговый тест по модулю 1 открывается
+DESCRIPTION:Итоговый тест по модулю 1 [1]\n\n	* __ Количество вопросов в те
+	сте - 20\n	* __ Ограничение времени на ответы - 20 минут\n	* __ Количество 
+	попыток тестирования - 2\n\nМежду очередными попытками выполнения теста дол
+	жно пройти не менее 2-х часов.\n\nМаксимальная оценка за тест 20 баллов. Те
+	ст считается зачтенным\, если выполнен не менее\, чем на 60%.\n\n\nLinks:\n
+	------\n[1] https://lms.spbstu.ru/mod/quiz/view.php?id=45523\n
+	
+CLASS:PUBLIC
+LAST-MODIFIED:20200505T183956Z
+DTSTAMP:20200508T234434Z
+DTSTART:20200506T210000Z
+DTEND:20200506T210000Z
+CATEGORIES:История
+END:VEVENT
+BEGIN:VEVENT
 UID:8067@lms.spbstu.ru
 SUMMARY:Итоговый тест по модулю 2 открывается
 DESCRIPTION:	* __ Количество вопросов в тесте - 20\n	* __ Ограничение време
@@ -12,10 +29,43 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 20\n	* _
 	олнен не менее\, чем на 60%.\n
 	
 CLASS:PUBLIC
-LAST-MODIFIED:20200206T104008Z
-DTSTAMP:20200310T174949Z
-DTSTART:20200409T210000Z
-DTEND:20200409T210000Z
+LAST-MODIFIED:20200505T184028Z
+DTSTAMP:20200508T234434Z
+DTSTART:20200506T210000Z
+DTEND:20200506T210000Z
+CATEGORIES:История
+END:VEVENT
+BEGIN:VEVENT
+UID:8071@lms.spbstu.ru
+SUMMARY:Итоговый тест по модулю 3 открывается
+DESCRIPTION:	* __ Количество вопросов в тесте - 20\n	* __ Ограничение време
+	ни на ответы - 20 минут\n	* __ Количество попыток тестирования - 2\n\nМежду
+	 очередными попытками выполнения теста должно пройти не менее 2-х часов.\n\
+	nМаксимальная оценка за тест 20 баллов. Тест считается зачтенным\, если вып
+	олнен не менее\, чем на 60%.\n
+	
+CLASS:PUBLIC
+LAST-MODIFIED:20200505T184109Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200506T210000Z
+DTEND:20200506T210000Z
+CATEGORIES:История
+END:VEVENT
+BEGIN:VEVENT
+UID:8064@lms.spbstu.ru
+SUMMARY:Итоговый тест по модулю 1 закрывается
+DESCRIPTION:Итоговый тест по модулю 1 [1]\n\n	* __ Количество вопросов в те
+	сте - 20\n	* __ Ограничение времени на ответы - 20 минут\n	* __ Количество 
+	попыток тестирования - 2\n\nМежду очередными попытками выполнения теста дол
+	жно пройти не менее 2-х часов.\n\nМаксимальная оценка за тест 20 баллов. Те
+	ст считается зачтенным\, если выполнен не менее\, чем на 60%.\n\n\nLinks:\n
+	------\n[1] https://lms.spbstu.ru/mod/quiz/view.php?id=45523\n
+	
+CLASS:PUBLIC
+LAST-MODIFIED:20200505T183957Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200508T205900Z
+DTEND:20200508T205900Z
 CATEGORIES:История
 END:VEVENT
 BEGIN:VEVENT
@@ -28,56 +78,10 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 20\n	* _
 	олнен не менее\, чем на 60%.\n
 	
 CLASS:PUBLIC
-LAST-MODIFIED:20200206T104008Z
-DTSTAMP:20200310T174949Z
-DTSTART:20200410T205900Z
-DTEND:20200410T205900Z
-CATEGORIES:История
-END:VEVENT
-BEGIN:VEVENT
-UID:8100@lms.spbstu.ru
-SUMMARY:Тест по разделу 2 открывается
-DESCRIPTION:	* __ Количество вопросов в тесте - 10\n	* __ Ограничение време
-	ни на ответы - 10 минут\n	* __ Количество попыток тестирования - 2\n\nМакси
-	мальная оценка за тест 10 баллов. Тест считается зачтенным\, если выполнен 
-	не менее\, чем на 50%.\n
-	
-CLASS:PUBLIC
-LAST-MODIFIED:20200213T100515Z
-DTSTAMP:20200310T174949Z
-DTSTART:20200414T210000Z
-DTEND:20200414T210000Z
-CATEGORIES:Социология
-END:VEVENT
-BEGIN:VEVENT
-UID:8101@lms.spbstu.ru
-SUMMARY:Тест по разделу 2 закрывается
-DESCRIPTION:	* __ Количество вопросов в тесте - 10\n	* __ Ограничение време
-	ни на ответы - 10 минут\n	* __ Количество попыток тестирования - 2\n\nМакси
-	мальная оценка за тест 10 баллов. Тест считается зачтенным\, если выполнен 
-	не менее\, чем на 50%.\n
-	
-CLASS:PUBLIC
-LAST-MODIFIED:20200213T100515Z
-DTSTAMP:20200310T174949Z
-DTSTART:20200420T205900Z
-DTEND:20200420T205900Z
-CATEGORIES:Социология
-END:VEVENT
-BEGIN:VEVENT
-UID:8071@lms.spbstu.ru
-SUMMARY:Итоговый тест по модулю 3 открывается
-DESCRIPTION:	* __ Количество вопросов в тесте - 20\n	* __ Ограничение време
-	ни на ответы - 20 минут\n	* __ Количество попыток тестирования - 2\n\nМежду
-	 очередными попытками выполнения теста должно пройти не менее 2-х часов.\n\
-	nМаксимальная оценка за тест 20 баллов. Тест считается зачтенным\, если вып
-	олнен не менее\, чем на 60%.\n
-	
-CLASS:PUBLIC
-LAST-MODIFIED:20200206T104121Z
-DTSTAMP:20200310T174949Z
-DTSTART:20200429T210000Z
-DTEND:20200429T210000Z
+LAST-MODIFIED:20200505T184028Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200508T205900Z
+DTEND:20200508T205900Z
 CATEGORIES:История
 END:VEVENT
 BEGIN:VEVENT
@@ -90,10 +94,40 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 20\n	* _
 	олнен не менее\, чем на 60%.\n
 	
 CLASS:PUBLIC
-LAST-MODIFIED:20200206T104121Z
-DTSTAMP:20200310T174949Z
-DTSTART:20200430T205900Z
-DTEND:20200430T205900Z
+LAST-MODIFIED:20200505T184109Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200508T205900Z
+DTEND:20200508T205900Z
+CATEGORIES:История
+END:VEVENT
+BEGIN:VEVENT
+UID:8561@lms.spbstu.ru
+SUMMARY:Контрольный тест закрывается
+DESCRIPTION:	* Количество вопросов в тесте - 5\n	* Количество попыток - 3\n
+		* Ограничение по времени - 30 минут\n	* Максимальное количество баллов - 1
+	5\n\nДля прохождения теста Вам необходимо набрать не менее 9 баллов!\n\nЖел
+	аем Вам успешного выполнения задания!\n
+	
+CLASS:PUBLIC
+LAST-MODIFIED:20200313T073727Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200510T205900Z
+DTEND:20200510T205900Z
+CATEGORIES:МНИиИГ(Б)
+END:VEVENT
+BEGIN:VEVENT
+UID:8075@lms.spbstu.ru
+SUMMARY:Итоговый тест по курсу открывается
+DESCRIPTION:	* __ Количество вопросов в тесте - 40\n	* __ Ограничение време
+	ни на ответы - 45 минут\n	* __ Количество попыток тестирования - 1\n\nМакси
+	мальная оценка за тест 40 баллов. Тест считается зачтенным\, если выполнен 
+	не менее\, чем на 60%.\n
+	
+CLASS:PUBLIC
+LAST-MODIFIED:20200206T104233Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200514T210000Z
+DTEND:20200514T210000Z
 CATEGORIES:История
 END:VEVENT
 BEGIN:VEVENT
@@ -106,10 +140,25 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 10\n	* _
 	
 CLASS:PUBLIC
 LAST-MODIFIED:20200213T085640Z
-DTSTAMP:20200310T174949Z
+DTSTAMP:20200508T234435Z
 DTSTART:20200514T210000Z
 DTEND:20200514T210000Z
 CATEGORIES:Социология
+END:VEVENT
+BEGIN:VEVENT
+UID:8076@lms.spbstu.ru
+SUMMARY:Итоговый тест по курсу закрывается
+DESCRIPTION:	* __ Количество вопросов в тесте - 40\n	* __ Ограничение време
+	ни на ответы - 45 минут\n	* __ Количество попыток тестирования - 1\n\nМакси
+	мальная оценка за тест 40 баллов. Тест считается зачтенным\, если выполнен 
+	не менее\, чем на 60%.\n
+	
+CLASS:PUBLIC
+LAST-MODIFIED:20200206T104233Z
+DTSTAMP:20200508T234435Z
+DTSTART:20200515T205900Z
+DTEND:20200515T205900Z
+CATEGORIES:История
 END:VEVENT
 BEGIN:VEVENT
 UID:8103@lms.spbstu.ru
@@ -121,7 +170,7 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 10\n	* _
 	
 CLASS:PUBLIC
 LAST-MODIFIED:20200213T085640Z
-DTSTAMP:20200310T174950Z
+DTSTAMP:20200508T234435Z
 DTSTART:20200520T205900Z
 DTEND:20200520T205900Z
 CATEGORIES:Социология
@@ -136,7 +185,7 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 30\n	* _
 	
 CLASS:PUBLIC
 LAST-MODIFIED:20200213T085739Z
-DTSTAMP:20200310T174950Z
+DTSTAMP:20200508T234435Z
 DTSTART:20200520T210000Z
 DTEND:20200520T210000Z
 CATEGORIES:Социология
@@ -151,7 +200,7 @@ DESCRIPTION:	* __ Количество вопросов в тесте - 30\n	* _
 	
 CLASS:PUBLIC
 LAST-MODIFIED:20200213T085739Z
-DTSTAMP:20200310T174950Z
+DTSTAMP:20200508T234435Z
 DTSTART:20200525T205900Z
 DTEND:20200525T205900Z
 CATEGORIES:Социология

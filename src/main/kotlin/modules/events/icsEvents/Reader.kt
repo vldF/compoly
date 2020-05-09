@@ -7,7 +7,7 @@ import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.component.CalendarComponent
 import net.fortuna.ical4j.model.component.VEvent
 
-val calendarFiles = listOf("lms.ics") //TODO Сейчас есть только на lms, спасибо гуманитариям за календарь
+val calendarFiles = listOf("lms.ics", "hum.ics")
 
 /**
  * Reads local events from the calendars
