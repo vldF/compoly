@@ -12,10 +12,9 @@ import java.time.Duration
 import kotlin.random.Random
 import java.net.http.HttpResponse
 
-
 class Vk {
     @Suppress("SameParameterValue")
-    private fun post(methodName: String, params: MutableMap<String, String>): HttpResponse<String>? {
+    fun post(methodName: String, params: MutableMap<String, String>): HttpResponse<String>? {
         if (testMode && methodName == "messages.send") {
             return null
         }
@@ -41,15 +40,7 @@ class Vk {
     }
 
     fun send(message: String, chatId: List<String>) {
-        for (id in chatId) {
-            log.info("message: $message, char_id: $id")
-            this.post(
-                "messages.send", mutableMapOf(
-                    "message" to message,
-                    "chat_id" to id
-                )
-            )
-        }
+        SendMessageThread.addInList(message, chatId)
     }
 
     fun getConversationMembersByPeerID(peer_id: String, fields: List<String>) =
