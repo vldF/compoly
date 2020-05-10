@@ -1,4 +1,5 @@
 import api.SendMessageThread
+import modules.chatbot.ChatBot
 import modules.events.EventStream
 import modules.loops.LoopStream
 
@@ -8,5 +9,5 @@ fun main() {
     eventStream.run()
     loopStream.run()
     SendMessageThread.start()
-    //ChatBot.start()
+    ChatBot.start()
 }

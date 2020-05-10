@@ -3,6 +3,7 @@ package modules.chatbot
 import api.SendMessageThread
 import api.Vk
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import group_id
 import io.github.classgraph.ClassGraph
 import log
@@ -13,11 +14,17 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-data class JsonVK(val response: Response) {
+data class JsonVK(val response: Response?, val error: Error?) {
     data class Response(
             val key: String,
             val server: String,
             val ts: String
+    )
+
+    data class Error(
+            val error_code: Int,
+            val error_msg: String,
+            val request_params: JsonObject
     )
 }
 
@@ -49,17 +56,33 @@ data class MessageNewObj(
 )
 
 object ChatBot: Thread() {
-    private val server: String
-    private val key: String
-    private var ts: String
-    private var commands: List<Command>
+    private lateinit var server: String
+    private lateinit var key: String
+    private lateinit var ts: String
+    private lateinit var commands: List<Command>
+    private var isInit = false
 
-    init {
-        val response = Vk().post("groups.getLongPollServer", mutableMapOf("group_id" to group_id))?.body()
-        val body = Gson().fromJson(response, JsonVK::class.java).response
-        server = body.server
-        key = body.key
-        ts = body.ts
+
+    private fun initLongPoll() {
+        val response = Vk().post(
+                "groups.getLongPollServer",
+                mutableMapOf(
+                        "group_id" to group_id
+                )
+        )?.body()
+
+        val jsonVK = Gson().fromJson(response, JsonVK::class.java)
+
+        if (jsonVK.error != null || jsonVK.response == null) {
+            log.severe("vk long poll connection error. ${jsonVK.error}\n")
+            return
+        }
+
+        val responseBody = jsonVK.response
+
+        server = responseBody.server
+        key = responseBody.key
+        ts = responseBody.ts
 
         commands = emptyList()
         ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.commands")
@@ -70,8 +93,11 @@ object ChatBot: Thread() {
                             }
                     commands = filtered
                             .map { it.loadClass() }
-                            .map { it.getConstructor().newInstance() } as List<Command>
+                            .map { it.getConstructor().newInstance() }
+                            .filterIsInstance<Command>()
                 }
+
+        isInit = true
     }
 
     private fun longPolRequest(): HttpResponse<String?> {
@@ -91,6 +117,12 @@ object ChatBot: Thread() {
 
     override fun run() {
         log.info("Initialising ChatBot...")
+        initLongPoll()
+        while (!isInit) {
+            sleep(10 * 1000) // 10 seconds
+            initLongPoll()
+        }
+
         while (true) {
             val response = longPolRequest().body()
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
@@ -98,11 +130,10 @@ object ChatBot: Thread() {
             for (update in jsonAnswer.updates) {
                 if (update.type == "message_new" && update.`object`.text.startsWith("/")
                     && update.`object`.peer_id != mainChatPeerId) {
-                    log.info("Message which starts with \"/\" finded")
+                    log.info("Message which starts with \"/\" found")
                     commandParser(update.`object`)
                 }
             }
-            sleep(2000)
         }
     }
 
