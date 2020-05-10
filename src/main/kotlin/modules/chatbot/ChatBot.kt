@@ -3,7 +3,7 @@ package modules.chatbot
 import api.SendMessageThread
 import api.Vk
 import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.google.gson.JsonArray
 import group_id
 import io.github.classgraph.ClassGraph
 import log
@@ -24,7 +24,7 @@ data class JsonVK(val response: Response?, val error: Error?) {
     data class Error(
             val error_code: Int,
             val error_msg: String,
-            val request_params: JsonObject
+            val request_params: JsonArray
     )
 }
 
@@ -100,7 +100,7 @@ object ChatBot: Thread() {
         isInit = true
     }
 
-    private fun longPolRequest(): HttpResponse<String?> {
+    private fun longPollRequest(): HttpResponse<String?> {
         val wait = 25
         val request = HttpRequest.newBuilder()
                 .uri(URI.create(server))
@@ -124,7 +124,7 @@ object ChatBot: Thread() {
         }
 
         while (true) {
-            val response = longPolRequest().body()
+            val response = longPollRequest().body()
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
             ts = jsonAnswer.ts
             for (update in jsonAnswer.updates) {

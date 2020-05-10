@@ -9,10 +9,11 @@ class Cats: Command {
     override val keyWord = "/cat"
     override val permission = CommandPermission.ADMIN_ONLY
 
+    val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
+
     override fun call(messageObj: MessageNewObj) {
 
-        var answer = ""
-        Vk().send(answer, listOf(messageObj.peer_id.toString()))
+
     }
 }
 
