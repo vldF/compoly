@@ -2,6 +2,7 @@ package modules.events.icsEvents
 
 import api.Vk
 import chatIds
+import getTime
 import modules.Active
 import modules.events.Event
 import modules.events.Time
@@ -20,7 +21,7 @@ class IcsEvents : Event {
 
     override fun call() {
         val reader = Reader()
-        val currentTime = Date()
+        val currentTime = Date(getTime())
 
         val currentEvents = mutableListOf<String>()
         val nextEvents = mutableListOf<String>()

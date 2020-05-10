@@ -2,6 +2,7 @@ package modules.events.daysUntil
 
 import api.Vk
 import chatIds
+import getTime
 import modules.Active
 import modules.events.Event
 import modules.events.Time
@@ -25,7 +26,7 @@ class DaysUntil : Event {
 
     override fun call() {
         for (day in days) {
-            val daysUntil = daysUntil(Date(), day.date)
+            val daysUntil = daysUntil(Date(getTime()), day.date)
             if (daysUntil > 0) {
                 Vk().send(day.message + daysUntil, chatIds)
             } else if (daysUntil == 0L) {

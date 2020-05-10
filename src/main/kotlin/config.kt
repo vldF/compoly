@@ -9,3 +9,4 @@ val chatIds = if (!testChatId) listOf(
 ) else listOf("3")
 
 const val testMode = false //no logging, no messages, println() instead
+const val debugTime = false //used in timing.kt

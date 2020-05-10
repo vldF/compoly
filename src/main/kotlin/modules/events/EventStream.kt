@@ -1,14 +1,13 @@
 package modules.events
 
+import getDayTime
 import io.github.classgraph.ClassGraph
 import kotlinx.coroutines.*
 import log
-import modules.millisecondInDay
-import modules.timeZone
+import millisecondInDay
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.Exception
-import java.lang.NullPointerException
 import java.lang.Runnable
 import kotlin.concurrent.thread
 
@@ -54,18 +53,15 @@ class EventStream : Runnable {
                         try {
                             val schedule = event.schedule
 
-                            var localTime = System.currentTimeMillis() + timeZone
-                            var timeSinceDayStart = localTime % (millisecondInDay)
-
                             var i = 0
                             for (call in schedule.indices) {
-                                if (timeSinceDayStart < schedule[call].time) {
+                                if (getDayTime() < schedule[call].time) {
                                     i = call
                                     break
                                 }
                             }
 
-                            var time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
+                            var time = calculateDelayTime(schedule[i].time, getDayTime())
                             log.info("Sleeping for $time until next <${event.name}> call")
                             delay(time)
 
@@ -77,9 +73,7 @@ class EventStream : Runnable {
                                     i = 0
                                 }
 
-                                localTime = System.currentTimeMillis() + timeZone
-                                timeSinceDayStart = localTime % (millisecondInDay)
-                                time = calculateDelayTime(schedule[i].time, timeSinceDayStart)
+                                time = calculateDelayTime(schedule[i].time, getDayTime())
                                 log.info("Sleeping for $time until next <${event.name}> call")
                                 delay(time)
                             }
