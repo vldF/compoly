@@ -1,37 +1,52 @@
 package api
 import log
+import java.util.concurrent.ConcurrentLinkedQueue
 
 object SendMessageThread: Thread() {
 
-    private var listMessages: MutableList<Pair<String, List<String>>> = mutableListOf()
+    private var messages: ConcurrentLinkedQueue<Message> = ConcurrentLinkedQueue()
     private const val maxMessagesInOneSession = 7
 
     override fun run() {
         while (true) {
-            if (listMessages.isNotEmpty()) {
+            if (messages.isNotEmpty()) {
                 var count = 0
-                while (listMessages.isNotEmpty()) {
-                    val text = listMessages[0].first
-                    val chatIds = listMessages[0].second
-                    listMessages.removeAt(0)
+                while (messages.isNotEmpty()) {
+                    val message = messages.poll()
+
+                    val text = message.message
+                    val attachments = message.attachments.joinToString(",")
+                    val chatIds = message.chatIds.map {
+                        if (it >= 100000000) it - 2000000000 else it
+                    }
+
                     for (id in chatIds) {
                         log.info(text)
                         count++
                         Vk().post("messages.send", mutableMapOf(
                                 "message" to text,
-                                "chat_id" to id))
+                                "chat_id" to id,
+                                "attachment" to attachments))
                         if (count == maxMessagesInOneSession) {
                             sleep(3000)
                             count = 0
                         }
                     }
                 }
-            }
-            sleep(200)
+            } else
+                sleep(20)
         }
     }
 
-    fun addInList(message: String, chatId: List<String>) {
-        listMessages.add(message to chatId)
+    fun addInList(message: Message) {
+        if (messages.size > 50)
+            return
+        messages.add(message)
     }
 }
+
+data class Message(
+    val message: String = "",
+    val chatIds: List<Int>,
+    val attachments: List<String>
+)

@@ -69,7 +69,7 @@ object ChatBot: Thread() {
                 mutableMapOf(
                         "group_id" to group_id
                 )
-        )?.body()
+        )
 
         val jsonVK = Gson().fromJson(response, JsonVK::class.java)
 
@@ -87,7 +87,7 @@ object ChatBot: Thread() {
         commands = emptyList()
         ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.commands")
                 .scan().use { scanResult ->
-                    val filtered = scanResult.getClassesImplementing("modules.chatbot.Command")
+                    val filtered = scanResult.getClassesImplementing("modules.chatbot.commands.Command")
                             .filter { classInfo ->
                                 classInfo.hasAnnotation("modules.Active")
                             }
@@ -140,7 +140,7 @@ object ChatBot: Thread() {
     private fun commandParser(message: MessageNewObj) {
         val beginOfCommand = message.text.split(" ").first()
         for (command in commands) {
-            if (beginOfCommand.equals(command.keyWord, ignoreCase = true)) {
+            if (command.keyWord.any{ it.equals(beginOfCommand, ignoreCase = true) }) {
                 log.info("Calling <${command.keyWord}>")
                 command.call(message)
             }

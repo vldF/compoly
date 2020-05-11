@@ -8,7 +8,7 @@ enum class CommandPermission {
 }
 
 interface Command {
-    val keyWord: String
+    val keyWord: List<String>
     val permission: CommandPermission
 
     fun call(messageObj: MessageNewObj)
