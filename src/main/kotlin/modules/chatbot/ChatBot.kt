@@ -139,13 +139,23 @@ object ChatBot: Thread() {
 
     private fun commandParser(message: MessageNewObj) {
         val beginOfCommand = message.text.split(" ").first()
+        var wasFound = false
         for (command in commands) {
             if (command.keyWord.any{ it.equals(beginOfCommand, ignoreCase = true) }) {
                 log.info("Calling <${command.keyWord}>")
+                wasFound = true
                 command.call(message)
             }
         }
+        if (!wasFound) {
+            Vk().send(
+                "Команда $beginOfCommand не существует. Напишите /help для ознакомления с доступными командами)",
+                listOf(message.peer_id)
+            )
+        }
     }
+
+    fun getCommands() = commands
 }
 
 fun main() {
