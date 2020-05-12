@@ -19,7 +19,7 @@ object SendMessageThread: Thread() {
                     val chatIds = message.chatIds.map {
                         if (it >= 100000000) it - 2000000000 else it
                     }
-
+                    log.info("text: $text")
                     for (id in chatIds) {
                         log.info(text)
                         count++

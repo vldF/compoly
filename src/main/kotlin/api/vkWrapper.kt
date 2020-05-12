@@ -11,6 +11,13 @@ import org.apache.http.message.BasicNameValuePair
 import testMode
 import vkApiToken
 import java.io.ByteArrayInputStream
+import java.lang.StringBuilder
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.time.Duration
+import kotlin.random.Random
 
 
 class Vk {
@@ -22,20 +29,44 @@ class Vk {
         if (testMode && methodName == "messages.send") {
             return null
         }
-        val reqParams = mutableListOf<BasicNameValuePair>()
+
+        /*val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
         reqParams.add(BasicNameValuePair("v", "5.103"))
         reqParams.add(BasicNameValuePair("random_id", System.currentTimeMillis().toString())) // todo
-
         for ((p, v) in params) {
             reqParams.add(BasicNameValuePair(p, v.toString()))
         }
+        log.info("reqParams: $reqParams")
+
         val request = HttpPost("https://api.vk.com/method/$methodName")
         request.entity = UrlEncodedFormEntity(reqParams)
-
+        log.info("requst: $request")
+        log.info("requst.entity: ${request.entity}")
+        log.info("requst.entity.content: ${request.entity.content}")
         val response = client.execute(request).entity.content.readAllBytes()?.decodeToString()
         log.info("response: $response")
-        return response
+        return response*/
+
+        val reqParams = StringBuilder()
+        reqParams.append("access_token=$vkApiToken&")
+        reqParams.append("v=5.103&")
+        reqParams.append("random_id=${Random(System.currentTimeMillis()).nextInt()}&")
+        for ((p, v) in params) {
+            reqParams.append("$p=$v&")
+        }
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.vk.com/method/$methodName"))
+            .timeout(Duration.ofSeconds(10))
+            .POST(HttpRequest.BodyPublishers.ofString(reqParams.toString()))
+            .build()
+        val client = HttpClient.newHttpClient()
+        val response = client.send(
+            request,
+            HttpResponse.BodyHandlers.ofString()
+        )
+        log.info("response: ${response.body()}")
+        return response.body()
     }
 
     fun send(text: String, chatId: List<Int>, attachments: List<String> = listOf()) {
