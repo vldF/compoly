@@ -53,6 +53,11 @@ class Vk {
         SendMessageThread.addInList(message)
     }
 
+    fun send(text: String, chatId: Int, attachments: List<String> = listOf()) {
+        val message = Message(text, listOf(chatId), attachments)
+        SendMessageThread.addInList(message)
+    }
+
     fun getConversationMembersByPeerID(peer_id: String, fields: List<String>) =
         post(
             "messages.getConversationMembers",
@@ -118,6 +123,15 @@ class Vk {
         val imageId = dataObject["id"]
 
         return "photo${ownerId}_$imageId"
+    }
+
+    fun getUserId(domain: String): Int? {
+        val resp = post("users.get", mutableMapOf(
+                "user_ids" to domain
+        ))
+        val json = JsonParser().parse(resp).asJsonObject
+        if (!json.has("response")) return null
+        return json["response"].asJsonArray[0].asJsonObject["id"].asInt
     }
 
 }

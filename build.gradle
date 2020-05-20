@@ -17,6 +17,7 @@ defaultTasks 'run'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -30,6 +31,10 @@ dependencies {
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.29'
     compile 'org.apache.httpcomponents:httpclient:4.5.12'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
+    compile("org.jetbrains.exposed:exposed-core:0.24.1")
+    compile("org.jetbrains.exposed:exposed-dao:0.24.1")
+    compile("org.jetbrains.exposed:exposed-jdbc:0.24.1")
+    compile("org.postgresql:postgresql:42.2.2")
 }
 
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }

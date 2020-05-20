@@ -1,4 +1,4 @@
-package modules.chatbot.commands
+package modules.chatbot.chatModules
 
 import modules.chatbot.MessageNewObj
 

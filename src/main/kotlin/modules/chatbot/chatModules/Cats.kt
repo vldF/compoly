@@ -1,4 +1,4 @@
-package modules.chatbot.commands
+package modules.chatbot.chatModules
 
 import api.Vk
 import com.google.gson.JsonParser
@@ -16,6 +16,7 @@ class Cats: Command {
     override val keyWord = listOf("/cat")
     override val permission = CommandPermission.ADMIN_ONLY
     override val description = "КОТИКИ"
+
     private val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
     private val client = HttpClient.newHttpClient()
 

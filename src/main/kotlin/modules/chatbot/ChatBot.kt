@@ -8,7 +8,7 @@ import group_id
 import io.github.classgraph.ClassGraph
 import log
 import mainChatPeerId
-import modules.chatbot.commands.Command
+import modules.chatbot.chatModules.Command
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -85,9 +85,9 @@ object ChatBot: Thread() {
         ts = responseBody.ts
 
         commands = emptyList()
-        ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.commands")
+        ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
                 .scan().use { scanResult ->
-                    val filtered = scanResult.getClassesImplementing("modules.chatbot.commands.Command")
+                    val filtered = scanResult.getClassesImplementing("modules.chatbot.chatModules.Command")
                             .filter { classInfo ->
                                 classInfo.hasAnnotation("modules.Active")
                             }
