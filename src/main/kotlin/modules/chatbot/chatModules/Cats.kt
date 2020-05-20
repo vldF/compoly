@@ -4,6 +4,7 @@ import api.Vk
 import com.google.gson.JsonParser
 import modules.Active
 import modules.chatbot.MessageNewObj
+import modules.chatbot.OnCommand
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpClient
@@ -12,15 +13,12 @@ import java.net.http.HttpResponse
 import java.time.Duration
 
 @Active
-class Cats: Command {
-    override val keyWord = listOf("/cat")
-    override val permission = CommandPermission.ADMIN_ONLY
-    override val description = "КОТИКИ"
-
+class Cats {
     private val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
     private val client = HttpClient.newHttpClient()
 
-    override fun call(messageObj: MessageNewObj) {
+    @OnCommand(["cat"], "КОТИКИ!")
+    fun cat(messageObj: MessageNewObj) {
         val requestJson = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.thecatapi.com/v1/images/search?api_key=$theCatApiKey"))
                 .timeout(Duration.ofSeconds(10))
@@ -39,6 +37,5 @@ class Cats: Command {
         val attachment = Vk().uploadImage(messageObj.peer_id, imageStream.readBytes())
         Vk().send("", listOf(messageObj.peer_id), listOf(attachment))
     }
-
 }
 

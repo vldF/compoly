@@ -8,7 +8,6 @@ import group_id
 import io.github.classgraph.ClassGraph
 import log
 import mainChatPeerId
-import modules.chatbot.chatModules.Command
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -84,17 +83,24 @@ object ChatBot: Thread() {
         key = responseBody.key
         ts = responseBody.ts
 
-        commands = emptyList()
-        ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
+        commands = ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
                 .scan().use { scanResult ->
-                    val filtered = scanResult.getClassesImplementing("modules.chatbot.chatModules.Command")
-                            .filter { classInfo ->
-                                classInfo.hasAnnotation("modules.Active")
+                    scanResult.allClasses
+                            .flatMap {
+                                it.methodAndConstructorInfo.filter { method ->
+                                    method.hasAnnotation(OnCommand::class.java.name)
+                                }.map { method ->
+                                    val loadedMethod = method.loadClassAndGetMethod()
+                                    val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                                    Command(
+                                            annotation.commands,
+                                            annotation.description,
+                                            it.loadClass().getConstructor().newInstance(),
+                                            loadedMethod,
+                                            annotation.permissions
+                                    )
+                                }
                             }
-                    commands = filtered
-                            .map { it.loadClass() }
-                            .map { it.getConstructor().newInstance() }
-                            .filterIsInstance<Command>()
                 }
 
         isInit = true
@@ -138,20 +144,11 @@ object ChatBot: Thread() {
     }
 
     private fun commandParser(message: MessageNewObj) {
-        val beginOfCommand = message.text.split(" ").first()
-        var wasFound = false
+        val commandName = message.text.split(" ")[0].removePrefix("/")
         for (command in commands) {
-            if (command.keyWord.any{ it.equals(beginOfCommand, ignoreCase = true) }) {
-                log.info("Calling <${command.keyWord}>")
-                wasFound = true
-                command.call(message)
+            if (command.commands.any{ it == commandName }) { // todo: проверка прав
+                command.call.invoke(command.baseClass, message)
             }
-        }
-        if (!wasFound) {
-            Vk().send(
-                "Команда $beginOfCommand не существует. Напишите /help для ознакомления с доступными командами)",
-                listOf(message.peer_id)
-            )
         }
     }
 
