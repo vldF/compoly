@@ -1,14 +1,14 @@
 package modules.events.happyBirthday
 
+import api.JsonVK
 import api.Vk
 import chatIds
 import com.google.gson.Gson
+import mainChatPeerId
 import modules.Active
 import modules.events.Event
 import modules.events.Time
 import java.util.*
-
-const val PEER_ID = "2000000002"
 
 @Active
 class HappyBirthday : Event {
@@ -16,51 +16,8 @@ class HappyBirthday : Event {
     override val schedule = listOf(Time(9, 0))
     override val name = "Birthday today"
 
-    private data class JsonVK(val response: Response)
-    private data class Response(
-        val items: List<Item>,
-        val count: Int,
-        val profiles: List<Profile>,
-        val groups: List<Group>
-    )
-
-    private data class Item(
-        val member_id: Int,
-        val can_kick: Boolean,
-        val invited_by: Int,
-        val join_date: Int,
-        val is_admin: Boolean,
-        val is_owner: Boolean,
-        val domain: String,
-        val bdate: String?
-    )
-
-    private data class Profile(
-        val id: Int,
-        val first_name: String,
-        val last_name: String,
-        val is_closed: Boolean,
-        val can_access_closed: Boolean,
-        val domain: String,
-        val bdate: String?
-    )
-
-    private data class Group(
-        val id: Int,
-        val name: String,
-        val screen_name: String,
-        val is_closed: Int,
-        val type: String,
-        val is_admin: Boolean,
-        val is_member: Boolean,
-        val is_advertiser: Boolean,
-        val photo_50: String,
-        val photo_100: String,
-        val photo_200: String
-    )
-
-    private fun getProfiles(): List<Profile> {
-        val json = Vk().getConversationMembersByPeerID(PEER_ID, listOf("bdate", "domain"))
+    private fun getProfiles(): List<JsonVK.Response.Profile> {
+        val json = Vk().getConversationMembersByPeerID(mainChatPeerId, listOf("bdate", "domain"))
         return Gson().fromJson(json, JsonVK::class.java).response.profiles
     }
 

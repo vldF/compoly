@@ -117,7 +117,7 @@ object ChatBot: Thread() {
                 request,
                 HttpResponse.BodyHandlers.ofString()
         )
-        log.info("response: ${response.body()}")
+        //log.info("response: ${response.body()}")
         return response
     }
 
@@ -134,6 +134,16 @@ object ChatBot: Thread() {
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
             ts = jsonAnswer.ts
             for (update in jsonAnswer.updates) {
+                if (update.type == "message_new"  && update.`object`.peer_id != mainChatPeerId ) {
+                    if (update.`object`.text == "1") {
+                        log.info("I WANT TO DELETE")
+                        Vk().post("messages.delete", mutableMapOf(
+                                "message_ids" to update.`object`.conversation_message_id-6000,
+                                "group_id" to group_id,
+                                "delete_for_all" to 1
+                        ))
+                    }
+                }
                 if (update.type == "message_new" && update.`object`.text.startsWith("/")
                     && update.`object`.peer_id != mainChatPeerId) {
                     log.info("Message which starts with \"/\" found")
@@ -146,13 +156,37 @@ object ChatBot: Thread() {
     private fun commandParser(message: MessageNewObj) {
         val commandName = message.text.split(" ")[0].removePrefix("/")
         for (command in commands) {
-            if (command.commands.any{ it == commandName }) { // todo: проверка прав
-                command.call.invoke(command.baseClass, message)
+            if (command.commands.any{ it == commandName }) {
+                var userCanUseCommand = true
+                val userPermission = getPermisson(message)
+                if (userPermission.ordinal < command.permission.ordinal)
+                    userCanUseCommand = false
+
+                if (userCanUseCommand) command.call.invoke(command.baseClass, message) else {
+                    val domain = Vk().getUserDomain(message.from_id.toString())
+                    Vk().send("""
+                        @${domain}, у Вас недостаточно прав для использования команды /${commandName}
+                    """.trimIndent(), message.peer_id
+                    )
+                }
             }
         }
     }
 
     fun getCommands() = commands
+
+    private fun getPermisson(message: MessageNewObj): CommandPermission {
+        val json = Vk().getConversationMembersByPeerID(message.peer_id, listOf())
+        val items = Gson().fromJson(json, api.JsonVK::class.java).response.items
+        //Find Admin
+        for (item in items) {
+            if (item.is_admin && item.member_id == message.from_id) {
+                return CommandPermission.ADMIN_ONLY
+            }
+        }
+        //Если не высшие права(админ), то что-то из рейтинговой системы
+        return CommandPermission.ALL
+    }
 }
 
 fun main() {

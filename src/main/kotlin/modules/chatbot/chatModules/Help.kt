@@ -10,7 +10,7 @@ import java.lang.StringBuilder
 
 @Active
 class Help {
-    @OnCommand(["help"], "Отображение справки (из дурки)")
+    @OnCommand(["help", "помощь"], "Отображение справки (из дурки)")
     fun help(messageObj: MessageNewObj) {
         val result = StringBuilder()
         val commands = ChatBot.getCommands()
