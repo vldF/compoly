@@ -7,3 +7,7 @@ annotation class OnCommand(
         val description: String = "",
         val permissions: CommandPermission = CommandPermission.ALL
 )
+
+@Target(AnnotationTarget.FUNCTION)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class OnMessage

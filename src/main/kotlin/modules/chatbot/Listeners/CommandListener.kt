@@ -1,8 +1,9 @@
-package modules.chatbot
+package modules.chatbot.Listeners
 
+import modules.chatbot.CommandPermission
 import java.lang.reflect.Method
 
-data class Command(
+data class CommandListener(
         val commands: Array<String>,
         val description: String,
         val baseClass: Any,
@@ -11,7 +12,7 @@ data class Command(
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Command) return false
+        if (other !is CommandListener) return false
 
         if (!commands.contentEquals(other.commands)) return false
         if (baseClass != other.baseClass) return false

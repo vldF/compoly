@@ -8,6 +8,8 @@ import group_id
 import io.github.classgraph.ClassGraph
 import log
 import mainChatPeerId
+import modules.chatbot.Listeners.CommandListener
+import modules.chatbot.Listeners.MessageListener
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -58,7 +60,8 @@ object ChatBot: Thread() {
     private lateinit var server: String
     private lateinit var key: String
     private lateinit var ts: String
-    private lateinit var commands: List<Command>
+    private lateinit var commandListeners: List<CommandListener>
+    private lateinit var messageListeners: List<MessageListener>
     private var isInit = false
 
 
@@ -83,24 +86,36 @@ object ChatBot: Thread() {
         key = responseBody.key
         ts = responseBody.ts
 
-        commands = ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
+        ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
                 .scan().use { scanResult ->
-                    scanResult.allClasses
-                            .flatMap {
-                                it.methodAndConstructorInfo.filter { method ->
-                                    method.hasAnnotation(OnCommand::class.java.name)
-                                }.map { method ->
-                                    val loadedMethod = method.loadClassAndGetMethod()
-                                    val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
-                                    Command(
-                                            annotation.commands,
-                                            annotation.description,
-                                            it.loadClass().getConstructor().newInstance(),
-                                            loadedMethod,
-                                            annotation.permissions
-                                    )
-                                }
-                            }
+                    val classes = scanResult.allClasses
+                    commandListeners = classes.flatMap {
+                        it.methodAndConstructorInfo.filter { method ->
+                            method.hasAnnotation(OnCommand::class.java.name)
+                        }.map { method ->
+                            val loadedMethod = method.loadClassAndGetMethod()
+                            val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                            CommandListener(
+                                    annotation.commands,
+                                    annotation.description,
+                                    it.loadClass().getConstructor().newInstance(),
+                                    loadedMethod,
+                                    annotation.permissions
+                            )
+                        }
+                    }
+
+                    messageListeners = classes.flatMap {
+                        it.methodAndConstructorInfo.filter { method ->
+                            method.hasAnnotation(OnMessage::class.java.name)
+                        }.map { method ->
+                            val loadedMethod = method.loadClassAndGetMethod()
+                            MessageListener(
+                                    it.loadClass().getConstructor().newInstance(),
+                                    loadedMethod
+                            )
+                        }
+                    }
                 }
 
         isInit = true
@@ -134,25 +149,33 @@ object ChatBot: Thread() {
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
             ts = jsonAnswer.ts
             for (update in jsonAnswer.updates) {
-                if (update.type == "message_new" && update.`object`.text.startsWith("/")
-                    && update.`object`.peer_id != mainChatPeerId) {
-                    log.info("Message which starts with \"/\" found")
-                    commandParser(update.`object`)
+                if (update.type == "message_new" && update.`object`.peer_id != mainChatPeerId) {
+                    if (update.`object`.text.startsWith("/")) {
+                        log.info("Message which starts with \"/\" found")
+                        commandProcessor(update.`object`)
+                    }
+
+                    messageProcessor(update.`object`)
                 }
             }
         }
     }
 
-    private fun commandParser(message: MessageNewObj) {
+    private fun commandProcessor(message: MessageNewObj) {
         val commandName = message.text.split(" ")[0].removePrefix("/")
-        for (command in commands) {
+        for (command in commandListeners) {
             if (command.commands.any{ it == commandName }) { // todo: проверка прав
                 command.call.invoke(command.baseClass, message)
             }
         }
     }
 
-    fun getCommands() = commands
+    private fun messageProcessor(message: MessageNewObj) {
+        for (messageListener in messageListeners)
+            messageListener.call.invoke(messageListener.baseClass, message)
+    }
+
+    fun getCommands() = commandListeners
 }
 
 fun main() {

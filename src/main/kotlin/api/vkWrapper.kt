@@ -23,7 +23,8 @@ import kotlin.random.Random
 
 
 class Vk {
-    private val client = HttpClientBuilder.create().build()
+    private val client = HttpClientBuilder.create()
+        .build()
 
     @Suppress("SameParameterValue")
     @OptIn(ExperimentalStdlibApi::class)
@@ -45,6 +46,7 @@ class Vk {
         val response = client.execute(request).entity.content.readAllBytes()
                 ?.decodeToString()
         log.info("response: $response")
+        request.releaseConnection()
         return response
     }
 
@@ -132,6 +134,16 @@ class Vk {
         val json = JsonParser().parse(resp).asJsonObject
         if (!json.has("response")) return null
         return json["response"].asJsonArray[0].asJsonObject["id"].asInt
+    }
+
+    fun getUserDisplayName(id: Int): String? {
+        val resp = post("users.get", mutableMapOf(
+                "user_ids" to id,
+                "fields" to "screen_name"
+        ))
+        val json = JsonParser().parse(resp).asJsonObject
+        if (!json.has("response")) return null
+        return json["response"].asJsonArray[0].asJsonObject["screen_name"].asString
     }
 
 }
