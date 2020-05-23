@@ -23,8 +23,7 @@ import kotlin.random.Random
 
 
 class Vk {
-    private val client = HttpClientBuilder.create()
-        .build()
+    private val client = HttpClientBuilder.create().build()
 
     @Suppress("SameParameterValue")
     @OptIn(ExperimentalStdlibApi::class)
@@ -60,7 +59,7 @@ class Vk {
         SendMessageThread.addInList(message)
     }
 
-    fun getConversationMembersByPeerID(peer_id: String, fields: List<String>) =
+    fun getConversationMembersByPeerID(peer_id: Int, fields: List<String>) =
         post(
             "messages.getConversationMembers",
             mutableMapOf(
@@ -74,7 +73,7 @@ class Vk {
         val serverData = post(
             "photos.getMessagesUploadServer",
             mutableMapOf(
-                    "peer_id" to peer_id
+                "peer_id" to peer_id
             )
         )
 
@@ -108,12 +107,12 @@ class Vk {
         val hash = jsonUpload["hash"].asString
 
         val saveData = post(
-                "photos.saveMessagesPhoto",
-                mutableMapOf(
-                        "server" to server,
-                        "photo" to photo,
-                        "hash" to hash
-                )
+            "photos.saveMessagesPhoto",
+            mutableMapOf(
+                "server" to server,
+                "photo" to photo,
+                "hash" to hash
+            )
         )
 
         val dataObject = JsonParser().parse(saveData)
@@ -128,9 +127,11 @@ class Vk {
     }
 
     fun getUserId(domain: String): Int? {
-        val resp = post("users.get", mutableMapOf(
+        val resp = post(
+            "users.get", mutableMapOf(
                 "user_ids" to domain
-        ))
+            )
+        )
         val json = JsonParser().parse(resp).asJsonObject
         if (!json.has("response")) return null
         return json["response"].asJsonArray[0].asJsonObject["id"].asInt
@@ -146,4 +147,60 @@ class Vk {
         return json["response"].asJsonArray[0].asJsonObject["screen_name"].asString
     }
 
+    fun getUserDomain(user_id: String): String? {
+        val resp = post(
+            "users.get",
+            mutableMapOf(
+                "user_ids" to user_id,
+                "fields" to "domain"
+            )
+        )
+        val json = JsonParser().parse(resp).asJsonObject
+        if (!json.has("response")) return null
+        return json["response"].asJsonArray[0].asJsonObject["domain"].asString
+    }
+}
+
+data class JsonVK(val response: Response) {
+    data class Response(
+    val items: List<Item>,
+    val count: Int,
+    val profiles: List<Profile>,
+    val groups: List<Group>
+    ) {
+    data class Item(
+        val member_id: Int,
+        val can_kick: Boolean,
+        val invited_by: Int,
+        val join_date: Int,
+        val is_admin: Boolean,
+        val is_owner: Boolean,
+        val domain: String,
+        val bdate: String?
+    )
+
+    data class Profile(
+        val id: Int,
+        val first_name: String,
+        val last_name: String,
+        val is_closed: Boolean,
+        val can_access_closed: Boolean,
+        val domain: String,
+        val bdate: String?
+    )
+
+    data class Group(
+        val id: Int,
+        val name: String,
+        val screen_name: String,
+        val is_closed: Int,
+        val type: String,
+        val is_admin: Boolean,
+        val is_member: Boolean,
+        val is_advertiser: Boolean,
+        val photo_50: String,
+        val photo_100: String,
+        val photo_200: String
+    )
+    }
 }

@@ -67,10 +67,10 @@ object ChatBot: Thread() {
 
     private fun initLongPoll() {
         val response = Vk().post(
-                "groups.getLongPollServer",
-                mutableMapOf(
-                        "group_id" to group_id
-                )
+            "groups.getLongPollServer",
+            mutableMapOf(
+                "group_id" to group_id
+            )
         )
 
         val jsonVK = Gson().fromJson(response, JsonVK::class.java)
@@ -87,38 +87,38 @@ object ChatBot: Thread() {
         ts = responseBody.ts
 
         ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
-                .scan().use { scanResult ->
-                    val classes = scanResult.allClasses
-                    commandListeners = classes.flatMap {
-                        it.methodAndConstructorInfo.filter { method ->
-                            method.hasAnnotation(OnCommand::class.java.name)
-                        }.map { method ->
-                            val loadedMethod = method.loadClassAndGetMethod()
-                            val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
-                            CommandListener(
-                                    annotation.commands,
-                                    annotation.description,
-                                    it.loadClass().getConstructor().newInstance(),
-                                    loadedMethod,
-                                    annotation.permissions
-                            )
-                        }
-                    }
-
-                    messageListeners = classes.flatMap {
-                        it.methodAndConstructorInfo.filter { method ->
-                            method.hasAnnotation(OnMessage::class.java.name)
-                        }.map { method ->
-                            val loadedMethod = method.loadClassAndGetMethod()
-                            MessageListener(
-                                    it.loadClass().getConstructor().newInstance(),
-                                    loadedMethod
-                            )
-                        }
+            .scan().use { scanResult ->
+                val classes = scanResult.allClasses
+                commandListeners = classes.flatMap {
+                    it.methodAndConstructorInfo.filter { method ->
+                        method.hasAnnotation(OnCommand::class.java.name)
+                    }.map { method ->
+                        val loadedMethod = method.loadClassAndGetMethod()
+                        val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                        CommandListener(
+                            annotation.commands,
+                            annotation.description,
+                            it.loadClass().getConstructor().newInstance(),
+                            loadedMethod,
+                            annotation.permissions
+                        )
                     }
                 }
 
-        isInit = true
+                messageListeners = classes.flatMap {
+                    it.methodAndConstructorInfo.filter { method ->
+                        method.hasAnnotation(OnMessage::class.java.name)
+                    }.map { method ->
+                        val loadedMethod = method.loadClassAndGetMethod()
+                        MessageListener(
+                            it.loadClass().getConstructor().newInstance(),
+                            loadedMethod
+                        )
+                    }
+                }
+
+                isInit = true
+            }
     }
 
     private fun longPollRequest(): HttpResponse<String?> {
@@ -170,12 +170,12 @@ object ChatBot: Thread() {
         }
     }
 
+    fun getCommands() = commandListeners
+
     private fun messageProcessor(message: MessageNewObj) {
         for (messageListener in messageListeners)
             messageListener.call.invoke(messageListener.baseClass, message)
     }
-
-    fun getCommands() = commandListeners
 }
 
 fun main() {
