@@ -64,9 +64,9 @@ class RatingSystem {
 
         addPoints(deltaScore, targetId, peerId)
         if (deltaScore >= 0)
-            vk.send("Теперь у $target на $deltaScore e-баллов больше!", messageObj.peer_id)
+            vk.send("Теперь у $target на $deltaScore e-балл больше!", messageObj.peer_id)
         else
-            vk.send("Теперь у $target на ${-deltaScore} e-баллов меньше!", messageObj.peer_id)
+            vk.send("Теперь у $target на ${-deltaScore} e-балл меньше!", messageObj.peer_id)
     }
 
     @OnMessage

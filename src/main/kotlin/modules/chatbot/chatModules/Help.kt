@@ -10,6 +10,8 @@ import java.lang.StringBuilder
 
 @Active
 class Help {
+    private val vk = Vk()
+
     @OnCommand(["help", "помощь"], "Отображение справки (из дурки)")
     fun help(messageObj: MessageNewObj) {
         val result = StringBuilder()
@@ -22,6 +24,6 @@ class Help {
                     postfix = "\n\n"
                 ) { "${it.commands.first()} - ${it.description}" })
         }
-        Vk().send(result.toString(), listOf((messageObj.peer_id)))
+        vk.send(result.toString(), listOf((messageObj.peer_id)))
     }
 }

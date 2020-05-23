@@ -14,5 +14,6 @@ fun main() {
 
     //initializing db
     Database.connect(hikari())
+
     ChatBot.start()
 }

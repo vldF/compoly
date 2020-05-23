@@ -16,6 +16,7 @@ import java.time.Duration
 class Cats {
     private val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
     private val client = HttpClient.newHttpClient()
+    private val vk = Vk()
 
     @OnCommand(["cat"], "КОТИКИ!")
     fun cat(messageObj: MessageNewObj) {
@@ -34,8 +35,8 @@ class Cats {
         val imageConnection = URL(imageUrl).openConnection()
         val imageStream = imageConnection.getInputStream()
 
-        val attachment = Vk().uploadImage(messageObj.peer_id, imageStream.readBytes())
-        Vk().send("", listOf(messageObj.peer_id), listOf(attachment))
+        val attachment = vk.uploadImage(messageObj.peer_id, imageStream.readBytes())
+        vk.send("", listOf(messageObj.peer_id), listOf(attachment))
     }
 }
 

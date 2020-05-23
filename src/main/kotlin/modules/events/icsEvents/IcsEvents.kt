@@ -12,12 +12,12 @@ import java.util.*
 
 @Active
 class IcsEvents : Event {
-
     override val name = "ICS calendar checking"
     override val schedule = listOf(Time(8, 0))
 
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
     private val scope = 5 //days
+    private val vk = Vk()
 
     override fun call() {
         val reader = Reader()
@@ -50,6 +50,6 @@ class IcsEvents : Event {
         else
             msg.append(nextEvents.joinToString(separator = "\n"))
 
-        Vk().send(msg.toString(), chatIds)
+        vk.send(msg.toString(), chatIds)
     }
 }

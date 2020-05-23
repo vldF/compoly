@@ -10,13 +10,21 @@ import modules.loops.Loop
 import modules.sendGet
 
 class PageChecker : Loop {
-
     override val delay = 60000L
     override val name = "Проверка обновления страницы"
 
-    private val pages = listOf<Link>(
+    private val pages = listOf<Link>()
 
-    )
+    private val vk = Vk()
+
+    override fun call() {
+        for (page in pages) {
+            if (isUpdated(page.trueUrl) == true) {
+                log.info("Page ${page.showingUrl} was updated")
+                vk.send("Страница ${page.showingUrl} была обновлена", chatIds)
+            }
+        }
+    }
 
     private fun getPath(page: String): String {
         val filePath = "/data/savedPages/" + page.replace(Regex("""[\\?|"/.:<>*]"""), "_") + ".txt"
@@ -39,15 +47,6 @@ class PageChecker : Loop {
             File(path).writeText(newPage)
             log.info("File $path was created")
             null
-        }
-    }
-
-    override fun call() {
-        for (page in pages) {
-            if (isUpdated(page.trueUrl) == true) {
-                log.info("Page ${page.showingUrl} was updated")
-                Vk().send("Страница ${page.showingUrl} была обновлена", chatIds)
-            }
         }
     }
 }

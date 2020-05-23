@@ -8,18 +8,9 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
-import org.apache.http.util.EncodingUtils
 import testMode
 import vkApiToken
-import java.beans.Encoder
 import java.io.ByteArrayInputStream
-import java.lang.StringBuilder
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.time.Duration
-import kotlin.random.Random
 
 
 class Vk {
@@ -35,7 +26,6 @@ class Vk {
         val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
         reqParams.add(BasicNameValuePair("v", "5.103"))
-        reqParams.add(BasicNameValuePair("random_id", System.currentTimeMillis().toString())) // todo
         for ((p, v) in params) {
             reqParams.add(BasicNameValuePair(p, v.toString()))
         }
@@ -147,18 +137,6 @@ class Vk {
         return json["response"].asJsonArray[0].asJsonObject["screen_name"].asString
     }
 
-    fun getUserDomain(user_id: String): String? {
-        val resp = post(
-            "users.get",
-            mutableMapOf(
-                "user_ids" to user_id,
-                "fields" to "domain"
-            )
-        )
-        val json = JsonParser().parse(resp).asJsonObject
-        if (!json.has("response")) return null
-        return json["response"].asJsonArray[0].asJsonObject["domain"].asString
-    }
 }
 
 data class JsonVK(val response: Response) {

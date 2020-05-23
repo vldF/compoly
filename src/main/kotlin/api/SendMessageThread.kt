@@ -6,6 +6,7 @@ object SendMessageThread: Thread() {
 
     private var messages: ConcurrentLinkedQueue<Message> = ConcurrentLinkedQueue()
     private const val maxMessagesInOneSession = 7
+    private val vk = Vk()
 
     override fun run() {
         while (true) {
@@ -23,10 +24,11 @@ object SendMessageThread: Thread() {
                     for (id in chatIds) {
                         log.info(text)
                         count++
-                        Vk().post("messages.send", mutableMapOf(
-                                "message" to text,
-                                "chat_id" to id,
-                                "attachment" to attachments))
+                        vk.post("messages.send", mutableMapOf(
+                            "message" to text,
+                            "chat_id" to id,
+                            "random_id" to System.currentTimeMillis().toString(),
+                            "attachment" to attachments))
                         if (count == maxMessagesInOneSession) {
                             sleep(3000)
                             count = 0

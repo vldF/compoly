@@ -12,12 +12,13 @@ import java.util.*
 
 @Active
 class HappyBirthday : Event {
-
     override val schedule = listOf(Time(9, 0))
     override val name = "Birthday today"
 
+    private val vk = Vk()
+
     private fun getProfiles(): List<JsonVK.Response.Profile> {
-        val json = Vk().getConversationMembersByPeerID(mainChatPeerId, listOf("bdate", "domain"))
+        val json = vk.getConversationMembersByPeerID(mainChatPeerId, listOf("bdate", "domain"))
         return Gson().fromJson(json, JsonVK::class.java).response.profiles
     }
 
@@ -46,7 +47,7 @@ class HappyBirthday : Event {
                     Желаем им благополучия и такого же упорства в развитии нашей Великой Партии!🎉🎉🎉
                 """.trimIndent()
             }
-            Vk().send(message, chatIds)
+            vk.send(message, chatIds)
         }
     }
 }
