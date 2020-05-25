@@ -18,7 +18,7 @@ class Cats {
     private val client = HttpClient.newHttpClient()
     private val vk = Vk()
 
-    @OnCommand(["cat"], "КОТИКИ!")
+    @OnCommand(["котик", "cat"], "КОТИКИ!")
     fun cat(messageObj: MessageNewObj) {
         val requestJson = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.thecatapi.com/v1/images/search?api_key=$theCatApiKey"))

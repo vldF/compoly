@@ -181,7 +181,14 @@ object ChatBot: Thread() {
                 if (userPermission.ordinal < command.permission.ordinal)
                     userCanUseCommand = false
 
-                if (userCanUseCommand) command.call.invoke(command.baseClass, message) else {
+                if (userCanUseCommand) {
+                    try {
+                        command.call.invoke(command.baseClass, message)
+                    } catch (e: Exception) {
+                        log.severe("message: ${message.text}")
+                        e.printStackTrace()
+                    }
+                } else {
                     val domain = vk.getUserDisplayName(message.from_id)
                     vk.send("""
                         @${domain}, у Вас недостаточно прав для использования команды /${commandName}
@@ -192,8 +199,8 @@ object ChatBot: Thread() {
         }
     }
 
-    private fun getPermission(message: MessageNewObj): CommandPermission {
-        val json = vk.getConversationMembersByPeerID(message.peer_id, listOf())
+    fun getPermission(message: MessageNewObj): CommandPermission {
+        val json = Vk().getConversationMembersByPeerID(message.peer_id, listOf())
         val items = Gson().fromJson(json, api.JsonVK::class.java).response.items
         //Find Admin
         for (item in items) {
@@ -208,8 +215,14 @@ object ChatBot: Thread() {
     fun getCommands() = commandListeners
 
     private fun messageProcessor(message: MessageNewObj) {
-        for (messageListener in messageListeners)
-            messageListener.call.invoke(messageListener.baseClass, message)
+        for (messageListener in messageListeners) {
+            try {
+                messageListener.call.invoke(messageListener.baseClass, message)
+            } catch (e: Exception) {
+                log.severe("message: ${message.text}")
+                e.printStackTrace()
+            }
+        }
     }
 }
 

@@ -1,8 +1,5 @@
 package modules.chatbot
 
-class ChatModuleBase {
-
-}
 
 enum class CommandPermission(val helpHeaderString: String) {
     ALL("Общедоступные"),
