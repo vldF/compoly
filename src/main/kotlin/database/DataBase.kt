@@ -21,7 +21,7 @@ object UserScore : Table() {
 
 fun hikari(): DataSource {
     val conf = HikariConfig()
-    conf.jdbcUrl = "jdbc:postgresql://130.61.203.95/compoly"
+    conf.jdbcUrl = "jdbc:postgresql://130.61.203.95:9997/compoly"
     conf.username = userName
     conf.password = password
     conf.maximumPoolSize = 5
