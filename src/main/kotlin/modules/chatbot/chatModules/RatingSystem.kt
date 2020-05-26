@@ -125,6 +125,11 @@ class RatingSystem {
             return
         }
 
+        if (targetId == sender) {
+            vk.send("Партия рекомендует не удалять рёбра", chatId)
+            return
+        }
+
         var canSend = true
         dbQuery {
             val selected = UserScore.select{
@@ -197,6 +202,11 @@ class RatingSystem {
             return
         }
 
+        if (targetId == sender) {
+            vk.send("Партия рекомендует не удалять рёбра", peerId)
+            return
+        }
+
         val currentTime = System.nanoTime()
         if (respects[sender to peerId] != null && currentTime - respects[sender to peerId]!! > 1000 * 60 * 60 * 2) {
             vk.send("Партия не рекомендует одобрять другие лица чаще, чем раз в 2 часа", peerId)
@@ -237,6 +247,11 @@ class RatingSystem {
             return
         }
 
+        if (targetId == sender) {
+            vk.send("Партия рекомендует не удалять рёбра", peerId)
+            return
+        }
+
         val currentTime = System.nanoTime()
         if (
                 disrespects[sender to peerId] != null &&
@@ -248,7 +263,7 @@ class RatingSystem {
 
         disrespects[sender to peerId] = currentTime
         addPoints(-10, targetId, peerId)
-        vk.send("Осуждание выражено", peerId)
+        vk.send("Осуждение выражено", peerId)
     }
 
 
