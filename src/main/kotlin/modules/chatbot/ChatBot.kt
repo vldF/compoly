@@ -10,6 +10,7 @@ import log
 import mainChatPeerId
 import modules.chatbot.Listeners.CommandListener
 import modules.chatbot.Listeners.MessageListener
+import testChatId
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -150,17 +151,7 @@ object ChatBot: Thread() {
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
             ts = jsonAnswer.ts
             for (update in jsonAnswer.updates) {
-                if (update.type == "message_new"  && update.`object`.peer_id != mainChatPeerId ) {
-                    if (update.`object`.text == "1") {
-                        log.info("I WANT TO DELETE")
-                        vk.post("messages.delete", mutableMapOf(
-                            "message_ids" to update.`object`.conversation_message_id-6000,
-                            "group_id" to group_id,
-                            "delete_for_all" to 1
-                        ))
-                    }
-                }
-                if (update.type == "message_new" && update.`object`.peer_id != mainChatPeerId) {
+                if (update.type == "message_new" && (!testChatId || update.`object`.peer_id != mainChatPeerId)) {
                     if (update.`object`.text.startsWith("/")) {
                         log.info("Message which starts with \"/\" found")
                         commandProcessor(update.`object`)
