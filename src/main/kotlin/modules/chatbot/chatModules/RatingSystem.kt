@@ -18,6 +18,7 @@ class RatingSystem {
     private val mentionRegex = Regex("id(\\d+)(.*)")
     private val vk = Vk()
     private val respects = mutableMapOf<Pair<Int, Int>, Long>()
+    private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
 
 
     companion object val levels = mapOf(
@@ -167,7 +168,7 @@ class RatingSystem {
         vk.send("По архивам Партии, у @$screenName уровень $levelName. Это примерно $showedScore e-баллов", chatId)
     }
 
-    @OnCommand(["одобряю"], "показать одобрение. /одобряю ОДОБРЯЕМЫЙ")
+    @OnCommand(["одобряю"], "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ")
     fun respect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id
@@ -206,6 +207,50 @@ class RatingSystem {
         addPoints(10, targetId, peerId)
         vk.send("Одобрение выражено", peerId)
     }
+
+    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
+    fun disrespect(messageObj: MessageNewObj) {
+        val peerId = messageObj.peer_id
+        val sender = messageObj.from_id
+        val parts = messageObj.text.split(" ")
+        if (parts.size < 2) {
+            vk.send("Не указан осуждаемый", peerId)
+            return
+        }
+
+        val target = parts[1]
+        val targetId = target.let {
+            if (it.contains("[id"))
+                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
+            else {
+                val name = when {
+                    it.contains("vk.com/") -> it.split("vk.com/")[1]
+                    it.startsWith("@") -> it.removePrefix("@")
+                    else -> it
+                }
+                vk.getUserId(name)
+            }
+        }
+
+        if (targetId == null) {
+            vk.send("Партии неизвестно это лицо", peerId)
+            return
+        }
+
+        val currentTime = System.nanoTime()
+        if (
+                disrespects[sender to peerId] != null &&
+                currentTime - disrespects[sender to peerId]!! > 1000 * 60 * 60 * 2
+        ) {
+            vk.send("Партия не рекомендует осуждать другие лица чаще, чем раз в 2 часа", peerId)
+            return
+        }
+
+        disrespects[sender to peerId] = currentTime
+        addPoints(-10, targetId, peerId)
+        vk.send("Осуждание выражено", peerId)
+    }
+
 
     private fun addPoints(count: Int, toUser: Int, chat: Int) {
         var oldScore = -1
