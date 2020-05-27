@@ -32,7 +32,8 @@ data class JsonVK(val response: Response?, val error: Error?) {
 
 data class JsonAnswer(
         val ts: String,
-        val updates: List<UpdatePart>
+        val updates: List<UpdatePart>,
+        val failed: Int?
 ) {
     data class UpdatePart(
             val type: String,
@@ -149,6 +150,11 @@ object ChatBot: Thread() {
         while (true) {
             val response = longPollRequest().body()
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
+            if (jsonAnswer.failed != null) {
+                log.severe("long poll error: $response")
+                initLongPoll()
+                continue
+            }
             ts = jsonAnswer.ts
             for (update in jsonAnswer.updates) {
                 if (update.type == "message_new" && (!testChatId || update.`object`.peer_id != mainChatPeerId)) {

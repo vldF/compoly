@@ -3,7 +3,7 @@ const val key = "141ef67be66f26e2a199e2a98f0f34fd"
 const val group_id = "188281612"
 const val mainChatPeerId = 2000000002
 
-const val testChatId = false
+const val testChatId = true
 val chatIds = if (!testChatId) listOf(  // todo: remove 1?
     1,
     2,
