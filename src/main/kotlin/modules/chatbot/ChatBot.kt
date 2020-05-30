@@ -11,6 +11,7 @@ import mainChatPeerId
 import modules.chatbot.Listeners.CommandListener
 import modules.chatbot.Listeners.MessageListener
 import testChatId
+import java.io.IOException
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -131,12 +132,16 @@ object ChatBot: Thread() {
                 .POST(HttpRequest.BodyPublishers.ofString("act=a_check&key=$key&ts=${ts}&wait=$wait"))
                 .build()
         val client = HttpClient.newHttpClient()
-        val response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString()
-        )
-        log.info("response: ${response.body()}")
-        return response
+        try {
+            val response = client.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()
+            )
+            log.info("response: ${response.body()}")
+            return response
+        } catch (e: IOException) {
+            return longPollRequest()
+        }
     }
 
     override fun run() {

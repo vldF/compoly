@@ -77,9 +77,10 @@ class RatingSystem {
         val userId = message.from_id
         val chatId = message.peer_id
 
-        val count = when (message.text.split(" ").size) {
-            in 1..5 -> 1
-            in 6..10 -> 2
+        val count = when (message.text.split(" ").filter { it.length > 2 }.size) {
+            in 0..2 -> 0
+            in 3..6 -> 1
+            in 7..10 -> 2
             in 11..20 -> 3
             in 21..50 -> 4
             else -> 5
@@ -252,7 +253,7 @@ class RatingSystem {
             return
         }
 
-        val currentTime = System.nanoTime()
+        val currentTime = System.currentTimeMillis()
         if (
                 disrespects[sender to peerId] != null &&
                 currentTime - disrespects[sender to peerId]!! > 1000 * 60 * 60 * 2
