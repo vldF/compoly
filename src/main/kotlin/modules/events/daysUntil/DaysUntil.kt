@@ -15,11 +15,11 @@ class DaysUntil : Event {
     override val schedule = listOf(Time(8, 30))
     override val name = "Days until..."
 
-    private val myFormat = SimpleDateFormat("dd MM yyyy")
+    private val myFormat = SimpleDateFormat("dd MM yyyy HH")
     private val vk = Vk()
     private val days = listOf(
-            Day("☀Дней до начала лета: ", myFormat.parse("01 06 2020"), "☀☀☀☀☀☀☀☀"),
-            Day("\uD83D\uDCD9Дней до физики: ", myFormat.parse("08 06 2020"), "Время сдавать физику...")
+            Day("☀Дней до начала лета: ", myFormat.parse("01 06 2020 23"), "☀☀☀☀☀☀☀☀"),
+            Day("\uD83D\uDCD9Дней до физики: ", myFormat.parse("08 06 2020 23"), "Время сдавать физику...")
     )
 
     override fun call() {
