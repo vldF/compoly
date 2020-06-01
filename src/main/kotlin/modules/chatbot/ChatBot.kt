@@ -184,7 +184,8 @@ object ChatBot: Thread() {
                 val chatId = message.peer_id
                 val userId = message.from_id
                 val userCanUseCommand = userPermission.ordinal >= command.permission.ordinal
-                val userScoreEnough = RatingSystem.buyCommand(chatId, userId, command.cost)
+                val userScoreEnough = command.cost == 0 ||
+                        RatingSystem.buyCommand(chatId, userId, command.cost)
 
                 if (userCanUseCommand && userScoreEnough) {
                     try {

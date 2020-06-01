@@ -153,8 +153,8 @@ class RatingSystem {
         val chatId = message.peer_id
 
         val count = when (message.text.split(" ").filter { it.length > 2 }.size) {
-            in 0..2 -> 0
-            in 3..6 -> 1
+            in 0..1 -> 0
+            in 2..6 -> 1
             in 7..10 -> 2
             in 11..20 -> 3
             in 21..50 -> 4
@@ -188,7 +188,7 @@ class RatingSystem {
 
     @OnCommand(["одобряю", "респект", "respect"],
             "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ",
-            cost=10)
+            cost=0)
     fun respect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id
@@ -225,9 +225,9 @@ class RatingSystem {
         val currentTime = System.currentTimeMillis()
         if (
                 respects[sender to peerId] != null &&
-                currentTime - respects[sender to peerId]!! < 1000 * 60 * 60 * 2
+                currentTime - respects[sender to peerId]!! < 1000 * 60 * 60 * 4
         ) {
-            vk.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 2 часа", peerId)
+            vk.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа", peerId)
             return
         }
 
@@ -236,7 +236,7 @@ class RatingSystem {
         vk.send("Одобрение выражено", peerId)
     }
 
-    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ", cost=10)
+    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ", cost=0)
     fun disrespect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id
@@ -273,9 +273,9 @@ class RatingSystem {
         val currentTime = System.currentTimeMillis()
         if (
                 disrespects[sender to peerId] != null &&
-                currentTime - disrespects[sender to peerId]!! < 1000 * 60 * 60 * 2
+                currentTime - disrespects[sender to peerId]!! < 1000 * 60 * 60 * 4
         ) {
-            vk.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 2 часа", peerId)
+            vk.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа", peerId)
             return
         }
 
