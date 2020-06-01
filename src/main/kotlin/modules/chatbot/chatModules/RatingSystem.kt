@@ -10,29 +10,104 @@ import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
 import modules.chatbot.OnMessage
 import org.jetbrains.exposed.sql.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 @Suppress("DuplicatedCode")
 @Active
 class RatingSystem {
     private val regex = Regex("^(.+)\\s(.+)\\s(-?\\d+)\$")
     private val mentionRegex = Regex("id(\\d+)(.*)")
-    private val vk = Vk()
     private val respects = mutableMapOf<Pair<Int, Int>, Long>()
     private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
 
+    companion object {
+        private val vk = Vk()
 
-    companion object val levels = mapOf(
-            1..100 to "октябрёнок",
-            101..200 to "пионер",
-            201..400 to "пролетарий",
-            401..600 to "комсомолец",
-            601..1200 to "профсоюзер",
-            1201..2000 to "посол",
-            2000..5000 to "генсек",
-            5001..Integer.MAX_VALUE to "Гелич"
+        private val levels = mapOf(
+                10..110 to "октябрёнок",
+                111..220 to "пионер",
+                221..450 to "пролетарий",
+                451..680 to "комсомолец",
+                681..1400 to "член профсоюза",
+                1401..2600 to "посол",
+                2601..6000 to "генсек",
+                6001..Integer.MAX_VALUE to "Гелич"
+        )
+
+        fun buyCommand(chatId: Int, userId: Int, cost: Int): Boolean {
+            var canBuy = true
+            dbQuery {
+                val selected = UserScore.select {
+                    (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+                }.firstOrNull()
+                val senderPoints = selected?.get(UserScore.score) ?: 0
+                if (senderPoints < cost) {
+                    canBuy = false
+                }
+            }
+
+            if (canBuy) {
+                addPoints(-cost, userId, chatId)
+            }
+            return canBuy
+        }
+
+        fun getLevelName(score: Int): String {
+            for ((key, value) in levels) {
+                if (score in key) return value
+            }
+            return "ЗАСЕКРЕЧЕНО"
+        }
+
+        fun addPoints(count: Int, toUser: Int, chat: Int) {
+            var oldScore = -1
+            var newScore = -1
+            dbQuery {
+                val selected = UserScore.select{
+                    (UserScore.chatId eq chat) and (UserScore.userId eq toUser)
+                }.firstOrNull()
+                if (selected == null) {
+                    UserScore.insert {
+                        it[chatId] = chat
+                        it[userId] = toUser
+                        it[score] = count
+                    }
+                } else {
+                    UserScore.update({ (UserScore.chatId eq chat) and (UserScore.userId eq toUser) }) {
+                        it[score] = selected[score] +  count
+                    }
+                }
+
+                oldScore = selected?.get(UserScore.score) ?: 0
+                newScore = count + oldScore
+            }
+
+            val name = getLevelName(newScore)
+            if (name != getLevelName(oldScore)) {
+                val screenName = vk.getUserDisplayName(toUser)
+                vk.send("Партия поздравляет $screenName с повышением до $name!", chat)
+            }
+        }
+
+        fun isUserHasScore(chatId: Int, userId: Int): Boolean {
+            val selected = dbQuery {
+                UserScore.select {
+                    (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+                }.firstOrNull()
+            }
+
+            return selected != null
+        }
+    }
+
+
+    @OnCommand(
+        ["добавить", "add"],
+        "добавить пользователю очков. /add ID COUNT",
+        CommandPermission.ADMIN_ONLY,
+        cost=0
     )
-
-    @OnCommand(["добавить", "add"], "добавить пользователю очков. /add ID COUNT", CommandPermission.ADMIN_ONLY)
     fun add(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val messageParts = regex.find(messageObj.text)
@@ -89,69 +164,8 @@ class RatingSystem {
         addPoints(count, userId, chatId)
     }
 
-    @OnCommand(["перевести", "отправить", "send"], "переводит e-баллы с твоей сберкнижки на другую. /перевести КОМУ КОЛИЧЕСТВО")
-    fun transferPoints(messageObj: MessageNewObj) {
-        val sender = messageObj.from_id
-        val chatId = messageObj.peer_id
-        val messageParts = regex.find(messageObj.text)
-        val target = messageParts?.groupValues?.get(2)
-        val count = messageParts?.groupValues?.get(3)?.let {
-            Integer.parseInt(it)
-        }
 
-        if (count != null && count <= 0) {
-            vk.send("Некорректное количество e-баллов", chatId)
-            return
-        }
-        if (count == null) {
-            vk.send("Неверная сумма", chatId)
-            return
-        }
-
-        val targetId = target?.let {
-            if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                vk.getUserId(name)
-            }
-        }
-
-        if (targetId == null) {
-            vk.send("Пользователь не найден в базе Партии", chatId)
-            return
-        }
-
-        if (targetId == sender) {
-            vk.send("Партия рекомендует не удалять рёбра", chatId)
-            return
-        }
-
-        var canSend = true
-        dbQuery {
-            val selected = UserScore.select{
-                (UserScore.chatId eq chatId) and (UserScore.userId eq sender)
-            }.firstOrNull()
-            val senderPoints = selected?.get(UserScore.score) ?: 0
-            if (senderPoints < count) {
-                vk.send("Недостаточно средств на сберкнижке", chatId)
-                canSend = false
-            }
-        }
-
-        if (canSend) {
-            addPoints(-count, sender, chatId)
-            addPoints(count, targetId, chatId)
-            vk.send("Вы перевели с Вашей сберкнижки $count e-баллов на счёт $target", chatId)
-        }
-    }
-
-
-    @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов")
+    @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов", cost=0)
     fun showUsersInfo(messageObj: MessageNewObj) {
         val userId = messageObj.from_id
         val chatId = messageObj.peer_id
@@ -165,16 +179,16 @@ class RatingSystem {
         val screenName = vk.getUserDisplayName(userId)
 
         val showedScore = "$score".let {
-            if (it[0] == '-') {
-                "${it[0]}${it[1]}${"0".repeat(it.length - 2)}"
-            } else
-                "${it[0]}${"0".repeat(it.length - 1)}"
+            val l = it.length * 1.0 - 1
+            it.substring(0..floor(l/2).toInt()) + "0".repeat(ceil(l/2).toInt())
         }
 
-        vk.send("По архивам Партии, у @$screenName уровень $levelName. Это примерно $showedScore e-баллов", chatId)
+        vk.send("По архивам Партии, у $screenName уровень $levelName. Это примерно $showedScore e-баллов", chatId)
     }
 
-    @OnCommand(["одобряю"], "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ")
+    @OnCommand(["одобряю", "респект", "respect"],
+            "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ",
+            cost=10)
     fun respect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id
@@ -198,7 +212,7 @@ class RatingSystem {
             }
         }
 
-        if (targetId == null) {
+        if (targetId == null || !isUserHasScore(peerId, targetId)) {
             vk.send("Партии неизвестно это лицо", peerId)
             return
         }
@@ -208,9 +222,12 @@ class RatingSystem {
             return
         }
 
-        val currentTime = System.nanoTime()
-        if (respects[sender to peerId] != null && currentTime - respects[sender to peerId]!! > 1000 * 60 * 60 * 2) {
-            vk.send("Партия не рекомендует одобрять другие лица чаще, чем раз в 2 часа", peerId)
+        val currentTime = System.currentTimeMillis()
+        if (
+                respects[sender to peerId] != null &&
+                currentTime - respects[sender to peerId]!! < 1000 * 60 * 60 * 2
+        ) {
+            vk.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 2 часа", peerId)
             return
         }
 
@@ -219,7 +236,7 @@ class RatingSystem {
         vk.send("Одобрение выражено", peerId)
     }
 
-    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
+    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ", cost=10)
     fun disrespect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id
@@ -243,7 +260,7 @@ class RatingSystem {
             }
         }
 
-        if (targetId == null) {
+        if (targetId == null || !isUserHasScore(peerId, targetId)) {
             vk.send("Партии неизвестно это лицо", peerId)
             return
         }
@@ -256,52 +273,14 @@ class RatingSystem {
         val currentTime = System.currentTimeMillis()
         if (
                 disrespects[sender to peerId] != null &&
-                currentTime - disrespects[sender to peerId]!! > 1000 * 60 * 60 * 2
+                currentTime - disrespects[sender to peerId]!! < 1000 * 60 * 60 * 2
         ) {
-            vk.send("Партия не рекомендует осуждать другие лица чаще, чем раз в 2 часа", peerId)
+            vk.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 2 часа", peerId)
             return
         }
 
         disrespects[sender to peerId] = currentTime
         addPoints(-10, targetId, peerId)
         vk.send("Осуждение выражено", peerId)
-    }
-
-
-    private fun addPoints(count: Int, toUser: Int, chat: Int) {
-        var oldScore = -1
-        var newScore = -1
-        dbQuery {
-            val selected = UserScore.select{
-                (UserScore.chatId eq chat) and (UserScore.userId eq toUser)
-            }.firstOrNull()
-            if (selected == null) {
-                UserScore.insert {
-                    it[chatId] = chat
-                    it[userId] = toUser
-                    it[score] = count
-                }
-            } else {
-                UserScore.update({ (UserScore.chatId eq chat) and (UserScore.userId eq toUser) }) {
-                    it[score] = selected[score] +  count
-                }
-            }
-
-            oldScore = selected?.get(UserScore.score) ?: 0
-            newScore = count + oldScore
-        }
-
-        val name = getLevelName(newScore)
-        if (name != getLevelName(oldScore)) {
-            val screenName = vk.getUserDisplayName(toUser)
-            vk.send("Партия поздравляет @$screenName с повышением до $name!", chat)
-        }
-    }
-
-    private fun getLevelName(score: Int): String {
-        for ((key, value) in levels) {
-            if (score in key) return value
-        }
-        return "ЗАСЕКРЕЧЕНО"
     }
 }

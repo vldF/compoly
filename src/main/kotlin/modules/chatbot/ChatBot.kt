@@ -10,6 +10,7 @@ import log
 import mainChatPeerId
 import modules.chatbot.Listeners.CommandListener
 import modules.chatbot.Listeners.MessageListener
+import modules.chatbot.chatModules.RatingSystem
 import testChatId
 import java.io.IOException
 import java.net.URI
@@ -104,7 +105,8 @@ object ChatBot: Thread() {
                             annotation.description,
                             it.loadClass().getConstructor().newInstance(),
                             loadedMethod,
-                            annotation.permissions
+                            annotation.permissions,
+                            annotation.cost
                         )
                     }
                 }
@@ -178,22 +180,29 @@ object ChatBot: Thread() {
         val commandName = message.text.split(" ")[0].removePrefix("/")
         for (command in commandListeners) {
             if (command.commands.any{ it == commandName }) {
-                var userCanUseCommand = true
                 val userPermission = getPermission(message)
-                if (userPermission.ordinal < command.permission.ordinal)
-                    userCanUseCommand = false
+                val chatId = message.peer_id
+                val userId = message.from_id
+                val userCanUseCommand = userPermission.ordinal >= command.permission.ordinal
+                val userScoreEnough = RatingSystem.buyCommand(chatId, userId, command.cost)
 
-                if (userCanUseCommand) {
+                if (userCanUseCommand && userScoreEnough) {
                     try {
                         command.call.invoke(command.baseClass, message)
                     } catch (e: Exception) {
                         log.severe("message: ${message.text}")
                         e.printStackTrace()
                     }
-                } else {
+                } else if (!userCanUseCommand) {
                     val domain = vk.getUserDisplayName(message.from_id)
                     vk.send("""
                         @${domain}, у Вас недостаточно прав для использования команды /${commandName}
+                    """.trimIndent(), message.peer_id
+                    )
+                } else if (!userScoreEnough) {
+                    val domain = vk.getUserDisplayName(message.from_id)
+                    vk.send("""
+                        @${domain}, у Вас недостаточно средств для использования команды /${commandName}
                     """.trimIndent(), message.peer_id
                     )
                 }

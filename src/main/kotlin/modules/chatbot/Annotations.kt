@@ -5,7 +5,8 @@ package modules.chatbot
 annotation class OnCommand(
         val commands: Array<String>,
         val description: String = "",
-        val permissions: CommandPermission = CommandPermission.ALL
+        val permissions: CommandPermission = CommandPermission.ALL,
+        val cost: Int
 )
 
 @Target(AnnotationTarget.FUNCTION)

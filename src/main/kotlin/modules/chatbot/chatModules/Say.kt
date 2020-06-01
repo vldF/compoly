@@ -11,7 +11,11 @@ class Say {
     private val vk = Vk()
     private val regex = Regex("(/.+) (\\d+) ([\\w\\W]+)+")
 
-    @OnCommand(["say"], "отправить сообщение в чат с ID: /say ID СООБЩЕНИЕ", CommandPermission.ADMIN_ONLY)
+    @OnCommand(["say"],
+        "отправить сообщение в чат с ID: /say ID СООБЩЕНИЕ",
+        CommandPermission.ADMIN_ONLY,
+        cost=0
+    )
     fun say(message: MessageNewObj) {
         val text = message.text
         val regexed = regex.find(text)

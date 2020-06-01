@@ -12,7 +12,7 @@ import java.lang.StringBuilder
 class Help {
     private val vk = Vk()
 
-    @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
+    @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)", cost=0)
     fun help(messageObj: MessageNewObj) {
         val result = StringBuilder()
         val usersPermissions = ChatBot.getPermission(messageObj)
@@ -28,7 +28,7 @@ class Help {
                     separator = "\n",
                     prefix = permission.helpHeaderString + ":\n",
                     postfix = "\n\n"
-                ) { "/${it.commands.first()} — ${it.description}" })
+                ) { "/${it.commands.first()} [${it.cost}] — ${it.description}" })
         }
         vk.send(result.toString(), listOf((messageObj.peer_id)))
     }
