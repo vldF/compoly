@@ -13,8 +13,7 @@ class Say {
 
     @OnCommand(["say"],
         "отправить сообщение в чат с ID: /say ID СООБЩЕНИЕ",
-        CommandPermission.ADMIN_ONLY,
-        cost=0
+        CommandPermission.ADMIN_ONLY
     )
     fun say(message: MessageNewObj) {
         val text = message.text

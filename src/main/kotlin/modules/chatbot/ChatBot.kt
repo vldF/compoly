@@ -8,8 +8,9 @@ import group_id
 import io.github.classgraph.ClassGraph
 import log
 import mainChatPeerId
-import modules.chatbot.Listeners.CommandListener
-import modules.chatbot.Listeners.MessageListener
+import modules.chatbot.chatModules.Gulag
+import modules.chatbot.listeners.CommandListener
+import modules.chatbot.listeners.MessageListener
 import modules.chatbot.chatModules.RatingSystem
 import testChatId
 import java.io.IOException
@@ -43,6 +44,7 @@ data class JsonAnswer(
             val group_id: Int,
             val event_id: String
     )
+
 }
 
 data class MessageNewObj(
@@ -57,8 +59,17 @@ data class MessageNewObj(
         val important: Boolean,
         val random_id: Int,
         val attachments: List<Any>,
-        val is_hidden: Boolean
-)
+        val is_hidden: Boolean,
+        val action: Action?
+) {
+    data class Action(
+        val type: String,
+        val member_id: Int,
+        val text: String,
+        val email: String,
+        val photo: Any
+    )
+}
 
 object ChatBot: Thread() {
     private lateinit var server: String
@@ -169,8 +180,28 @@ object ChatBot: Thread() {
                         log.info("Message which starts with \"/\" found")
                         commandProcessor(update.`object`)
                     }
-
                     messageProcessor(update.`object`)
+                }
+
+                if (update.type == "message_new" && (update.`object`.action != null)) {
+                    if (update.`object`.action.type == "chat_invite_user"
+                        || update.`object`.action.type == "chat_invite_user_by_link") {
+                        log.info("Somebody was added to chat")
+                        val targetId = update.`object`.action.member_id
+                        val peerId = update.`object`.peer_id
+                        if (Gulag.gulagKickTime.containsKey(targetId to peerId)) {
+                            val dif = Gulag.gulagKickTime[targetId to peerId]!! - System.currentTimeMillis()
+                            if (dif > 0) {
+                                val msg = when(val sec = (dif / 1000).toInt()) {
+                                    in 0..59 -> "Еще наказан $sec секунд"
+                                    else -> "Еще наказан ${(sec - (sec % 60) / 60)} минут ${sec % 60} секунд"
+                                }
+                                vk.send(msg, peerId)
+                                sleep(400)
+                                vk.removeUserFromChat(targetId, peerId)
+                            } else Gulag.gulagKickTime.remove(targetId to peerId)
+                        } else vk.send("Приветствуем ${vk.getUserDisplayName(targetId)}", peerId)
+                    }
                 }
             }
         }
@@ -212,7 +243,7 @@ object ChatBot: Thread() {
     }
 
     fun getPermission(message: MessageNewObj): CommandPermission {
-        val json = Vk().getConversationMembersByPeerID(message.peer_id, listOf())
+        val json = vk.getConversationMembersByPeerID(message.peer_id, listOf())
         val items = Gson().fromJson(json, api.JsonVK::class.java).response.items
         //Find Admin
         for (item in items) {
@@ -236,9 +267,4 @@ object ChatBot: Thread() {
             }
         }
     }
-}
-
-fun main() {
-    SendMessageThread.start()
-    ChatBot.start()
 }

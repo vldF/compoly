@@ -1,4 +1,4 @@
-package modules.chatbot.Listeners
+package modules.chatbot.listeners
 
 import modules.chatbot.CommandPermission
 import java.lang.reflect.Method

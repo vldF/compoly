@@ -105,8 +105,7 @@ class RatingSystem {
     @OnCommand(
         ["добавить", "add"],
         "добавить пользователю очков. /add ID COUNT",
-        CommandPermission.ADMIN_ONLY,
-        cost=0
+        CommandPermission.ADMIN_ONLY
     )
     fun add(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
@@ -165,7 +164,7 @@ class RatingSystem {
     }
 
 
-    @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов", cost=0)
+    @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов")
     fun showUsersInfo(messageObj: MessageNewObj) {
         val userId = messageObj.from_id
         val chatId = messageObj.peer_id
@@ -187,8 +186,7 @@ class RatingSystem {
     }
 
     @OnCommand(["одобряю", "респект", "respect"],
-            "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ",
-            cost=0)
+            "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ")
     fun respect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id
@@ -236,7 +234,7 @@ class RatingSystem {
         vk.send("Одобрение выражено", peerId)
     }
 
-    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ", cost=0)
+    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
     fun disrespect(messageObj: MessageNewObj) {
         val peerId = messageObj.peer_id
         val sender = messageObj.from_id

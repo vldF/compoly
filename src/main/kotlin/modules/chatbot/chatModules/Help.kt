@@ -12,7 +12,7 @@ import java.lang.StringBuilder
 class Help {
     private val vk = Vk()
 
-    @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)", cost=0)
+    @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
     fun help(messageObj: MessageNewObj) {
         val result = StringBuilder()
         val usersPermissions = ChatBot.getPermission(messageObj)

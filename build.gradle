@@ -37,7 +37,6 @@ dependencies {
     compile("org.postgresql:postgresql:42.2.2")
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
-
 }
 
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }

@@ -6,7 +6,7 @@ annotation class OnCommand(
         val commands: Array<String>,
         val description: String = "",
         val permissions: CommandPermission = CommandPermission.ALL,
-        val cost: Int
+        val cost: Int = 0
 )
 
 @Target(AnnotationTarget.FUNCTION)

@@ -137,6 +137,20 @@ class Vk {
         return json["response"].asJsonArray[0].asJsonObject["screen_name"].asString
     }
 
+    fun removeUserFromChat(id: Int, peer_id: Int) {
+        post("messages.removeChatUser", mutableMapOf(
+            "chat_id" to peer_id - 2000000000,
+            "user_id" to id
+        ))
+    }
+
+    fun addChatUser(id: Int, peer_id: Int) {
+        post("messages.addChatUser", mutableMapOf(
+            "chat_id" to peer_id - 2000000000,
+            "user_id" to id,
+            "visible_messages_count" to 1000
+        ))
+    }
 }
 
 data class JsonVK(val response: Response) {
@@ -164,7 +178,8 @@ data class JsonVK(val response: Response) {
         val is_closed: Boolean,
         val can_access_closed: Boolean,
         val domain: String,
-        val bdate: String?
+        val bdate: String?,
+        val online: Int?
     )
 
     data class Group(
