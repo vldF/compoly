@@ -86,7 +86,10 @@ class RatingSystem {
             val name = getLevelName(newScore)
             if (name != getLevelName(oldScore)) {
                 val screenName = vk.getUserDisplayName(toUser)
-                vk.send("Партия поздравляет $screenName с повышением до $name!", chat)
+                if (count > 0)
+                    vk.send("Партия поздравляет $screenName с повышением до $name!", chat)
+                else
+                    vk.send("Партия сочувствует $screenName. Он понижен до $name", chat)
             }
         }
 

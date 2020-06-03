@@ -9,7 +9,7 @@ class Voting(
 
     fun addVote(id: Int, peer_id: Int): Boolean {
         voteSet += id to peer_id
-        return voteSet.size == rightNumToVote
+        return voteSet.size >= rightNumToVote
     }
 
     fun getVotes() = voteSet.size

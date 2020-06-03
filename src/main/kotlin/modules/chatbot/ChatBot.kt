@@ -192,11 +192,13 @@ object ChatBot: Thread() {
                         if (Gulag.gulagKickTime.containsKey(targetId to peerId)) {
                             val dif = Gulag.gulagKickTime[targetId to peerId]!! - System.currentTimeMillis()
                             if (dif > 0) {
-                                val msg = when(val sec = (dif / 1000).toInt()) {
-                                    in 0..59 -> "Еще наказан $sec секунд"
-                                    else -> "Еще наказан ${(sec - (sec % 60) / 60)} минут ${sec % 60} секунд"
-                                }
-                                vk.send(msg, peerId)
+                                val fullSec = dif / 1000
+                                val hours = fullSec / (60 * 60)
+                                val minutes = (fullSec % 3600) / 60
+                                val seconds = fullSec % 60
+                                val message = "Еще наказан ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}"
+
+                                vk.send(message, peerId)
                                 sleep(400)
                                 vk.removeUserFromChat(targetId, peerId)
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
