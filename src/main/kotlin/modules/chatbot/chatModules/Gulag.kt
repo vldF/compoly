@@ -16,8 +16,8 @@ class Gulag {
     private val gulagVoting = mutableMapOf<Pair<Int, Int>, Voting>()
     private val gulagTimeout = mutableMapOf<Pair<Int, Int>, Long>()
 
-    private val koefForKick = 0.1 // Процент от онлайна, нужный для кика
-    private val minCount = 2 // Минимальное кол-во людей для кика
+    private val koefForKick = 0.3 // Процент от онлайна, нужный для кика
+    private val minCount = 10 // Минимальное кол-во людей для кика
     private val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
 
     companion object {
@@ -145,5 +145,49 @@ class Gulag {
         }
 
         vk.send("$target может вернуться досрочно", peerId)
+    }
+
+    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN_ONLY)
+    fun admgulag(messageObj: MessageNewObj) {
+        val peerId = messageObj.peer_id
+        val sender = messageObj.from_id
+        val parts = messageObj.text.split(" ")
+        if (parts.size < 2) {
+            vk.send("Не указан ссыльный", peerId)
+            return
+        }
+
+        val target = parts[1]
+        val targetId = target.let {
+            if (it.contains("[id"))
+                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
+            else {
+                val name = when {
+                    it.contains("vk.com/") -> it.split("vk.com/")[1]
+                    it.startsWith("@") -> it.removePrefix("@")
+                    else -> it
+                }
+                vk.getUserId(name)
+            }
+        }
+
+        if (targetId == null) {
+            vk.send("Товарищ, нельзя сослать того, кого нет", peerId)
+            return
+        }
+
+        if (targetId == sender) {
+            vk.send("Товарищ! Вы еще нужны своей родине", peerId)
+            return
+        }
+
+        vk.send("Подумай над своим поведением, $target, а потом напиши админам, чтобы тебя позвали назад", peerId)
+        sleep(500)
+        vk.removeUserFromChat(targetId, peerId)
+        val currentTime = System.currentTimeMillis()
+        gulagKickTime[targetId to peerId] = currentTime + 1000 * 60 * kickMinuteTime
+        gulagVoting.remove(targetId to peerId)
+        gulagTimeout[sender to peerId] = currentTime
+
     }
 }
