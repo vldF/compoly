@@ -10,7 +10,7 @@ import modules.events.daysUntil
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Active
+
 class DaysUntil : Event {
     override val schedule = listOf(Time(8, 30))
     override val name = "Days until..."
