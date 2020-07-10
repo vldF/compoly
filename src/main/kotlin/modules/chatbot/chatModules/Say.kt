@@ -9,7 +9,7 @@ import modules.chatbot.OnCommand
 @Active
 class Say {
     private val vk = Vk()
-    private val regex = Regex("(/.+) (\\d+) ([\\w\\W]+)+")
+    private val regex = Regex("(/say) (\\d+) ([\\w\\W\\d]*)")
 
     @OnCommand(["say"],
         "отправить сообщение в чат с ID: /say ID СООБЩЕНИЕ",
