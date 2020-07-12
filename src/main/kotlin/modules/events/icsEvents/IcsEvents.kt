@@ -1,9 +1,8 @@
 package modules.events.icsEvents
 
-import api.Vk
+import api.VkPlatform
 import chatIds
 import getTime
-import modules.Active
 import modules.events.Event
 import modules.events.Time
 import modules.events.daysUntil
@@ -17,7 +16,7 @@ class IcsEvents : Event {
 
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
     private val scope = 5 //days
-    private val vk = Vk()
+    private val vk = VkPlatform()
 
     override fun call() {
         val reader = Reader()
@@ -50,6 +49,6 @@ class IcsEvents : Event {
         else
             msg.append(nextEvents.joinToString(separator = "\n"))
 
-        vk.send(msg.toString(), chatIds)
+        chatIds.forEach { vk.send(msg.toString(), it) }
     }
 }

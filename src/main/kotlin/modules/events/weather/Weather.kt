@@ -1,5 +1,5 @@
 package modules.events.weather
-import api.Vk
+import api.VkPlatform
 import chatIds
 import com.google.gson.Gson
 import key
@@ -15,7 +15,7 @@ class Weather : Event {
     override val schedule = listOf<Time>()
     override val name = "Погода сейчас"
 
-    private val vk = Vk()
+    private val vk = VkPlatform()
 
     private fun apparentTemperature(temperature: Double, wind: Double, humidity: Double): String {
         val e = (humidity / 100) * 6.105 * exp((17.27 * temperature) / (237.7 + temperature))
@@ -36,7 +36,7 @@ class Weather : Event {
                         🌡Температура: ${info.main.temp} °C
                         🖐Ощущается как: ${apparentTemperature(info.main.temp, info.main.temp, info.main.humidity.toDouble())} °C
                     """.trimIndent()
-                vk.send(text, chatIds)
+                chatIds.forEach { vk.send(text, it) }
             } catch (e: Exception) {
                 log.warning("Weather casting exception")
             }

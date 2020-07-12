@@ -1,9 +1,8 @@
 package modules.events.daysUntil
 
-import api.Vk
+import api.VkPlatform
 import chatIds
 import getTime
-import modules.Active
 import modules.events.Event
 import modules.events.Time
 import modules.events.daysUntil
@@ -16,7 +15,7 @@ class DaysUntil : Event {
     override val name = "Days until..."
 
     private val myFormat = SimpleDateFormat("dd MM yyyy HH")
-    private val vk = Vk()
+    private val vk = VkPlatform()
     private val days = listOf(
             Day("☀Дней до начала лета: ", myFormat.parse("01 06 2020 23"), "☀☀☀☀☀☀☀☀"),
             Day("\uD83D\uDCD9Дней до физики: ", myFormat.parse("08 06 2020 23"), "Время сдавать физику...")
@@ -26,9 +25,9 @@ class DaysUntil : Event {
         for (day in days) {
             val daysUntil = daysUntil(Date(getTime()), day.date)
             if (daysUntil > 0) {
-                vk.send(day.message + daysUntil, chatIds)
+                chatIds.forEach { vk.send(day.message + daysUntil, it) }
             } else if (daysUntil == 0L) {
-                vk.send(day.finalMessage, chatIds)
+                chatIds.forEach { vk.send(day.finalMessage, it) }
             }
         }
     }

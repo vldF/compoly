@@ -1,7 +1,6 @@
 package modules.chatbot
 
-import api.SendMessageThread
-import api.Vk
+import api.VkPlatform
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import group_id
@@ -78,7 +77,7 @@ object ChatBot: Thread() {
     private lateinit var commandListeners: List<CommandListener>
     private lateinit var messageListeners: List<MessageListener>
     private var isInit = false
-    private val vk = Vk()
+    private val vk = VkPlatform()
 
 
     private fun initLongPoll() {
@@ -200,9 +199,9 @@ object ChatBot: Thread() {
 
                                 vk.send(message, peerId)
                                 sleep(400)
-                                vk.removeUserFromChat(targetId, peerId)
+                                vk.kickUserFromChat(targetId, peerId)
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
-                        } else vk.send("Приветствуем ${vk.getUserDisplayName(targetId)}", peerId)
+                        } else vk.send("Приветствуем ${vk.getUserNameById(targetId)}", peerId)
                     }
                 }
             }
@@ -228,13 +227,13 @@ object ChatBot: Thread() {
                         e.printStackTrace()
                     }
                 } else if (!userCanUseCommand) {
-                    val domain = vk.getUserDisplayName(message.from_id)
+                    val domain = vk.getUserNameById(message.from_id)
                     vk.send("""
                         @${domain}, у Вас недостаточно прав для использования команды /${commandName}
                     """.trimIndent(), message.peer_id
                     )
                 } else if (!userScoreEnough) {
-                    val domain = vk.getUserDisplayName(message.from_id)
+                    val domain = vk.getUserNameById(message.from_id)
                     vk.send("""
                         @${domain}, у Вас недостаточно средств для использования команды /${commandName}
                     """.trimIndent(), message.peer_id
@@ -245,11 +244,10 @@ object ChatBot: Thread() {
     }
 
     fun getPermission(message: MessageNewObj): CommandPermission {
-        val json = vk.getConversationMembersByPeerID(message.peer_id, listOf())
-        val items = Gson().fromJson(json, api.JsonVK::class.java).response.items
+        val profiles = vk.getChatMembers(message.peer_id, listOf()) ?: throw IllegalStateException()
         //Find Admin
-        for (item in items) {
-            if (item.is_admin && item.member_id == message.from_id) {
+        for (profile in profiles) {
+            if (profile.is_admin && profile.member_id == message.from_id) {
                 return CommandPermission.ADMIN_ONLY
             }
         }

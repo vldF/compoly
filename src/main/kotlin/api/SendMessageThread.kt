@@ -6,7 +6,7 @@ object SendMessageThread: Thread() {
 
     private var messages: ConcurrentLinkedQueue<Message> = ConcurrentLinkedQueue()
     private const val maxMessagesInOneSession = 7
-    private val vk = Vk()
+    private val vk = VkPlatform()
 
     override fun run() {
         while (true) {

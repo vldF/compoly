@@ -1,6 +1,6 @@
 package modules.loops.pageChecking
 
-import api.Vk
+import api.VkPlatform
 import chatIds
 import log
 import java.io.File
@@ -15,13 +15,13 @@ class PageChecker : Loop {
 
     private val pages = listOf<Link>()
 
-    private val vk = Vk()
+    private val vk = VkPlatform()
 
     override fun call() {
         for (page in pages) {
             if (isUpdated(page.trueUrl) == true) {
                 log.info("Page ${page.showingUrl} was updated")
-                vk.send("Страница ${page.showingUrl} была обновлена", chatIds)
+                chatIds.forEach { vk.send("Страница ${page.showingUrl} была обновлена", it) }
             }
         }
     }

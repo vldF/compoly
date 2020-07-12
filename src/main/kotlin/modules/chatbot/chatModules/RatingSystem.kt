@@ -1,6 +1,6 @@
 package modules.chatbot.chatModules
 
-import api.Vk
+import api.VkPlatform
 import database.UserScore
 import database.dbQuery
 import log
@@ -22,7 +22,7 @@ class RatingSystem {
     private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
 
     companion object {
-        private val vk = Vk()
+        private val vk = VkPlatform()
 
         private val levels = mapOf(
                 10..110 to "октябрёнок",
@@ -85,7 +85,7 @@ class RatingSystem {
 
             val name = getLevelName(newScore)
             if (name != getLevelName(oldScore)) {
-                val screenName = vk.getUserDisplayName(toUser)
+                val screenName = vk.getUserNameById(toUser)
                 if (count > 0)
                     vk.send("Партия поздравляет $screenName с повышением до $name!", chat)
                 else
@@ -127,7 +127,7 @@ class RatingSystem {
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserId(name)
+                vk.getUserIdByName(name)
             }
         }
             if (
@@ -178,7 +178,7 @@ class RatingSystem {
         }
 
         val levelName = getLevelName(score)
-        val screenName = vk.getUserDisplayName(userId)
+        val screenName = vk.getUserNameById(userId)
 
         val showedScore = "$score".let {
             val l = it.length * 1.0 - 1
@@ -209,7 +209,7 @@ class RatingSystem {
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserId(name)
+                vk.getUserIdByName(name)
             }
         }
 
@@ -257,7 +257,7 @@ class RatingSystem {
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserId(name)
+                vk.getUserIdByName(name)
             }
         }
 

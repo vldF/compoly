@@ -1,6 +1,6 @@
 package modules.chatbot.chatModules
 
-import api.Vk
+import api.VkPlatform
 import modules.Active
 import modules.chatbot.CommandPermission
 import modules.chatbot.MessageNewObj
@@ -8,7 +8,7 @@ import modules.chatbot.OnCommand
 
 @Active
 class Say {
-    private val vk = Vk()
+    private val vk = VkPlatform()
     private val regex = Regex("(/say) (\\d+) ([\\w\\W\\d]*)")
 
     @OnCommand(["say"],

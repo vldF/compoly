@@ -1,5 +1,9 @@
 package api
 
+import api.objects.VkUser
+import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import log
 import org.apache.http.client.entity.UrlEncodedFormEntity
@@ -13,53 +17,58 @@ import vkApiToken
 import java.io.ByteArrayInputStream
 
 
-class Vk {
+class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
+    private val gson = Gson()
 
-    @Suppress("SameParameterValue")
-    @OptIn(ExperimentalStdlibApi::class)
-    fun post(methodName: String, params: MutableMap<String, Any>): String? {
-        if (testMode && methodName == "messages.send") {
-            return null
-        }
+    override fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
+        val resp = post(
+                "messages.getConversationMembers",
+                mutableMapOf(
+                        "peer_id" to peer_id,
+                        "fields" to fields.joinToString(separator = ",")
+                )
+        ) ?: return null
 
-        val reqParams = mutableListOf<BasicNameValuePair>()
-        reqParams.add(BasicNameValuePair("access_token", vkApiToken))
-        reqParams.add(BasicNameValuePair("v", "5.103"))
-        for ((p, v) in params) {
-            reqParams.add(BasicNameValuePair(p, v.toString()))
-        }
+        val vkResponse = resp["response"]?.asJsonObject ?: return null
+        val profiles = vkResponse["items"].asJsonArray
 
-        val request = HttpPost("https://api.vk.com/method/$methodName")
-        request.entity = UrlEncodedFormEntity(reqParams, charset("utf-8"))
-        val response = client.execute(request).entity.content.readAllBytes()
-                ?.decodeToString()
-        log.info("response: $response")
-        request.releaseConnection()
-        return response
+        return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    fun send(text: String, chatId: List<Int>, attachments: List<String> = listOf()) {
-        val message = Message(text, chatId, attachments)
-        SendMessageThread.addInList(message)
+    override fun getUserIdByName(showingName: String): Int? {
+        val resp = post(
+                "users.get", mutableMapOf(
+                "user_ids" to showingName
+            )
+        )
+        val json = resp?.asJsonObject
+        return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asInt
     }
 
-    fun send(text: String, chatId: Int, attachments: List<String> = listOf()) {
+    override fun getUserNameById(id: Int): String? {
+        val resp = post("users.get", mutableMapOf(
+                "user_ids" to id,
+                "fields" to "screen_name"
+        ))
+        val json = resp?.asJsonObject
+        return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("screen_name")?.asString
+    }
+
+    override fun kickUserFromChat(chatId: Int, userId: Int) {
+        post("messages.removeChatUser", mutableMapOf(
+                "chat_id" to chatId - 2000000000,
+                "user_id" to userId
+        ))
+    }
+
+    override fun send(text: String, chatId: Int, attachments: List<String>) {
         val message = Message(text, listOf(chatId), attachments)
         SendMessageThread.addInList(message)
     }
 
-    fun getConversationMembersByPeerID(peer_id: Int, fields: List<String>) =
-        post(
-            "messages.getConversationMembers",
-            mutableMapOf(
-                "peer_id" to peer_id,
-                "fields" to fields.joinToString(separator = ",")
-            )
-        )
-
     @OptIn(ExperimentalStdlibApi::class)
-    fun uploadImage(peer_id: Int, data: ByteArray): String {
+    fun uploadImage(peer_id: Int, data: ByteArray): String? {
         val serverData = post(
             "photos.getMessagesUploadServer",
             mutableMapOf(
@@ -67,11 +76,11 @@ class Vk {
             )
         )
 
-        val jsonServer = JsonParser().parse(serverData).asJsonObject
-        val vkResponse = jsonServer["response"].asJsonObject ?: throw IllegalStateException(serverData)
+        val jsonServer = serverData?.asJsonObject ?: return null
+        val vkResponse = jsonServer["response"].asJsonObject ?: throw IllegalStateException(serverData.asString)
         val uploadUrl = vkResponse["upload_url"].asString
 
-        val inputStreamBody = InputStreamBody(ByteArrayInputStream(data), "compolylovesiknt.jpg")
+        val inputStreamBody = InputStreamBody(ByteArrayInputStream(data), "compoly_loves_iknt.jpg")
 
         val multipartData = MultipartEntityBuilder
             .create()
@@ -103,9 +112,9 @@ class Vk {
                 "photo" to photo,
                 "hash" to hash
             )
-        )
+        ) ?: return null
 
-        val dataObject = JsonParser().parse(saveData)
+        val dataObject = saveData
             .asJsonObject["response"]
             .asJsonArray[0]
             .asJsonObject
@@ -116,84 +125,27 @@ class Vk {
         return "photo${ownerId}_$imageId"
     }
 
-    fun getUserId(domain: String): Int? {
-        val resp = post(
-            "users.get", mutableMapOf(
-                "user_ids" to domain
-            )
-        )
-        val json = JsonParser().parse(resp).asJsonObject
-        if (!json.has("response")) return null
-        return json["response"].asJsonArray[0].asJsonObject["id"].asInt
-    }
 
-    fun getUserDisplayName(id: Int): String? {
-        val resp = post("users.get", mutableMapOf(
-                "user_ids" to id,
-                "fields" to "screen_name"
-        ))
-        val json = JsonParser().parse(resp).asJsonObject
-        if (!json.has("response")) return null
-        return json["response"].asJsonArray[0].asJsonObject["screen_name"].asString
-    }
+    @Suppress("SameParameterValue")
+    @OptIn(ExperimentalStdlibApi::class)
+    fun post(methodName: String, params: MutableMap<String, Any>): JsonObject? {
+        if (testMode && methodName == "messages.send") {
+            return null
+        }
 
-    fun removeUserFromChat(id: Int, peer_id: Int) {
-        post("messages.removeChatUser", mutableMapOf(
-            "chat_id" to peer_id - 2000000000,
-            "user_id" to id
-        ))
-    }
+        val reqParams = mutableListOf<BasicNameValuePair>()
+        reqParams.add(BasicNameValuePair("access_token", vkApiToken))
+        reqParams.add(BasicNameValuePair("v", "5.103"))
+        for ((p, v) in params) {
+            reqParams.add(BasicNameValuePair(p, v.toString()))
+        }
 
-    fun addChatUser(id: Int, peer_id: Int) {
-        post("messages.addChatUser", mutableMapOf(
-            "chat_id" to peer_id - 2000000000,
-            "user_id" to id,
-            "visible_messages_count" to 1000
-        ))
-    }
-}
-
-data class JsonVK(val response: Response) {
-    data class Response(
-    val items: List<Item>,
-    val count: Int,
-    val profiles: List<Profile>,
-    val groups: List<Group>
-    ) {
-    data class Item(
-        val member_id: Int,
-        val can_kick: Boolean,
-        val invited_by: Int,
-        val join_date: Int,
-        val is_admin: Boolean,
-        val is_owner: Boolean,
-        val domain: String,
-        val bdate: String?
-    )
-
-    data class Profile(
-        val id: Int,
-        val first_name: String,
-        val last_name: String,
-        val is_closed: Boolean,
-        val can_access_closed: Boolean,
-        val domain: String,
-        val bdate: String?,
-        val online: Int?
-    )
-
-    data class Group(
-        val id: Int,
-        val name: String,
-        val screen_name: String,
-        val is_closed: Int,
-        val type: String,
-        val is_admin: Boolean,
-        val is_member: Boolean,
-        val is_advertiser: Boolean,
-        val photo_50: String,
-        val photo_100: String,
-        val photo_200: String
-    )
+        val request = HttpPost("https://api.vk.com/method/$methodName")
+        request.entity = UrlEncodedFormEntity(reqParams, charset("utf-8"))
+        val response = client.execute(request).entity.content.readAllBytes()
+                ?.decodeToString()
+        log.info("response: $response")
+        request.releaseConnection()
+        return JsonParser().parse(response).asJsonObject
     }
 }

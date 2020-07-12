@@ -1,12 +1,11 @@
 package modules.chatbot.chatModules
 
-import api.JsonVK
-import api.Vk
-import com.google.gson.Gson
+import api.VkPlatform
 import modules.Active
 import modules.chatbot.CommandPermission
 import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
+import java.lang.IllegalStateException
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 
@@ -21,7 +20,7 @@ class Gulag {
     private val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
 
     companion object {
-        private val vk = Vk()
+        private val vk = VkPlatform()
         val gulagKickTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
     }
 
@@ -45,7 +44,7 @@ class Gulag {
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserId(name)
+                vk.getUserIdByName(name)
             }
         }
 
@@ -59,7 +58,7 @@ class Gulag {
             return
         }
 
-        val screenName = vk.getUserDisplayName(targetId)
+        val screenName = vk.getUserNameById(targetId)
         if (targetId to peerId in gulagKickTime.keys) {
             vk.send("Партия уже наказала $screenName", peerId)
             return
@@ -76,11 +75,12 @@ class Gulag {
 
         if (gulagVoting[targetId to peerId] == null ||
             gulagVoting[targetId to peerId]!!.timeOfClosing < currentTime) {
-            val json = vk.getConversationMembersByPeerID(messageObj.peer_id, listOf("online"))
-            val onlineCount = Gson().fromJson(json, JsonVK::class.java)
-                .response.profiles.filter { it.online!! == 1}.size
+            val members = vk.getChatMembers(messageObj.peer_id, listOf("online"))
+            val onlineCount = members?.filter { it.online!! == 1}?.size
+                    ?: throw IllegalStateException("error on getting members")
             val count = (onlineCount * koefForKick).toInt()
             val newVoting = Voting(currentTime + 1000 * 60 * 5, if (count > minCount) count else minCount)
+
             newVoting.addVote(sender, peerId)
             gulagVoting[targetId to peerId] = newVoting
             vk.send(
@@ -97,7 +97,7 @@ class Gulag {
             if (votingIsComplete) {
                 vk.send("Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад", peerId)
                 sleep(500)
-                vk.removeUserFromChat(targetId, peerId)
+                vk.kickUserFromChat(targetId, peerId)
                 gulagKickTime[targetId to peerId] = currentTime + 1000 * 60 * kickMinuteTime
                 gulagVoting.remove(targetId to peerId)
             }
@@ -125,7 +125,7 @@ class Gulag {
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserId(name)
+                vk.getUserIdByName(name)
             }
         }
 
@@ -167,7 +167,7 @@ class Gulag {
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserId(name)
+                vk.getUserIdByName(name)
             }
         }
 
@@ -183,7 +183,7 @@ class Gulag {
 
         vk.send("Подумай над своим поведением, $target, а потом напиши админам, чтобы тебя позвали назад", peerId)
         sleep(500)
-        vk.removeUserFromChat(targetId, peerId)
+        vk.kickUserFromChat(targetId, peerId)
         val currentTime = System.currentTimeMillis()
         gulagKickTime[targetId to peerId] = currentTime + 1000 * 60 * kickMinuteTime
         gulagVoting.remove(targetId to peerId)

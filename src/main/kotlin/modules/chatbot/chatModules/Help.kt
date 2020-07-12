@@ -1,6 +1,6 @@
 package modules.chatbot.chatModules
 
-import api.Vk
+import api.VkPlatform
 import modules.Active
 import modules.chatbot.ChatBot
 import modules.chatbot.CommandPermission
@@ -10,7 +10,7 @@ import java.lang.StringBuilder
 
 @Active
 class Help {
-    private val vk = Vk()
+    private val vk = VkPlatform()
 
     @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
     fun help(messageObj: MessageNewObj) {
@@ -30,6 +30,6 @@ class Help {
                     postfix = "\n\n"
                 ) { "/${it.commands.first()} [${it.cost}] — ${it.description}" })
         }
-        vk.send(result.toString(), listOf((messageObj.peer_id)))
+        vk.send(result.toString(), messageObj.peer_id)
     }
 }
