@@ -1,11 +1,9 @@
 package api
 
-import api.objects.BaseUser
-//import com.github.kotlintelegrambot.bot
 import com.elbekD.bot.Bot
 import telApiToken
 import telBotUsername
-import java.util.*
+import java.lang.IllegalArgumentException
 
 class TelegramPlatform: PlatformApiInterface {
     private val bot = Bot.createPolling(telBotUsername, telApiToken)
@@ -34,8 +32,12 @@ class TelegramPlatform: PlatformApiInterface {
     override fun getUserNameById(id: Int): String? {
         if (!botIsWorking) startBot()
         for (chatId in chatIds) {
-            val member = bot.getChatMember(chatId = chatId, userId =  id.toLong())
-            if (member != null) return member.get().user.username
+            try {
+                val member = bot.getChatMember(chatId = chatId, userId =  id.toLong())
+                return member.get().user.username
+            } catch (e: IllegalArgumentException) {
+                continue
+            }
         }
         return null
     }
