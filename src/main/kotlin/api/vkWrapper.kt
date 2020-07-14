@@ -21,7 +21,7 @@ class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
 
-    override fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
+    fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
         val resp = post(
                 "messages.getConversationMembers",
                 mutableMapOf(
@@ -36,7 +36,7 @@ class VkPlatform : PlatformApiInterface {
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    override fun getUserIdByName(showingName: String): Int? {
+    fun getUserIdByName(showingName: String): Int? {
         val resp = post(
                 "users.get", mutableMapOf(
                 "user_ids" to showingName
