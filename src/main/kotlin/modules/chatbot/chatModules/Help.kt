@@ -7,7 +7,7 @@ import modules.chatbot.CommandPermission
 import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
 import java.lang.StringBuilder
-
+/*
 @Active
 class Help {
     private val vk = VkPlatform()
@@ -33,3 +33,4 @@ class Help {
         vk.send(result.toString(), messageObj.peer_id)
     }
 }
+*/

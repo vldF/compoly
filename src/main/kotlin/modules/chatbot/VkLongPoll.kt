@@ -68,6 +68,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
     }
 
     override fun run() {
+        initLongPoll()
         while (true) {
             val response = longPollRequest().body()
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)
@@ -87,6 +88,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                             update.`object`.from_id,
                             update.`object`.peer_id
                     )
+
                     queue.add(messageEvent)
                 }
                 // todo refactor
