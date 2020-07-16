@@ -3,8 +3,8 @@ package modules.chatbot.chatModules
 import api.VkPlatform
 import modules.Active
 import modules.chatbot.CommandPermission
-import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
+import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import java.lang.IllegalStateException
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
@@ -25,12 +25,12 @@ class Gulag {
     }
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
-    fun gulag(messageObj: MessageNewObj) {
-        val peerId = messageObj.peer_id
-        val sender = messageObj.from_id
-        val parts = messageObj.text.split(" ")
+    fun gulag(event: LongPollNewMessageEvent) {
+        val chatId = event.chatId
+        val sender = event.userId
+        val parts = event.text.split(" ")
         if (parts.size < 2) {
-            vk.send("Не указан ссыльный", peerId)
+            vk.send("Не указан ссыльный", chatId)
             return
         }
 
@@ -49,69 +49,69 @@ class Gulag {
         }
 
         if (targetId == null) {
-            vk.send("Товарищ, нельзя сослать того, кого нет", peerId)
+            vk.send("Товарищ, нельзя сослать того, кого нет", chatId)
             return
         }
 
         if (targetId == sender) {
-            vk.send("Товарищ! Вы еще нужны своей родине", peerId)
+            vk.send("Товарищ! Вы еще нужны своей родине", chatId)
             return
         }
 
         val screenName = vk.getUserNameById(targetId)
-        if (targetId to peerId in gulagKickTime.keys) {
-            vk.send("Партия уже наказала $screenName", peerId)
+        if (targetId to chatId in gulagKickTime.keys) {
+            vk.send("Партия уже наказала $screenName", chatId)
             return
         }
 
         val currentTime = System.currentTimeMillis()
         if (
-            gulagTimeout[sender to peerId] != null &&
-            currentTime - gulagTimeout[sender to peerId]!! < 1000 * 60 * 60 * 4
+            gulagTimeout[sender to chatId] != null &&
+            currentTime - gulagTimeout[sender to chatId]!! < 1000 * 60 * 60 * 4
         ) {
-            vk.send("Партия не рекомендует отправлять в ГУЛАГ других лиц чаще, чем раз в 4 часа", peerId)
+            vk.send("Партия не рекомендует отправлять в ГУЛАГ других лиц чаще, чем раз в 4 часа", chatId)
             return
         }
 
-        if (gulagVoting[targetId to peerId] == null ||
-            gulagVoting[targetId to peerId]!!.timeOfClosing < currentTime) {
-            val members = vk.getChatMembers(messageObj.peer_id, listOf("online"))
+        if (gulagVoting[targetId to chatId] == null ||
+            gulagVoting[targetId to chatId]!!.timeOfClosing < currentTime) {
+            val members = vk.getChatMembers(chatId, listOf("online"))
             val onlineCount = members?.filter { it.online!! == 1}?.size
                     ?: throw IllegalStateException("error on getting members")
             val count = (onlineCount * koefForKick).toInt()
             val newVoting = Voting(currentTime + 1000 * 60 * 5, if (count > minCount) count else minCount)
 
-            newVoting.addVote(sender, peerId)
-            gulagVoting[targetId to peerId] = newVoting
+            newVoting.addVote(sender, chatId)
+            gulagVoting[targetId to chatId] = newVoting
             vk.send(
                "Голосование на отправление $screenName в лагерь началось - 1/${newVoting.rightNumToVote}\n" +
                     "Отправь /гулаг $screenName",
-                    peerId
+                    chatId
             )
         } else {
-            val votingIsComplete = gulagVoting[targetId to peerId]!!.addVote(sender, peerId)
+            val votingIsComplete = gulagVoting[targetId to chatId]!!.addVote(sender, chatId)
             vk.send(
-                "Отправление $screenName в лагерь - ${gulagVoting[targetId to peerId]!!.getVotes()}/${gulagVoting[targetId to peerId]!!.rightNumToVote}",
-                peerId
+                "Отправление $screenName в лагерь - ${gulagVoting[targetId to chatId]!!.getVotes()}/${gulagVoting[targetId to chatId]!!.rightNumToVote}",
+                chatId
             )
             if (votingIsComplete) {
-                vk.send("Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад", peerId)
+                vk.send("Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад", chatId)
                 sleep(500)
-                vk.kickUserFromChat(targetId, peerId)
-                gulagKickTime[targetId to peerId] = currentTime + 1000 * 60 * kickMinuteTime
-                gulagVoting.remove(targetId to peerId)
+                vk.kickUserFromChat(targetId, chatId)
+                gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
+                gulagVoting.remove(targetId to chatId)
             }
         }
-        gulagTimeout[sender to peerId] = currentTime
+        gulagTimeout[sender to chatId] = currentTime
     }
 
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN_ONLY)
-    fun back(messageObj: MessageNewObj) {
-        val peerId = messageObj.peer_id
-        val sender = messageObj.from_id
-        val parts = messageObj.text.split(" ")
+    fun back(event: LongPollNewMessageEvent) {
+        val chatId = event.chatId
+        val sender = event.userId
+        val parts = event.text.split(" ")
         if (parts.size < 2) {
-            vk.send("Не указан ссыльный", peerId)
+            vk.send("Не указан ссыльный", chatId)
             return
         }
 
@@ -130,30 +130,30 @@ class Gulag {
         }
 
         if (targetId == null) {
-            vk.send("Товарищ, нельзя вернуть того, кого нет", peerId)
+            vk.send("Товарищ, нельзя вернуть того, кого нет", chatId)
             return
         }
 
         if (targetId == sender) {
-            vk.send("Товарищ! Вы еще нужны своей родине", peerId)
+            vk.send("Товарищ! Вы еще нужны своей родине", chatId)
             return
         }
 
-        if (gulagKickTime.remove(targetId to peerId) == null) {
-            vk.send("Данного человека нет в архивах ГУЛАГ", peerId)
+        if (gulagKickTime.remove(targetId to chatId) == null) {
+            vk.send("Данного человека нет в архивах ГУЛАГ", chatId)
             return
         }
 
-        vk.send("$target может вернуться досрочно", peerId)
+        vk.send("$target может вернуться досрочно", chatId)
     }
 
     @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN_ONLY)
-    fun admgulag(messageObj: MessageNewObj) {
-        val peerId = messageObj.peer_id
-        val sender = messageObj.from_id
-        val parts = messageObj.text.split(" ")
+    fun admgulag(event: LongPollNewMessageEvent) {
+        val chatId = event.chatId
+        val sender = event.userId
+        val parts = event.text.split(" ")
         if (parts.size < 2) {
-            vk.send("Не указан ссыльный", peerId)
+            vk.send("Не указан ссыльный", chatId)
             return
         }
 
@@ -172,22 +172,22 @@ class Gulag {
         }
 
         if (targetId == null) {
-            vk.send("Товарищ, нельзя сослать того, кого нет", peerId)
+            vk.send("Товарищ, нельзя сослать того, кого нет", chatId)
             return
         }
 
         if (targetId == sender) {
-            vk.send("Товарищ! Вы еще нужны своей родине", peerId)
+            vk.send("Товарищ! Вы еще нужны своей родине", chatId)
             return
         }
 
-        vk.send("Подумай над своим поведением, $target, а потом напиши админам, чтобы тебя позвали назад", peerId)
+        vk.send("Подумай над своим поведением, $target, а потом напиши админам, чтобы тебя позвали назад", chatId)
         sleep(500)
-        vk.kickUserFromChat(targetId, peerId)
+        vk.kickUserFromChat(targetId, chatId)
         val currentTime = System.currentTimeMillis()
-        gulagKickTime[targetId to peerId] = currentTime + 1000 * 60 * kickMinuteTime
-        gulagVoting.remove(targetId to peerId)
-        gulagTimeout[sender to peerId] = currentTime
+        gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
+        gulagVoting.remove(targetId to chatId)
+        gulagTimeout[sender to chatId] = currentTime
 
     }
 }

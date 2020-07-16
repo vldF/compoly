@@ -84,9 +84,9 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                 if (update.type == "message_new" && (!useTestChatId || update.`object`.peer_id != mainChatPeerId)) {
                     val messageEvent = LongPollNewMessageEvent(
                             Platform.VK,
+                            update.`object`.peer_id,
                             update.`object`.text,
-                            update.`object`.from_id,
-                            update.`object`.peer_id
+                            update.`object`.from_id
                     )
 
                     queue.add(messageEvent)

@@ -1,8 +1,8 @@
 package modules.chatbot.chatBotEvents
 
 class LongPollNewMessageEvent(
-        platform: Platform,
+        override val platform: Platform,
+        override val chatId: Int,
         val text: String,
-        val senderId: Int,
-        val chatId: Int
-) : LongPollEventBase(platform)
+        val userId: Int
+) : LongPollEventBase()

@@ -1,6 +1,9 @@
 package modules.chatbot.chatBotEvents
 
-abstract class LongPollEventBase(val platform: Platform)
+abstract class LongPollEventBase {
+    abstract val platform: Platform
+    abstract val chatId: Int
+}
 
 enum class Platform {
     VK,

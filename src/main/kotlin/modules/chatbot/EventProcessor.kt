@@ -13,8 +13,10 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
     private val pollSize = 4
     private val poll = Executors.newFixedThreadPool(pollSize)
 
-    private lateinit var commandListeners: List<CommandListener>
-    private lateinit var messageListeners: List<MessageListener>
+    companion object {
+        lateinit var commandListeners: List<CommandListener>
+        lateinit var messageListeners: List<MessageListener>
+    }
 
     private fun mainLoop() {
         while (true) {
@@ -42,7 +44,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 for (module in commandListeners) {
                     if (module.commands.contains(commandName)) {
                         //todo: add purchasing and permissions
-                        //module.call.invoke(module.baseClass, event)
+                        module.call.invoke(module.baseClass, event)
                         log.info("command: $text")
                     }
                 }

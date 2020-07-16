@@ -5,6 +5,7 @@ import com.google.gson.JsonParser
 import modules.Active
 import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
+import modules.chatbot.chatBotEvents.LongPollEventBase
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpClient
@@ -19,7 +20,7 @@ class Cats {
     private val vk = VkPlatform()
 
     @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
-    fun cat(messageObj: MessageNewObj) {
+    fun cat(event: LongPollEventBase) {
         val requestJson = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.thecatapi.com/v1/images/search?api_key=$theCatApiKey"))
                 .timeout(Duration.ofSeconds(10))
@@ -35,8 +36,8 @@ class Cats {
         val imageConnection = URL(imageUrl).openConnection()
         val imageStream = imageConnection.getInputStream()
 
-        val attachment = vk.uploadImage(messageObj.peer_id, imageStream.readBytes()) ?: ""
-        vk.send("", messageObj.peer_id, listOf(attachment))
+        val attachment = vk.uploadImage(event.chatId, imageStream.readBytes()) ?: ""
+        vk.send("", event.chatId, listOf(attachment))
     }
 }
 

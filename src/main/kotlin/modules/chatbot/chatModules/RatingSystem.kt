@@ -9,6 +9,7 @@ import modules.chatbot.CommandPermission
 import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
 import modules.chatbot.OnMessage
+import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import org.jetbrains.exposed.sql.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -110,9 +111,9 @@ class RatingSystem {
         "добавить пользователю очков. /add ID COUNT",
         CommandPermission.ADMIN_ONLY
     )
-    fun add(messageObj: MessageNewObj) {
-        val peerId = messageObj.peer_id
-        val messageParts = regex.find(messageObj.text)
+    fun add(event: LongPollNewMessageEvent) {
+        val chatId = event.chatId
+        val messageParts = regex.find(event.text)
         val target = messageParts?.groupValues?.get(2)
         val deltaScore = messageParts?.groupValues?.get(3)?.let {
             Integer.parseInt(it)
@@ -138,23 +139,23 @@ class RatingSystem {
                 deltaScore == null
             ) {
                 log.info("arguments: $target, $deltaScore")
-                vk.send("Неверные аргументы, товарищ", peerId)
+                vk.send("Неверные аргументы, товарищ", chatId)
                 return
         }
 
-        addPoints(deltaScore, targetId, peerId)
+        addPoints(deltaScore, targetId, chatId)
         if (deltaScore >= 0)
-            vk.send("Теперь у $target на $deltaScore e-балл больше!", messageObj.peer_id)
+            vk.send("Теперь у $target на $deltaScore e-балл больше!", chatId)
         else
-            vk.send("Теперь у $target на ${-deltaScore} e-балл меньше!", messageObj.peer_id)
+            vk.send("Теперь у $target на ${-deltaScore} e-балл меньше!", chatId)
     }
 
     @OnMessage
-    fun onMessageReceive(message: MessageNewObj) {
-        val userId = message.from_id
-        val chatId = message.peer_id
+    fun onMessageReceive(event: LongPollNewMessageEvent) {
+        val chatId = event.chatId
+        val messageParts = regex.find(event.text)
 
-        val count = when (message.text.split(" ").filter { it.length > 2 }.size) {
+        val count = when (event.text.split(" ").filter { it.length > 2 }.size) {
             in 0..1 -> 0
             in 2..6 -> 1
             in 7..10 -> 2
@@ -163,14 +164,15 @@ class RatingSystem {
             else -> 5
         }
 
-        addPoints(count, userId, chatId)
+        addPoints(count, event.userId, chatId)
     }
 
 
     @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов")
-    fun showUsersInfo(messageObj: MessageNewObj) {
-        val userId = messageObj.from_id
-        val chatId = messageObj.peer_id
+    fun showUsersInfo(event: LongPollNewMessageEvent) {
+        val chatId = event.chatId
+        val userId = event.userId
+
         val score = dbQuery {
             UserScore.select{
                 (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
@@ -190,10 +192,10 @@ class RatingSystem {
 
     @OnCommand(["одобряю", "респект", "respect"],
             "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ")
-    fun respect(messageObj: MessageNewObj) {
-        val peerId = messageObj.peer_id
-        val sender = messageObj.from_id
-        val parts = messageObj.text.split(" ")
+    fun respect(event: LongPollNewMessageEvent) {
+        val peerId = event.chatId
+        val sender = event.userId
+        val parts = event.text.split(" ")
         if (parts.size < 2) {
             vk.send("Не указан одобряемый", peerId)
             return
@@ -238,10 +240,10 @@ class RatingSystem {
     }
 
     @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
-    fun disrespect(messageObj: MessageNewObj) {
-        val peerId = messageObj.peer_id
-        val sender = messageObj.from_id
-        val parts = messageObj.text.split(" ")
+    fun disrespect(event: LongPollNewMessageEvent) {
+        val peerId = event.chatId
+        val sender = event.userId
+        val parts = event.text.split(" ")
         if (parts.size < 2) {
             vk.send("Не указан осуждаемый", peerId)
             return

@@ -2,21 +2,19 @@ package modules.chatbot.chatModules
 
 import api.VkPlatform
 import modules.Active
-import modules.chatbot.ChatBot
-import modules.chatbot.CommandPermission
-import modules.chatbot.MessageNewObj
-import modules.chatbot.OnCommand
+import modules.chatbot.*
+import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import java.lang.StringBuilder
-/*
+
 @Active
 class Help {
     private val vk = VkPlatform()
 
     @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
-    fun help(messageObj: MessageNewObj) {
+    fun help(event: LongPollNewMessageEvent) {
         val result = StringBuilder()
         val usersPermissions = ChatBot.getPermission(messageObj)
-        val commands = ChatBot.getCommands()
+        val commands = EventProcessor.commandListeners.flatMap { it.commands }
 
         val permissions = CommandPermission.values().filter {
             it.ordinal <= usersPermissions.ordinal
@@ -33,4 +31,3 @@ class Help {
         vk.send(result.toString(), messageObj.peer_id)
     }
 }
-*/
