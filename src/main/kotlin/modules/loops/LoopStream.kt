@@ -8,7 +8,7 @@ import java.io.StringWriter
 import kotlin.concurrent.thread
 
 
-class LoopStream : Runnable {
+object LoopStream : Runnable {
 
     private val loops: List<Loop>
 
