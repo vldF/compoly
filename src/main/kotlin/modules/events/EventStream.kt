@@ -11,7 +11,7 @@ import java.lang.Exception
 import java.lang.Runnable
 import kotlin.concurrent.thread
 
-class EventStream : Runnable {
+object EventStream : Runnable {
 
     private val events: List<Event>
 

@@ -6,10 +6,8 @@ import modules.loops.LoopStream
 import org.jetbrains.exposed.sql.Database
 
 fun main() {
-    val eventStream = EventStream()
-    val loopStream = LoopStream()
-    eventStream.run()
-    loopStream.run()
+    EventStream.run()
+    LoopStream.run()
     SendMessageThread.start()
 
     //initializing db
