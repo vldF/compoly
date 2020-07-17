@@ -53,15 +53,15 @@ object EventStream : Runnable {
                         try {
                             val schedule = event.schedule
 
-                            var i = 0
+                            var callIndex = 0
                             for (call in schedule.indices) {
                                 if (getDayTime() < schedule[call].time) {
-                                    i = call
+                                    callIndex = call
                                     break
                                 }
                             }
 
-                            var time = calculateDelayTime(schedule[i].time, getDayTime())
+                            var time = calculateDelayTime(schedule[callIndex].time, getDayTime())
                             log.info("Sleeping for $time until next <${event.name}> call")
                             delay(time)
 
@@ -69,11 +69,11 @@ object EventStream : Runnable {
                                 log.info("Calling <${event.name}>")
                                 event.call()
 
-                                if (++i == schedule.size) {
-                                    i = 0
+                                if (++callIndex == schedule.size) {
+                                    callIndex = 0
                                 }
 
-                                time = calculateDelayTime(schedule[i].time, getDayTime())
+                                time = calculateDelayTime(schedule[callIndex].time, getDayTime())
                                 log.info("Sleeping for $time until next <${event.name}> call")
                                 delay(time)
                             }
