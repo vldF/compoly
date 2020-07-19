@@ -68,7 +68,7 @@ class VkPlatform : PlatformApiInterface {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    fun uploadImage(peer_id: Int, data: ByteArray): String? {
+    override fun uploadPhoto(peer_id: Int, data: ByteArray): String? {
         val serverData = post(
             "photos.getMessagesUploadServer",
             mutableMapOf(

@@ -10,9 +10,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 object ChatBot: Thread() {
     override fun run() {
-        log.info("Initializing ChatBot")
-        log.info("Initializing modules done")
-
         val queue = ConcurrentLinkedQueue<LongPollEventBase>()
 
         // longpolls

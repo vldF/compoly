@@ -17,7 +17,6 @@ import java.time.Duration
 class Cats {
     private val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
     private val client = HttpClient.newHttpClient()
-    private val vk = VkPlatform()
 
     @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
     fun cat(event: LongPollEventBase) {
@@ -30,14 +29,16 @@ class Cats {
                 HttpResponse.BodyHandlers.ofString()
         )
 
+        val api = event.api
+
         val catInfo = JsonParser().parse(response.body()).asJsonArray[0].asJsonObject
         val imageUrl = catInfo["url"].asString
 
         val imageConnection = URL(imageUrl).openConnection()
         val imageStream = imageConnection.getInputStream()
 
-        val attachment = vk.uploadImage(event.chatId, imageStream.readBytes()) ?: ""
-        vk.send("", event.chatId, listOf(attachment))
+        val attachment = api.uploadPhoto(event.chatId, imageStream.readBytes()) ?: ""
+        api.send("", event.chatId, listOf(attachment))
     }
 }
 
