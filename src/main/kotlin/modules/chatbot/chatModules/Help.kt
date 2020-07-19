@@ -13,8 +13,8 @@ class Help {
     @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
     fun help(event: LongPollNewMessageEvent) {
         val result = StringBuilder()
-        val usersPermissions = ChatBot.getPermission(messageObj)
-        val commands = EventProcessor.commandListeners.flatMap { it.commands }
+        val usersPermissions = Permissions.getUserPermissionsByNewMessageEvent(event)
+        val commands = EventProcessor.commandListeners
 
         val permissions = CommandPermission.values().filter {
             it.ordinal <= usersPermissions.ordinal
@@ -28,6 +28,6 @@ class Help {
                     postfix = "\n\n"
                 ) { "/${it.commands.first()} [${it.cost}] — ${it.description}" })
         }
-        vk.send(result.toString(), messageObj.peer_id)
+        vk.send(result.toString(), event.chatId)
     }
 }
