@@ -8,10 +8,9 @@ import java.lang.StringBuilder
 
 @Active
 class Help {
-    private val vk = VkPlatform()
-
     @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
     fun help(event: LongPollNewMessageEvent) {
+        val api = event.api
         val result = StringBuilder()
         val usersPermissions = Permissions.getUserPermissionsByNewMessageEvent(event)
         val commands = EventProcessor.commandListeners
@@ -28,6 +27,6 @@ class Help {
                     postfix = "\n\n"
                 ) { "/${it.commands.first()} [${it.cost}] — ${it.description}" })
         }
-        vk.send(result.toString(), event.chatId)
+        api.send(result.toString(), event.chatId)
     }
 }

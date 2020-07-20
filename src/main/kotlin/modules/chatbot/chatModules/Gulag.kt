@@ -25,6 +25,7 @@ class Gulag {
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
     fun gulag(event: LongPollNewMessageEvent) {
+        if (event.api !is VkPlatform) return
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
@@ -107,6 +108,7 @@ class Gulag {
 
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN_ONLY)
     fun back(event: LongPollNewMessageEvent) {
+        if (event.api !is VkPlatform) return
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
@@ -150,6 +152,7 @@ class Gulag {
 
     @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN_ONLY)
     fun admgulag(event: LongPollNewMessageEvent) {
+        if (event.api !is VkPlatform) return
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId

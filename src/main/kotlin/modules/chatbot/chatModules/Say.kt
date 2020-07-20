@@ -9,7 +9,6 @@ import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 
 @Active
 class Say {
-    private val vk = VkPlatform()
     private val regex = Regex("(/say) (\\d+) ([\\w\\W\\d]*)")
 
     @OnCommand(["say"],
@@ -17,20 +16,21 @@ class Say {
         CommandPermission.ADMIN_ONLY
     )
     fun say(event: LongPollNewMessageEvent) {
+        val api = event.api
         val text = event.text
         val regexed = regex.find(text)
         val receiverChatId = regexed?.groupValues?.get(2)?.let { Integer.parseInt(it) }
         val messageText = regexed?.groupValues?.get(3)
 
         if (receiverChatId == null) {
-            vk.send("Неверный параметр ID", event.chatId)
+            api.send("Неверный параметр ID", event.chatId)
             return
         }
         if (messageText == null) {
-            vk.send("Неверный параметр СООБЩЕНИЕ", event.chatId)
+            api.send("Неверный параметр СООБЩЕНИЕ", event.chatId)
             return
         }
 
-        vk.send(messageText, receiverChatId)
+        api.send(messageText, receiverChatId)
     }
 }
