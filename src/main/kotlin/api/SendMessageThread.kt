@@ -3,7 +3,6 @@ import log
 import java.util.concurrent.ConcurrentLinkedQueue
 
 object SendMessageThread: Thread() {
-
     private var messages: ConcurrentLinkedQueue<Message> = ConcurrentLinkedQueue()
     private const val maxMessagesInOneSession = 7
     private val vk = VkPlatform()

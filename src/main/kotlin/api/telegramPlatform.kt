@@ -3,19 +3,12 @@ package api
 import com.google.gson.Gson
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
-import org.apache.http.entity.mime.content.FileBody
 import org.apache.http.impl.client.HttpClientBuilder
 import telApiToken
-import java.io.File
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.nio.file.Files
-import java.util.concurrent.CancellationException
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionException
-import java.util.concurrent.TimeoutException
 
 class TelegramPlatform : PlatformApiInterface {
     private val gson = Gson()
@@ -46,8 +39,7 @@ class TelegramPlatform : PlatformApiInterface {
                     "chat_id" to chatId,
                     "user_id" to "@$username"
             )
-            val result =
-                    makeJsonRequest<ChatMemberResponse>("getChatMember", values)
+            val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
             if (result != null) return (result as TelegramChatMember).user.id
         }
         return null
@@ -66,26 +58,22 @@ class TelegramPlatform : PlatformApiInterface {
         return sendPhotoFile(chatId, data, "")
     }
 
-    fun getMe(): TelegramUser? =
-            makeJsonRequest<UserResponse>("getMe", null)
-                    as TelegramUser?
+    fun getMe() = makeJsonRequest<UserResponse>("getMe", null) as TelegramUser?
 
     fun getUpdates(offset: Int): Array<TelegramUpdate>? {
         val values = mapOf(
                 "offset" to offset,
                 "timeout" to 25
         )
-        return makeJsonRequest<UpdatesResponse>("getUpdates", values)
-                as Array<TelegramUpdate>?
+        return makeJsonRequest<UpdatesResponse>("getUpdates", values) as Array<TelegramUpdate>?
     }
 
-    fun sendMessage(chatId: Int, text: String): TelegramMessage? {
+    private fun sendMessage(chatId: Int, text: String): TelegramMessage? {
         val values = mapOf(
                 "chat_id" to chatId,
                 "text" to text
         )
-        return makeJsonRequest<MessageResponse>("sendMessage", values)
-                as TelegramMessage?
+        return makeJsonRequest<MessageResponse>("sendMessage", values) as TelegramMessage?
     }
 
     fun sendPhotoURL(chatId: Int, photo: String, caption: String?): TelegramMessage? {
@@ -103,7 +91,7 @@ class TelegramPlatform : PlatformApiInterface {
                 "chat_id" to chatId.toString(),
                 "caption" to caption
         )
-        return makeMultipartRequest<MessageResponse>(parameters, photoByteArray)
+        return makeMultipartRequest(parameters, photoByteArray)
     }
 
     private inline fun <reified T> makeJsonRequest(
@@ -117,23 +105,7 @@ class TelegramPlatform : PlatformApiInterface {
                 .header("Content-Type", "application/json")
                 .build()
 
-        val future = try {
-            client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenApply(HttpResponse<String>::body)
-        } catch (e: CancellationException) {
-            println(e.message)
-            return null
-        } catch (e: CompletionException) {
-            println(e.message)
-            return null
-        }
-
-        val json = try {
-            (future as CompletableFuture<String>).get()
-        }
-        catch (e: TimeoutException){
-            null
-        }
+        val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
         val response = gson.fromJson(json, T::class.java)
 
         return if (response is Response && response.ok) response.result
@@ -142,7 +114,7 @@ class TelegramPlatform : PlatformApiInterface {
 
 
     @ExperimentalStdlibApi
-    private inline fun <reified T> makeMultipartRequest(
+    private fun makeMultipartRequest(
             parameters: Map<String, String?>, byteArray: ByteArray
     ): String {
         val multipartBuilder = MultipartEntityBuilder
@@ -165,7 +137,7 @@ class TelegramPlatform : PlatformApiInterface {
     }
 }
 
-open abstract class Response() {
+abstract class Response {
     abstract val ok: Boolean
     abstract val result: Any
     abstract val description: String?

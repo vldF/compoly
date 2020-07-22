@@ -1,7 +1,5 @@
 package api
 
-import api.objects.BaseUser
-
 interface PlatformApiInterface {
     fun send(text: String, chatId: Int, attachments: List<String> = listOf())
 
@@ -12,5 +10,4 @@ interface PlatformApiInterface {
     fun kickUserFromChat(chatId: Int, userId: Int)
 
     fun uploadPhoto(chatId: Int, data: ByteArray): String?
-
 }
