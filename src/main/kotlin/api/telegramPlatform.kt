@@ -11,28 +11,59 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.nio.file.Files
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionException
 import java.util.concurrent.TimeoutException
 
 class TelegramPlatform : PlatformApiInterface {
-    val gson = Gson()
+    private val gson = Gson()
+    private val client = HttpClient.newHttpClient()
+    private val chatIds = mutableSetOf<Int>()
 
     override fun send(text: String, chatId: Int, attachments: List<String>) {
-        TODO("Not yet implemented")
+        sendMessage(chatId, text)
+        chatIds.add(chatId)
     }
 
     override fun getUserNameById(id: Int): String? {
-        TODO("Not yet implemented")
+        for (chatId in chatIds) {
+            val values = mapOf(
+                    "chat_id" to chatId,
+                    "user_id" to id
+            )
+            val result =
+                    makeJsonRequest<ChatMemberResponse>("getChatMember", values)
+            if (result != null) return (result as TelegramChatMember).user.username
+        }
+        return null
+    }
+
+    fun getUserIdByName(username: String): Int? {
+        for (chatId in chatIds) {
+            val values = mapOf(
+                    "chat_id" to chatId,
+                    "user_id" to "@$username"
+            )
+            val result =
+                    makeJsonRequest<ChatMemberResponse>("getChatMember", values)
+            if (result != null) return (result as TelegramChatMember).user.id
+        }
+        return null
     }
 
     override fun kickUserFromChat(chatId: Int, userId: Int) {
-        TODO("Not yet implemented")
+        val values = mapOf(
+                "chat_id" to chatId,
+                "user_id" to userId
+        )
+        makeJsonRequest<Boolean>("kickChatMember", values)
     }
 
+    @ExperimentalStdlibApi
     override fun uploadPhoto(chatId: Int, data: ByteArray): String? {
-        TODO("Not yet implemented")
+        return sendPhotoFile(chatId, data, "")
     }
 
     fun getMe(): TelegramUser? =
@@ -66,13 +97,13 @@ class TelegramPlatform : PlatformApiInterface {
         return makeJsonRequest<MessageResponse>("sendPhoto", values) as TelegramMessage?
     }
 
-    fun sendPhotoFile(chatId: Int, photoPath: String, caption: String?) {
-        val fileBody = FileBody(File(photoPath))
+    @ExperimentalStdlibApi
+    fun sendPhotoFile(chatId: Int, photoByteArray: ByteArray, caption: String?): String {
         val parameters = mapOf(
                 "chat_id" to chatId.toString(),
                 "caption" to caption
         )
-        makeMultipartRequest(parameters,fileBody)
+        return makeMultipartRequest<MessageResponse>(parameters, photoByteArray)
     }
 
     private inline fun <reified T> makeJsonRequest(
@@ -80,7 +111,6 @@ class TelegramPlatform : PlatformApiInterface {
     ): Any? {
         val requestBody = gson.toJson(values)
 
-        val client = HttpClient.newHttpClient()
         val request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .uri(URI.create("https://api.telegram.org/bot$telApiToken/$method"))
@@ -105,54 +135,65 @@ class TelegramPlatform : PlatformApiInterface {
             null
         }
         val response = gson.fromJson(json, T::class.java)
-        val result =
-                if (response is Response) response?.result
-                else null
-        return result
+
+        return if (response is Response && response.ok) response.result
+        else null
     }
 
 
-    private fun makeMultipartRequest(parameters: Map<String, String?>, fileBody: FileBody) {
+    @ExperimentalStdlibApi
+    private inline fun <reified T> makeMultipartRequest(
+            parameters: Map<String, String?>, byteArray: ByteArray
+    ): String {
         val multipartBuilder = MultipartEntityBuilder
                 .create()
-                .addPart("photo", fileBody)
+                .addBinaryBody("photo", byteArray)
         for ((key, value) in parameters) {
             multipartBuilder.addTextBody(key, value)
         }
         val multipartData = multipartBuilder.build()
         val requestUploadImage = HttpPost("https://api.telegram.org/bot$telApiToken/sendPhoto")
         requestUploadImage.entity = multipartData
-        HttpClientBuilder
+        return HttpClientBuilder
                 .create()
                 .build()
                 .execute(requestUploadImage)
+                .entity
+                .content
+                .readAllBytes()
+                .decodeToString()
     }
 }
 
-open abstract class Response(
-        ok: Boolean,
-        description: String?
-) {
+open abstract class Response() {
+    abstract val ok: Boolean
     abstract val result: Any
+    abstract val description: String?
 }
 
 data class UpdatesResponse(
-        val ok: Boolean,
+        override val ok: Boolean,
         override val result: Array<TelegramUpdate>,
-        val description: String?
-): Response(ok, description)
+        override val description: String?
+): Response()
 
 data class MessageResponse(
-        val ok: Boolean,
+        override val ok: Boolean,
         override val result: TelegramMessage,
-        val description: String?
-): Response(ok, description)
+        override val description: String?
+): Response()
 
 data class UserResponse(
-        val ok: Boolean,
+        override val ok: Boolean,
         override val result: TelegramUser,
-        val description: String?
-): Response(ok, description)
+        override val description: String?
+): Response()
+
+data class ChatMemberResponse(
+        override val ok: Boolean,
+        override val result: TelegramChatMember,
+        override val description: String?
+): Response()
 
 
 data class TelegramUser(
@@ -167,6 +208,11 @@ data class TelegramUser(
         val supports_inline_queries: Boolean
 )
 
+data class TelegramChatMember(
+        val user: TelegramUser,
+        val status: String
+)
+
 data class TelegramChat(
         val id: Int,
         val type: String,
@@ -176,7 +222,7 @@ data class TelegramChat(
 data class TelegramMessage(
         val message_id: Int,
         val from: TelegramUser,
-        val date: Integer,
+        val date: Int,
         val chat: TelegramChat,
         val text: String
 )
