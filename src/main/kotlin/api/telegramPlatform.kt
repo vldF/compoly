@@ -40,7 +40,7 @@ class TelegramPlatform : PlatformApiInterface {
         return null
     }
 
-    fun getUserIdByName(username: String): Int? {
+    override fun getUserIdByName(username: String): Int? {
         for (chatId in chatIds) {
             val values = mapOf(
                     "chat_id" to chatId,

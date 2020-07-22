@@ -36,7 +36,7 @@ class VkPlatform : PlatformApiInterface {
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    fun getUserIdByName(showingName: String): Int? {
+    override fun getUserIdByName(showingName: String): Int? {
         val resp = post(
                 "users.get", mutableMapOf(
                 "user_ids" to showingName
