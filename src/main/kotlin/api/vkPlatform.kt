@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair
 import testMode
 import vkApiToken
 import java.io.ByteArrayInputStream
+import java.net.URL
 
 
 class VkPlatform : PlatformApiInterface {
@@ -62,13 +63,20 @@ class VkPlatform : PlatformApiInterface {
         ))
     }
 
-    override fun send(text: String, chatId: Int, attachments: List<String>) {
+    override fun send(text: String, chatId: Int, urls: List<String>) {
+        val attachments = mutableListOf<String>()
+        for (url in urls) {
+            val imageConnection = URL(url).openConnection()
+            val imageStream = imageConnection.getInputStream()
+            attachments.add(uploadPhoto(chatId, imageStream.readBytes()) ?: "")
+        }
+
         val message = Message(text, listOf(chatId), attachments)
         SendMessageThread.addInList(message)
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun uploadPhoto(peer_id: Int, data: ByteArray): String? {
+    fun uploadPhoto(peer_id: Int, data: ByteArray): String? {
         val serverData = post(
             "photos.getMessagesUploadServer",
             mutableMapOf(

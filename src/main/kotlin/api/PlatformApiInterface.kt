@@ -8,6 +8,4 @@ interface PlatformApiInterface {
     fun getUserIdByName(username: String): Int?
 
     fun kickUserFromChat(chatId: Int, userId: Int)
-
-    fun uploadPhoto(chatId: Int, data: ByteArray): String?
 }

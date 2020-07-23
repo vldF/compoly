@@ -16,8 +16,15 @@ class TelegramPlatform : PlatformApiInterface {
     private val chatIds = mutableSetOf<Int>()
 
     override fun send(text: String, chatId: Int, attachments: List<String>) {
-        sendMessage(chatId, text)
         chatIds.add(chatId)
+        if(attachments.isEmpty()) sendMessage(chatId, text)
+        else {
+            if (attachments.size == 1) sendPhotoURL(chatId, attachments[0], text)
+            else sendMediaGroupURL(
+                    chatId,
+                    attachments.map { TGInputMedia("photo", it) }.toTypedArray()
+            )
+        }
     }
 
     override fun getUserNameById(id: Int): String? {
@@ -28,7 +35,7 @@ class TelegramPlatform : PlatformApiInterface {
             )
             val result =
                     makeJsonRequest<ChatMemberResponse>("getChatMember", values)
-            if (result != null) return (result as TelegramChatMember).user.username
+            if (result != null) return (result as TGChatMember).user.username
         }
         return null
     }
@@ -40,7 +47,7 @@ class TelegramPlatform : PlatformApiInterface {
                     "user_id" to "@$username"
             )
             val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
-            if (result != null) return (result as TelegramChatMember).user.id
+            if (result != null) return (result as TGChatMember).user.id
         }
         return null
     }
@@ -53,36 +60,39 @@ class TelegramPlatform : PlatformApiInterface {
         makeJsonRequest<Boolean>("kickChatMember", values)
     }
 
-    @ExperimentalStdlibApi
-    override fun uploadPhoto(chatId: Int, data: ByteArray): String? {
-        return sendPhotoFile(chatId, data, "")
-    }
+    fun getMe() = makeJsonRequest<UserResponse>("getMe", null) as TGUser?
 
-    fun getMe() = makeJsonRequest<UserResponse>("getMe", null) as TelegramUser?
-
-    fun getUpdates(offset: Int): Array<TelegramUpdate>? {
+    fun getUpdates(offset: Int): Array<TGUpdate>? {
         val values = mapOf(
                 "offset" to offset,
                 "timeout" to 25
         )
-        return makeJsonRequest<UpdatesResponse>("getUpdates", values) as Array<TelegramUpdate>?
+        return makeJsonRequest<UpdatesResponse>("getUpdates", values) as Array<TGUpdate>?
     }
 
-    private fun sendMessage(chatId: Int, text: String): TelegramMessage? {
+    private fun sendMessage(chatId: Int, text: String): TGMessage? {
         val values = mapOf(
                 "chat_id" to chatId,
                 "text" to text
         )
-        return makeJsonRequest<MessageResponse>("sendMessage", values) as TelegramMessage?
+        return makeJsonRequest<MessageResponse>("sendMessage", values) as TGMessage?
     }
 
-    fun sendPhotoURL(chatId: Int, photo: String, caption: String?): TelegramMessage? {
+    private fun sendPhotoURL(chatId: Int, photo: String, caption: String = ""): TGMessage? {
         val values = mapOf(
                 "chat_id" to chatId,
                 "photo" to photo,
                 "caption" to caption
         )
-        return makeJsonRequest<MessageResponse>("sendPhoto", values) as TelegramMessage?
+        return makeJsonRequest<MessageResponse>("sendPhoto", values) as TGMessage?
+    }
+
+    private fun sendMediaGroupURL(chatId: Int, media: Array<TGInputMedia>): Array<TGMessage>? {
+        val values = mapOf(
+                "chat_id" to chatId,
+                "media" to media
+        )
+        return makeJsonRequest<MessagesResponse>("sendMediaGroup", values) as Array<TGMessage>?
     }
 
     @ExperimentalStdlibApi
@@ -145,30 +155,36 @@ abstract class Response {
 
 data class UpdatesResponse(
         override val ok: Boolean,
-        override val result: Array<TelegramUpdate>,
+        override val result: Array<TGUpdate>,
         override val description: String?
 ): Response()
 
 data class MessageResponse(
         override val ok: Boolean,
-        override val result: TelegramMessage,
+        override val result: TGMessage,
+        override val description: String?
+): Response()
+
+data class MessagesResponse(
+        override val ok: Boolean,
+        override val result: Array<TGMessage>,
         override val description: String?
 ): Response()
 
 data class UserResponse(
         override val ok: Boolean,
-        override val result: TelegramUser,
+        override val result: TGUser,
         override val description: String?
 ): Response()
 
 data class ChatMemberResponse(
         override val ok: Boolean,
-        override val result: TelegramChatMember,
+        override val result: TGChatMember,
         override val description: String?
 ): Response()
 
 
-data class TelegramUser(
+data class TGUser(
         val id: Int,
         val is_bot: Boolean,
         val first_name: String?,
@@ -180,26 +196,31 @@ data class TelegramUser(
         val supports_inline_queries: Boolean
 )
 
-data class TelegramChatMember(
-        val user: TelegramUser,
+data class TGChatMember(
+        val user: TGUser,
         val status: String
 )
 
-data class TelegramChat(
+data class TGChat(
         val id: Int,
         val type: String,
         val title: String
 )
 
-data class TelegramMessage(
+data class TGMessage(
         val message_id: Int,
-        val from: TelegramUser,
+        val from: TGUser,
         val date: Int,
-        val chat: TelegramChat,
+        val chat: TGChat,
         val text: String
 )
 
-data class TelegramUpdate(
+data class TGUpdate(
         val update_id: Int,
-        val message: TelegramMessage
+        val message: TGMessage
+)
+
+data class TGInputMedia(
+        val type: String,
+        val media: String
 )
