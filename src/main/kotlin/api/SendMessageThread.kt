@@ -47,7 +47,7 @@ object SendMessageThread: Thread() {
 }
 
 data class Message(
-    val message: String = "",
-    val chatIds: List<Int>,
-    val attachments: List<String>
+        val message: String = "",
+        val chatIds: List<Long>,
+        val attachments: List<String>
 )

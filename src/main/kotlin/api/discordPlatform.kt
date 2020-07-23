@@ -22,8 +22,7 @@ class DiscordPlatform : PlatformApiInterface {
 
     override fun getUserNameById(id: Long): String? = client.getUserById(id).toString()
 
-    override fun uploadPhoto(chatId: Long, data: ByteArray): String? {
-        client.getTextChannelById(chatId)?.sendFile(data, "")
-        return ""
+    fun uploadPhoto(chatId: Long, data: ByteArray) {
+        client.getTextChannelById(chatId)?.sendFile(data, "cat")
     }
 }
