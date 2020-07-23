@@ -108,11 +108,11 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                                 val seconds = fullSec % 60
                                 val message = "Еще наказан ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}"
 
-                                vk.send(message, peerId)
+                                vk.send(message, peerId.toLong())
                                 sleep(400)
-                                vk.kickUserFromChat(targetId, peerId)
+                                vk.kickUserFromChat(targetId.toLong(), peerId.toLong())
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
-                        } else vk.send("Приветствуем ${vk.getUserNameById(targetId)}", peerId)
+                        } else vk.send("Приветствуем ${vk.getUserNameById(targetId.toLong())}", peerId.toLong())
                     }
                 }
             }
