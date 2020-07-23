@@ -1,13 +1,11 @@
 package api
 
 interface PlatformApiInterface {
-    fun send(text: String, chatId: Long, attachments: List<String> = listOf())
+    fun send(text: String, chatId: Int, attachments: List<String> = listOf())
 
-    fun getUserNameById(id: Long): String?
+    fun getUserNameById(id: Int): String?
 
-    fun getUserIdByName(username: String): Long?
+    fun getUserIdByName(username: String): Int?
 
-    fun kickUserFromChat(chatId: Long, userId: Long)
-
-    fun uploadPhoto(chatId: Long, data: ByteArray): String?
+    fun kickUserFromChat(chatId: Int, userId: Int)
 }

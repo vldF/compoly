@@ -34,11 +34,7 @@ class Cats {
         val catInfo = JsonParser().parse(response.body()).asJsonArray[0].asJsonObject
         val imageUrl = catInfo["url"].asString
 
-        val imageConnection = URL(imageUrl).openConnection()
-        val imageStream = imageConnection.getInputStream()
-
-        val attachment = api.uploadPhoto(event.chatId, imageStream.readBytes()) ?: ""
-        api.send("", event.chatId, listOf(attachment))
+        api.send("", event.chatId, listOf(imageUrl))
     }
 }
 
