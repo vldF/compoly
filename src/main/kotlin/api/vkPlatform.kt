@@ -36,17 +36,17 @@ class VkPlatform : PlatformApiInterface {
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    override fun getUserIdByName(showingName: String): Int? {
+    override fun getUserIdByName(showingName: String): Long? {
         val resp = post(
                 "users.get", mutableMapOf(
                 "user_ids" to showingName
             )
         )
         val json = resp?.asJsonObject
-        return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asInt
+        return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asLong
     }
 
-    override fun getUserNameById(id: Int): String? {
+    override fun getUserNameById(id: Long): String? {
         val resp = post("users.get", mutableMapOf(
                 "user_ids" to id,
                 "fields" to "screen_name"
@@ -55,20 +55,20 @@ class VkPlatform : PlatformApiInterface {
         return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("screen_name")?.asString
     }
 
-    override fun kickUserFromChat(chatId: Int, userId: Int) {
+    override fun kickUserFromChat(chatId: Long, userId: Long) {
         post("messages.removeChatUser", mutableMapOf(
                 "chat_id" to chatId - 2000000000,
                 "user_id" to userId
         ))
     }
 
-    override fun send(text: String, chatId: Int, attachments: List<String>) {
-        val message = Message(text, listOf(chatId), attachments)
+    override fun send(text: String, chatId: Long, attachments: List<String>) {
+        val message = Message(text, listOf(chatId.toInt()), attachments)
         SendMessageThread.addInList(message)
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun uploadPhoto(peer_id: Int, data: ByteArray): String? {
+    override fun uploadPhoto(chatId: Long, data: ByteArray): String? {
         val serverData = post(
             "photos.getMessagesUploadServer",
             mutableMapOf(

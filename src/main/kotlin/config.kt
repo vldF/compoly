@@ -6,6 +6,8 @@ const val mainChatPeerId = 2000000002
 const val telApiToken = "1294496718:AAH4zTnxURHRth60AtJVvwpzlkY7OroWue4"
 const val telBotUsername = "compoly"
 
+const val disApiToken = "NzM1NzM2MTU4ODUxNjk0NjQz.XxkyUQ.rK-9BHwckLgRyzPxOeGN3JsBgvM"
+
 const val useTestChatId = true
 val chatIds = if (!useTestChatId) listOf(  // todo: remove 1?
     1,

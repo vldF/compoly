@@ -15,12 +15,12 @@ class TelegramPlatform : PlatformApiInterface {
     private val client = HttpClient.newHttpClient()
     private val chatIds = mutableSetOf<Int>()
 
-    override fun send(text: String, chatId: Int, attachments: List<String>) {
-        sendMessage(chatId, text)
-        chatIds.add(chatId)
+    override fun send(text: String, chatId: Long, attachments: List<String>) {
+        sendMessage(chatId.toInt(), text)
+        chatIds.add(chatId.toInt())
     }
 
-    override fun getUserNameById(id: Int): String? {
+    override fun getUserNameById(id: Long): String? {
         for (chatId in chatIds) {
             val values = mapOf(
                     "chat_id" to chatId,
@@ -33,19 +33,19 @@ class TelegramPlatform : PlatformApiInterface {
         return null
     }
 
-    override fun getUserIdByName(username: String): Int? {
+    override fun getUserIdByName(username: String): Long? {
         for (chatId in chatIds) {
             val values = mapOf(
                     "chat_id" to chatId,
                     "user_id" to "@$username"
             )
             val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
-            if (result != null) return (result as TelegramChatMember).user.id
+            if (result != null) return (result as TelegramChatMember).user.id.toLong()
         }
         return null
     }
 
-    override fun kickUserFromChat(chatId: Int, userId: Int) {
+    override fun kickUserFromChat(chatId: Long, userId: Long) {
         val values = mapOf(
                 "chat_id" to chatId,
                 "user_id" to userId
@@ -54,7 +54,7 @@ class TelegramPlatform : PlatformApiInterface {
     }
 
     @ExperimentalStdlibApi
-    override fun uploadPhoto(chatId: Int, data: ByteArray): String? {
+    override fun uploadPhoto(chatId: Long, data: ByteArray): String? {
         return sendPhotoFile(chatId, data, "")
     }
 
@@ -86,7 +86,7 @@ class TelegramPlatform : PlatformApiInterface {
     }
 
     @ExperimentalStdlibApi
-    fun sendPhotoFile(chatId: Int, photoByteArray: ByteArray, caption: String?): String {
+    fun sendPhotoFile(chatId: Long, photoByteArray: ByteArray, caption: String?): String {
         val parameters = mapOf(
                 "chat_id" to chatId.toString(),
                 "caption" to caption
