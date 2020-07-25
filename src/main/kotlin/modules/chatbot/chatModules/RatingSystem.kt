@@ -1,16 +1,18 @@
 package modules.chatbot.chatModules
 
-import api.VkPlatform
+import api.PlatformApiInterface
 import database.UserScore
 import database.dbQuery
 import log
 import modules.Active
 import modules.chatbot.CommandPermission
-import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
 import modules.chatbot.OnMessage
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -19,12 +21,10 @@ import kotlin.math.floor
 class RatingSystem {
     private val regex = Regex("^(.+)\\s(.+)\\s(-?\\d+)\$")
     private val mentionRegex = Regex("id(\\d+)(.*)")
-    private val respects = mutableMapOf<Pair<Int, Int>, Long>()
-    private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
+    private val respects = mutableMapOf<Pair<Long, Long>, Long>()
+    private val disrespects = mutableMapOf<Pair<Long, Long>, Long>()
 
     companion object {
-        private val vk = VkPlatform()
-
         private val levels = mapOf(
                 10..110 to "октябрёнок",
                 111..220 to "пионер",
@@ -36,7 +36,7 @@ class RatingSystem {
                 6001..Integer.MAX_VALUE to "Гелич"
         )
 
-        fun buyCommand(chatId: Int, userId: Int, cost: Int): Boolean {
+        fun buyCommand(chatId: Long, userId: Long, cost: Int, api: PlatformApiInterface): Boolean {
             var canBuy = true
             dbQuery {
                 val selected = UserScore.select {
@@ -49,7 +49,7 @@ class RatingSystem {
             }
 
             if (canBuy) {
-                addPoints(-cost, userId, chatId)
+                addPoints(-cost, userId, chatId, api)
             }
             return canBuy
         }
@@ -61,7 +61,7 @@ class RatingSystem {
             return "ЗАСЕКРЕЧЕНО"
         }
 
-        fun addPoints(count: Int, toUser: Int, chat: Int) {
+        fun addPoints(count: Int, toUser: Long, chat: Long, api: PlatformApiInterface) {
             var oldScore = -1
             var newScore = -1
             dbQuery {
@@ -84,17 +84,19 @@ class RatingSystem {
                 newScore = count + oldScore
             }
 
-            val name = getLevelName(newScore)
-            if (name != getLevelName(oldScore)) {
-                val screenName = vk.getUserNameById(toUser)
-                if (count > 0)
-                    vk.send("Партия поздравляет $screenName с повышением до $name!", chat)
-                else
-                    vk.send("Партия сочувствует $screenName. Он понижен до $name", chat)
+            val level = getLevelName(newScore)
+            val userName = api.getUserNameById(toUser)
+            when {
+                level != getLevelName(oldScore) && count > 0 -> {
+                    api.send("Партия поздравляет $userName с повышением до $level", chat)
+                }
+                level != getLevelName(oldScore) && count < 0 -> {
+                    api.send("Партия сочувствует ${userName}. Он понижен до $level", chat)
+                }
             }
         }
 
-        fun isUserHasScore(chatId: Int, userId: Int): Boolean {
+        fun isUserHasScore(chatId: Long, userId: Long): Boolean {
             val selected = dbQuery {
                 UserScore.select {
                     (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
@@ -112,6 +114,7 @@ class RatingSystem {
         CommandPermission.ADMIN_ONLY
     )
     fun add(event: LongPollNewMessageEvent) {
+        val api = event.api
         val chatId = event.chatId
         val messageParts = regex.find(event.text)
         val target = messageParts?.groupValues?.get(2)
@@ -121,14 +124,14 @@ class RatingSystem {
 
         val targetId = target?.let {
             if (it.contains("id"))
-                mentionRegex.find(it)?.groupValues?.get(1).let { v -> Integer.parseInt(v) }
+                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
             else {
                 val name = when {
                     it.contains("vk.com/") -> it.split("vk.com/")[1]
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserIdByName(name)
+                api.getUserIdByName(name)
             }
         }
             if (
@@ -139,22 +142,21 @@ class RatingSystem {
                 deltaScore == null
             ) {
                 log.info("arguments: $target, $deltaScore")
-                vk.send("Неверные аргументы, товарищ", chatId)
+                api.send("Неверные аргументы, товарищ", chatId)
                 return
         }
 
-        addPoints(deltaScore, targetId, chatId)
+        addPoints(deltaScore, targetId, chatId, api)
         if (deltaScore >= 0)
-            vk.send("Теперь у $target на $deltaScore e-балл больше!", chatId)
+            api.send("Теперь у $target на $deltaScore e-балл больше!", chatId)
         else
-            vk.send("Теперь у $target на ${-deltaScore} e-балл меньше!", chatId)
+            api.send("Теперь у $target на ${-deltaScore} e-балл меньше!", chatId)
     }
 
     @OnMessage
     fun onMessageReceive(event: LongPollNewMessageEvent) {
+        val api = event.api
         val chatId = event.chatId
-        val messageParts = regex.find(event.text)
-
         val count = when (event.text.split(" ").filter { it.length > 2 }.size) {
             in 0..1 -> 0
             in 2..6 -> 1
@@ -164,12 +166,13 @@ class RatingSystem {
             else -> 5
         }
 
-        addPoints(count, event.userId, chatId)
+        addPoints(count, event.userId, chatId, api)
     }
 
 
     @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов")
     fun showUsersInfo(event: LongPollNewMessageEvent) {
+        val api = event.api
         val chatId = event.chatId
         val userId = event.userId
 
@@ -180,48 +183,49 @@ class RatingSystem {
         }
 
         val levelName = getLevelName(score)
-        val screenName = vk.getUserNameById(userId)
+        val screenName = api.getUserNameById(userId)
 
         val showedScore = "$score".let {
             val l = it.length * 1.0 - 1
             it.substring(0..floor(l/2).toInt()) + "0".repeat(ceil(l/2).toInt())
         }
 
-        vk.send("По архивам Партии, у $screenName уровень $levelName. Это примерно $showedScore e-баллов", chatId)
+        api.send("По архивам Партии, у $screenName уровень $levelName. Это примерно $showedScore e-баллов", chatId)
     }
 
     @OnCommand(["одобряю", "респект", "respect"],
             "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ")
     fun respect(event: LongPollNewMessageEvent) {
+        val api = event.api
         val peerId = event.chatId
         val sender = event.userId
         val parts = event.text.split(" ")
         if (parts.size < 2) {
-            vk.send("Не указан одобряемый", peerId)
+            api.send("Не указан одобряемый", peerId)
             return
         }
 
         val target = parts[1]
         val targetId = target.let {
             if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
+                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
             else {
                 val name = when {
                     it.contains("vk.com/") -> it.split("vk.com/")[1]
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserIdByName(name)
+                api.getUserIdByName(name)
             }
         }
 
         if (targetId == null || !isUserHasScore(peerId, targetId)) {
-            vk.send("Партии неизвестно это лицо", peerId)
+            api.send("Партии неизвестно это лицо", peerId)
             return
         }
 
         if (targetId == sender) {
-            vk.send("Партия рекомендует не удалять рёбра", peerId)
+            api.send("Партия рекомендует не удалять рёбра", peerId)
             return
         }
 
@@ -230,46 +234,47 @@ class RatingSystem {
                 respects[sender to peerId] != null &&
                 currentTime - respects[sender to peerId]!! < 1000 * 60 * 60 * 4
         ) {
-            vk.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа", peerId)
+            api.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа", peerId)
             return
         }
 
         respects[sender to peerId] = currentTime
-        addPoints(10, targetId, peerId)
-        vk.send("Одобрение выражено", peerId)
+        addPoints(10, targetId, peerId, api)
+        api.send("Одобрение выражено", peerId)
     }
 
     @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
     fun disrespect(event: LongPollNewMessageEvent) {
+        val api = event.api
         val peerId = event.chatId
         val sender = event.userId
         val parts = event.text.split(" ")
         if (parts.size < 2) {
-            vk.send("Не указан осуждаемый", peerId)
+            api.send("Не указан осуждаемый", peerId)
             return
         }
 
         val target = parts[1]
         val targetId = target.let {
             if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
+                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
             else {
                 val name = when {
                     it.contains("vk.com/") -> it.split("vk.com/")[1]
                     it.startsWith("@") -> it.removePrefix("@")
                     else -> it
                 }
-                vk.getUserIdByName(name)
+                api.getUserIdByName(name)
             }
         }
 
         if (targetId == null || !isUserHasScore(peerId, targetId)) {
-            vk.send("Партии неизвестно это лицо", peerId)
+            api.send("Партии неизвестно это лицо", peerId)
             return
         }
 
         if (targetId == sender) {
-            vk.send("Партия рекомендует не удалять рёбра", peerId)
+            api.send("Партия рекомендует не удалять рёбра", peerId)
             return
         }
 
@@ -278,12 +283,12 @@ class RatingSystem {
                 disrespects[sender to peerId] != null &&
                 currentTime - disrespects[sender to peerId]!! < 1000 * 60 * 60 * 4
         ) {
-            vk.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа", peerId)
+            api.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа", peerId)
             return
         }
 
         disrespects[sender to peerId] = currentTime
-        addPoints(-10, targetId, peerId)
-        vk.send("Осуждение выражено", peerId)
+        addPoints(-10, targetId, peerId, api)
+        api.send("Осуждение выражено", peerId)
     }
 }

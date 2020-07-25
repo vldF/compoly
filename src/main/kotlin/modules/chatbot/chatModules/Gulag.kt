@@ -12,15 +12,15 @@ import java.util.concurrent.ConcurrentHashMap
 @Active
 class Gulag {
     private val mentionRegex = Regex("id(\\d+)(.*)")
-    private val gulagVoting = mutableMapOf<Pair<Int, Int>, Voting>()
-    private val gulagTimeout = mutableMapOf<Pair<Int, Int>, Long>()
+    private val gulagVoting = mutableMapOf<Pair<Long, Long>, Voting>()
+    private val gulagTimeout = mutableMapOf<Pair<Long, Long>, Long>()
 
     private val koefForKick = 0.3 // Процент от онлайна, нужный для кика
     private val minCount = 10 // Минимальное кол-во людей для кика
     private val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
 
     companion object {
-        val gulagKickTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
+        val gulagKickTime = ConcurrentHashMap<Pair<Long, Long>, Long>()
     }
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
@@ -38,7 +38,7 @@ class Gulag {
         val target = parts[1]
         val targetId = target.let {
             if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
+                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
             else {
                 val name = when {
                     it.contains("vk.com/") -> it.split("vk.com/")[1]
@@ -165,7 +165,7 @@ class Gulag {
         val target = parts[1]
         val targetId = target.let {
             if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
+                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
             else {
                 val name = when {
                     it.contains("vk.com/") -> it.split("vk.com/")[1]

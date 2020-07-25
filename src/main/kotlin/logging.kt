@@ -6,7 +6,7 @@ val log: Logger by lazy {
     val log = Logger.getLogger("main")
     val logFile = FileHandler("main.log")
     log.addHandler(logFile)
-    val formatter = SimpleFormatter();
+    val formatter = SimpleFormatter()
     logFile.formatter = formatter
     log
 }

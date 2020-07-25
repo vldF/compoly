@@ -5,9 +5,9 @@ class Voting(
     val timeOfClosing: Long,
     val rightNumToVote: Int
 ) {
-    private val voteSet = mutableSetOf<Pair<Int, Int>>()
+    private val voteSet = mutableSetOf<Pair<Long, Long>>()
 
-    fun addVote(id: Int, peer_id: Int): Boolean {
+    fun addVote(id: Long, peer_id: Long): Boolean {
         voteSet += id to peer_id
         return voteSet.size >= rightNumToVote
     }

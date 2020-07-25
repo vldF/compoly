@@ -2,8 +2,6 @@ package database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.addLogger
@@ -14,8 +12,8 @@ const val userName = "compoly"
 const val password = "c0mp0ly"
 
 object UserScore : Table() {
-    val userId = integer("user_id")
-    val chatId = integer("chat_id")
+    val userId = long("user_id")
+    val chatId = long("chat_id")
     val score = integer("score")
 }
 

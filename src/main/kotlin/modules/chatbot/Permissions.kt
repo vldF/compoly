@@ -1,7 +1,6 @@
 package modules.chatbot
 
 import api.VkPlatform
-import com.google.gson.JsonParser
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import modules.chatbot.chatBotEvents.Platform
 
@@ -13,7 +12,7 @@ object Permissions {
         Platform.TELEGRAM -> getPermissionsTelegram()
     }
 
-    private fun getPermissionsVk(userId: Int, chatId: Int): CommandPermission {
+    private fun getPermissionsVk(userId: Long, chatId: Long): CommandPermission {
         val users = vk.getChatMembers(chatId, listOf()) ?: return CommandPermission.ALL
         //Find Admin
         for (item in users) {

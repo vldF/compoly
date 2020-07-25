@@ -1,13 +1,10 @@
 package modules.chatbot.chatModules
 
-import api.VkPlatform
 import com.google.gson.JsonParser
 import modules.Active
-import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollEventBase
 import java.net.URI
-import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse

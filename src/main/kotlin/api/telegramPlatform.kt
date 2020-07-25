@@ -13,10 +13,9 @@ import java.net.http.HttpResponse
 class TelegramPlatform : PlatformApiInterface {
     private val gson = Gson()
     private val client = HttpClient.newHttpClient()
-    private val chatIds = mutableSetOf<Int>()
+    private val chatIds = setOf<Long>(-445009017)
 
-    override fun send(text: String, chatId: Int, attachments: List<String>) {
-        chatIds.add(chatId)
+    override fun send(text: String, chatId: Long, attachments: List<String>) {
         if(attachments.isEmpty()) sendMessage(chatId, text)
         else {
             if (attachments.size == 1) sendPhotoURL(chatId, attachments[0], text)
@@ -27,7 +26,7 @@ class TelegramPlatform : PlatformApiInterface {
         }
     }
 
-    override fun getUserNameById(id: Int): String? {
+    override fun getUserNameById(id: Long): String? {
         for (chatId in chatIds) {
             val values = mapOf(
                     "chat_id" to chatId,
@@ -40,7 +39,7 @@ class TelegramPlatform : PlatformApiInterface {
         return null
     }
 
-    override fun getUserIdByName(username: String): Int? {
+    override fun getUserIdByName(username: String): Long? {
         for (chatId in chatIds) {
             val values = mapOf(
                     "chat_id" to chatId,
@@ -52,7 +51,7 @@ class TelegramPlatform : PlatformApiInterface {
         return null
     }
 
-    override fun kickUserFromChat(chatId: Int, userId: Int) {
+    override fun kickUserFromChat(chatId: Long, userId: Long) {
         val values = mapOf(
                 "chat_id" to chatId,
                 "user_id" to userId
@@ -70,7 +69,7 @@ class TelegramPlatform : PlatformApiInterface {
         return makeJsonRequest<UpdatesResponse>("getUpdates", values) as Array<TGUpdate>?
     }
 
-    private fun sendMessage(chatId: Int, text: String): TGMessage? {
+    private fun sendMessage(chatId: Long, text: String): TGMessage? {
         val values = mapOf(
                 "chat_id" to chatId,
                 "text" to text
@@ -78,7 +77,7 @@ class TelegramPlatform : PlatformApiInterface {
         return makeJsonRequest<MessageResponse>("sendMessage", values) as TGMessage?
     }
 
-    private fun sendPhotoURL(chatId: Int, photo: String, caption: String = ""): TGMessage? {
+    private fun sendPhotoURL(chatId: Long, photo: String, caption: String = ""): TGMessage? {
         val values = mapOf(
                 "chat_id" to chatId,
                 "photo" to photo,
@@ -87,7 +86,7 @@ class TelegramPlatform : PlatformApiInterface {
         return makeJsonRequest<MessageResponse>("sendPhoto", values) as TGMessage?
     }
 
-    private fun sendMediaGroupURL(chatId: Int, media: Array<TGInputMedia>): Array<TGMessage>? {
+    private fun sendMediaGroupURL(chatId: Long, media: Array<TGInputMedia>): Array<TGMessage>? {
         val values = mapOf(
                 "chat_id" to chatId,
                 "media" to media
@@ -185,7 +184,7 @@ data class ChatMemberResponse(
 
 
 data class TGUser(
-        val id: Int,
+        val id: Long,
         val is_bot: Boolean,
         val first_name: String?,
         val last_name: String?,
@@ -202,7 +201,7 @@ data class TGChatMember(
 )
 
 data class TGChat(
-        val id: Int,
+        val id: Long,
         val type: String,
         val title: String
 )
@@ -212,12 +211,12 @@ data class TGMessage(
         val from: TGUser,
         val date: Int,
         val chat: TGChat,
-        val text: String
+        val text: String?
 )
 
 data class TGUpdate(
         val update_id: Int,
-        val message: TGMessage
+        val message: TGMessage?
 )
 
 data class TGInputMedia(

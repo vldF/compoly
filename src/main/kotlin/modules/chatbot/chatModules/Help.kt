@@ -1,10 +1,11 @@
 package modules.chatbot.chatModules
 
-import api.VkPlatform
 import modules.Active
-import modules.chatbot.*
+import modules.chatbot.CommandPermission
+import modules.chatbot.EventProcessor
+import modules.chatbot.OnCommand
+import modules.chatbot.Permissions
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
-import java.lang.StringBuilder
 
 @Active
 class Help {

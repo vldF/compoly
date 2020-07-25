@@ -21,7 +21,7 @@ class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
 
-    fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
+    fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
         val resp = post(
                 "messages.getConversationMembers",
                 mutableMapOf(

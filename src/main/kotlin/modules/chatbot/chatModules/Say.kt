@@ -1,9 +1,7 @@
 package modules.chatbot.chatModules
 
-import api.VkPlatform
 import modules.Active
 import modules.chatbot.CommandPermission
-import modules.chatbot.MessageNewObj
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 
@@ -19,7 +17,7 @@ class Say {
         val api = event.api
         val text = event.text
         val regexed = regex.find(text)
-        val receiverChatId = regexed?.groupValues?.get(2)?.let { Integer.parseInt(it) }
+        val receiverChatId = regexed?.groupValues?.get(2)?.toLongOrNull()
         val messageText = regexed?.groupValues?.get(3)
 
         if (receiverChatId == null) {

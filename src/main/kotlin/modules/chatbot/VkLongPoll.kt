@@ -108,11 +108,11 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                                 val seconds = fullSec % 60
                                 val message = "Еще наказан ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}"
 
-                                vk.send(message, peerId.toLong())
+                                vk.send(message, peerId)
                                 sleep(400)
-                                vk.kickUserFromChat(targetId.toLong(), peerId.toLong())
+                                vk.kickUserFromChat(targetId, peerId)
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
-                        } else vk.send("Приветствуем ${vk.getUserNameById(targetId.toLong())}", peerId.toLong())
+                        } else vk.send("Приветствуем ${vk.getUserNameById(targetId)}", peerId)
                     }
                 }
             }
@@ -150,10 +150,10 @@ data class JsonAnswer(
 
 data class MessageNewObj(
         val date: Int,
-        val from_id: Int,
-        val id: Int,
+        val from_id: Long,
+        val id: Long,
         val out: Int,
-        val peer_id: Int,
+        val peer_id: Long,
         val text: String,
         val conversation_message_id: Int,
         val fwd_messages: List<Any>,
@@ -165,7 +165,7 @@ data class MessageNewObj(
 ) {
     data class Action(
             val type: String,
-            val member_id: Int,
+            val member_id: Long,
             val text: String,
             val email: String,
             val photo: Any

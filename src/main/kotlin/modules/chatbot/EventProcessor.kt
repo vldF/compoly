@@ -39,6 +39,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
 
                 val text = event.text
                 if (text.isEmpty()) return
+                log.info("new message: $text")
 
                 val commandName = text.split(" ")[0].removePrefix("/")
                 for (module in commandListeners) {
