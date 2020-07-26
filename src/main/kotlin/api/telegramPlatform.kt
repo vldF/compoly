@@ -40,14 +40,7 @@ class TelegramPlatform : PlatformApiInterface {
     }
 
     override fun getUserIdByName(username: String): Long? {
-        for (chatId in chatIds) {
-            val values = mapOf(
-                    "chat_id" to chatId,
-                    "user_id" to "@$username"
-            )
-            val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
-            if (result != null) return (result as TGChatMember).user.id
-        }
+
         return null
     }
 
