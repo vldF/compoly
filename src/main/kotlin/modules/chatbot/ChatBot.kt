@@ -11,8 +11,8 @@ object ChatBot: Thread() {
         val queue = ConcurrentLinkedQueue<LongPollEventBase>()
 
         // longpolls
-        // VkLongPoll(queue).start()
-        DiscordLongPoll(queue).start()
+        //VkLongPoll(queue).start()
+        //DiscordLongPoll(queue).start()
         TelegramLongPoll(queue).start()
 
 
