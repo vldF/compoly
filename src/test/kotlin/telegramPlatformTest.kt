@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class TelegramPlatformTest {
-    private val telegram = TelegramPlatform(telApiToken)
+    private val telegram = TelegramPlatform
     private var lastUpdateId = 0
     private val TEST_CHAT_ID: Long = -426117826
     private val picUrl = "https://www.interfax.ru/ftproot/textphotos/2019/05/17/700gc.jpg"

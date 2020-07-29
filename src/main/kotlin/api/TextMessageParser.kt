@@ -5,7 +5,7 @@ import telTestToken
 import kotlin.reflect.KClass
 
 class TextMessageParser(private val platform : Platform) {
-    private val tgApi = TelegramPlatform(telTestToken)
+    private val tgApi = TelegramPlatform
 
     private val mentionRegex = Regex("id(\\d+)\\|(.*)]")
 

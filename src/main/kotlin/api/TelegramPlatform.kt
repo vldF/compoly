@@ -4,15 +4,18 @@ import com.google.gson.Gson
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.HttpClientBuilder
+import telApiToken
+import java.io.File
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-class TelegramPlatform(private val token: String) : PlatformApiInterface {
+object TelegramPlatform : PlatformApiInterface {
     private val gson = Gson()
     private val client = HttpClient.newHttpClient()
     private val chatIds = setOf<Long>(-445009017)
+    private const val token = telApiToken
 
     override fun send(text: String, chatId: Long, attachments: List<String>) {
         if(attachments.isEmpty()) sendMessage(chatId, text)
@@ -38,10 +41,7 @@ class TelegramPlatform(private val token: String) : PlatformApiInterface {
         return null
     }
 
-    override fun getUserIdByName(username: String): Long? {
-        //TODO
-        return null
-    }
+    override fun getUserIdByName(username: String): Long? = TelegramUsersDataBase.getIdByNick(username)
 
     override fun kickUserFromChat(chatId: Long, userId: Long) {
         val values = mapOf(
