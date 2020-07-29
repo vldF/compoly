@@ -3,7 +3,7 @@ package api
 import java.io.File
 
 object TelegramUsersDataBase {
-    private val idFile = loadUserIdFile()
+    private val file = loadUserIdFile()
     private var data = loadUserIds().toMutableMap()
 
     fun getIdByNick(nick: String) = data[nick]
@@ -11,13 +11,13 @@ object TelegramUsersDataBase {
     fun addId(id: Long) {
         val name = TelegramPlatform.getUserNameById(id) ?: return
         if (data[name] == id) return
-        idFile.writeText("${name}:${id}\n")
+        file.appendText("${name}:${id}\n")
         data[name] = id
     }
 
     fun addId(id: Long, name: String) {
         if (data[name] == id) return
-        idFile.writeText("${name}:${id}\n")
+        file.appendText("${name}:${id}\n")
         data[name] = id
     }
 
@@ -25,9 +25,11 @@ object TelegramUsersDataBase {
         val newData = data.map { (TelegramPlatform.getUserNameById(it.value) ?: "") to it.value }.toMap().toMutableMap()
         data = newData
 
+        val newContent = StringBuffer()
         for ((name, id) in newData) {
-            idFile.writeText("${name}:${id}\n")
+            newContent.append("${name}:${id}\n")
         }
+        file.writeText(newContent.toString())
     }
 
     private fun loadUserIdFile(): File {
@@ -39,7 +41,7 @@ object TelegramUsersDataBase {
         return file
     }
 
-    private fun loadUserIds() = idFile.readLines().map {
+    private fun loadUserIds() = file.readLines().map {
         it.split(":").let { p ->
             p[0] to p[1].toLong()
         }

@@ -99,7 +99,7 @@ data class Command(
 ) : AbstractParseData()
 
 data class Mention(
-    val targetId: Long,
+    val targetId: Long?,
     val targetScreenName: String,
     override val rawText: String
 ) : AbstractParseData()

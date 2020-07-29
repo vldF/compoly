@@ -1,6 +1,7 @@
 package api
 
 import com.google.gson.Gson
+import log
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.HttpClientBuilder
@@ -99,6 +100,7 @@ object TelegramPlatform : PlatformApiInterface {
             method: String, values: Map<String, Any?>?
     ): Any? {
         val requestBody = gson.toJson(values)
+        log.info("json of request: $requestBody")
 
         val request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -107,6 +109,7 @@ object TelegramPlatform : PlatformApiInterface {
                 .build()
 
         val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
+        log.info("json of response: $json")
         val response = gson.fromJson(json, T::class.java)
 
         return if (response is Response && response.ok) response.result

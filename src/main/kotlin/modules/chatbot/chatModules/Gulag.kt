@@ -1,21 +1,21 @@
 package modules.chatbot.chatModules
 
+import api.Mention
+import api.TextMessageParser
 import api.VkPlatform
 import modules.Active
 import modules.chatbot.CommandPermission
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
-import java.lang.IllegalStateException
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 
 @Active
 class Gulag {
-    private val mentionRegex = Regex("id(\\d+)(.*)")
     private val gulagVoting = mutableMapOf<Pair<Long, Long>, Voting>()
     private val gulagTimeout = mutableMapOf<Pair<Long, Long>, Long>()
 
-    private val koefForKick = 0.3 // Процент от онлайна, нужный для кика
+    private val coefficientForKick = 0.3 // Процент от онлайна, нужный для кика
     private val minCount = 10 // Минимальное кол-во людей для кика
     private val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
 
@@ -25,28 +25,16 @@ class Gulag {
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
     fun gulag(event: LongPollNewMessageEvent) {
-        if (event.api !is VkPlatform) return
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
-        val parts = event.text.split(" ")
-        if (parts.size < 2) {
+
+        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val target = parsed.get<Mention>(1)
+        val targetId = target?.targetId
+        if (target == null) {
             api.send("Не указан ссыльный", chatId)
             return
-        }
-
-        val target = parts[1]
-        val targetId = target.let {
-            if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                api.getUserIdByName(name)
-            }
         }
 
         if (targetId == null) {
@@ -59,7 +47,7 @@ class Gulag {
             return
         }
 
-        val screenName = api.getUserNameById(targetId)
+        val screenName = target.targetScreenName
         if (targetId to chatId in gulagKickTime.keys) {
             api.send("Партия уже наказала $screenName", chatId)
             return
@@ -76,10 +64,8 @@ class Gulag {
 
         if (gulagVoting[targetId to chatId] == null ||
             gulagVoting[targetId to chatId]!!.timeOfClosing < currentTime) {
-            val members = api.getChatMembers(chatId, listOf("online"))
-            val onlineCount = members?.filter { it.online!! == 1}?.size
-                    ?: throw IllegalStateException("error on getting members")
-            val count = (onlineCount * koefForKick).toInt()
+            val onlineCount = 10 // todo: get this value via API
+            val count = (onlineCount * coefficientForKick).toInt()
             val newVoting = Voting(currentTime + 1000 * 60 * 5, if (count > minCount) count else minCount)
 
             newVoting.addVote(sender, chatId)
@@ -108,32 +94,20 @@ class Gulag {
 
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN_ONLY)
     fun back(event: LongPollNewMessageEvent) {
-        if (event.api !is VkPlatform) return
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
-        val parts = event.text.split(" ")
-        if (parts.size < 2) {
+
+        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val target = parsed.get<Mention>(1)
+        val targetId = target?.targetId
+        if (target == null) {
             api.send("Не указан ссыльный", chatId)
             return
         }
 
-        val target = parts[1]
-        val targetId = target.let {
-            if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.let { v -> Integer.parseInt(v) }
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                api.getUserIdByName(name)
-            }
-        }
-
         if (targetId == null) {
-            api.send("Товарищ, нельзя вернуть того, кого нет", chatId)
+            api.send("Товарищ, нельзя сослать того, кого нет", chatId)
             return
         }
 
@@ -152,28 +126,16 @@ class Gulag {
 
     @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN_ONLY)
     fun admgulag(event: LongPollNewMessageEvent) {
-        if (event.api !is VkPlatform) return
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
-        val parts = event.text.split(" ")
-        if (parts.size < 2) {
+
+        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val target = parsed.get<Mention>(1)
+        val targetId = target?.targetId
+        if (target == null) {
             api.send("Не указан ссыльный", chatId)
             return
-        }
-
-        val target = parts[1]
-        val targetId = target.let {
-            if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                api.getUserIdByName(name)
-            }
         }
 
         if (targetId == null) {
@@ -186,9 +148,9 @@ class Gulag {
             return
         }
 
-        api.send("Подумай над своим поведением, $target, а потом напиши админам, чтобы тебя позвали назад", chatId)
+        api.send("Подумай над своим поведением, ${target.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад", chatId)
         sleep(500)
-        api.kickUserFromChat(targetId, chatId)
+        api.kickUserFromChat(chatId, targetId)
         val currentTime = System.currentTimeMillis()
         gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
         gulagVoting.remove(targetId to chatId)
