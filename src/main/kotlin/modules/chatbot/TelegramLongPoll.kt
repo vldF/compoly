@@ -17,7 +17,7 @@ class TelegramLongPoll(
             for (update in updates) {
                 if (update.message?.text == null) continue
                 val messageEvent = LongPollNewMessageEvent(
-                        Platform.VK,
+                        Platform.TELEGRAM,
                         telegram,
                         update.message.chat.id,
                         update.message.text,

@@ -40,7 +40,7 @@ class TelegramPlatform : PlatformApiInterface {
     }
 
     override fun getUserIdByName(username: String): Long? {
-
+        //TODO
         return null
     }
 
