@@ -4,12 +4,13 @@ import api.TelegramPlatform
 import modules.chatbot.chatBotEvents.LongPollEventBase
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import modules.chatbot.chatBotEvents.Platform
+import telApiToken
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class TelegramLongPoll(
         private val queue: ConcurrentLinkedQueue<LongPollEventBase>
 ): Thread() {
-    private val telegram = TelegramPlatform()
+    private val telegram = TelegramPlatform(telApiToken)
     override fun run() {
         var lastUpdateId = 0
         while(true) {

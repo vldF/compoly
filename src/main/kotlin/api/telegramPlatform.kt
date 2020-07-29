@@ -4,13 +4,12 @@ import com.google.gson.Gson
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.HttpClientBuilder
-import telApiToken
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-class TelegramPlatform : PlatformApiInterface {
+class TelegramPlatform(private val token: String) : PlatformApiInterface {
     private val gson = Gson()
     private val client = HttpClient.newHttpClient()
     private val chatIds = setOf<Long>(-445009017)
@@ -103,7 +102,7 @@ class TelegramPlatform : PlatformApiInterface {
 
         val request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .uri(URI.create("https://api.telegram.org/bot$telApiToken/$method"))
+                .uri(URI.create("https://api.telegram.org/bot$token/$method"))
                 .header("Content-Type", "application/json")
                 .build()
 
@@ -126,7 +125,7 @@ class TelegramPlatform : PlatformApiInterface {
             multipartBuilder.addTextBody(key, value)
         }
         val multipartData = multipartBuilder.build()
-        val requestUploadImage = HttpPost("https://api.telegram.org/bot$telApiToken/sendPhoto")
+        val requestUploadImage = HttpPost("https://api.telegram.org/bot$token/sendPhoto")
         requestUploadImage.entity = multipartData
         return HttpClientBuilder
                 .create()

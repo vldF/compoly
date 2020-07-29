@@ -1,10 +1,11 @@
 package api
 
 import modules.chatbot.chatBotEvents.Platform
+import telTestToken
 import kotlin.reflect.KClass
 
 class TextMessageParser(private val platform : Platform) {
-    private val tgApi = TelegramPlatform()
+    private val tgApi = TelegramPlatform(telTestToken)
 
     private val mentionRegex = Regex("id(\\d+)\\|(.*)]")
 
