@@ -11,12 +11,11 @@ import java.net.http.HttpResponse
 import java.time.Duration
 
 @Active
-class Cats {
+object Cats {
     private val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
     private val client = HttpClient.newHttpClient()
 
-    @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
-    fun cat(event: LongPollEventBase) {
+    fun getCatUrl(): String {
         val requestJson = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.thecatapi.com/v1/images/search?api_key=$theCatApiKey"))
                 .timeout(Duration.ofSeconds(10))
@@ -25,13 +24,14 @@ class Cats {
                 requestJson,
                 HttpResponse.BodyHandlers.ofString()
         )
-
-        val api = event.api
-
         val catInfo = JsonParser().parse(response.body()).asJsonArray[0].asJsonObject
-        val imageUrl = catInfo["url"].asString
+        return catInfo["url"].asString
+    }
 
-        api.send("", event.chatId, listOf(imageUrl))
+    @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
+    fun cat(event: LongPollEventBase) {
+        val api = event.api
+        api.sendCat(event.chatId)
     }
 }
 

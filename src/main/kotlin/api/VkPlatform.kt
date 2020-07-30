@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import log
+import modules.chatbot.chatModules.Cats
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
@@ -15,11 +16,23 @@ import testMode
 import vkApiToken
 import java.io.ByteArrayInputStream
 import java.net.URL
+import java.util.*
 
 
 class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
+    private val catPhotos: Queue<String> = LinkedList()
+
+    init {
+        uploadCat()
+    }
+
+    private fun uploadCat() {
+        val imageConnection = URL(Cats.getCatUrl()).openConnection()
+        val imageStream = imageConnection.getInputStream()
+        catPhotos.add(uploadPhoto(null, imageStream.readBytes()) ?: "")
+    }
 
     fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
         val resp = post(
@@ -74,14 +87,23 @@ class VkPlatform : PlatformApiInterface {
         SendMessageThread.addInList(message)
     }
 
+    override fun sendCat(chatId: Long) {
+        val message = Message("", listOf(chatId), listOf(catPhotos.poll()))
+        SendMessageThread.addInList(message)
+        uploadCat()
+    }
+
+
+
     @OptIn(ExperimentalStdlibApi::class)
-    fun uploadPhoto(peer_id: Long, data: ByteArray): String? {
-        val serverData = post(
-            "photos.getMessagesUploadServer",
-            mutableMapOf(
-                "peer_id" to peer_id
-            )
-        )
+    fun uploadPhoto(peer_id: Long?, data: ByteArray): String? {
+        val serverData =
+                if (peer_id != null) post(
+                    "photos.getMessagesUploadServer",
+                    mutableMapOf("peer_id" to peer_id)
+                )
+                else post("photos.getMessagesUploadServer", mutableMapOf())
+
 
         val jsonServer = serverData?.asJsonObject ?: return null
         val vkResponse = jsonServer["response"].asJsonObject ?: throw IllegalStateException(serverData.asString)

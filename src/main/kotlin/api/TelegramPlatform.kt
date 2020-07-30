@@ -2,6 +2,7 @@ package api
 
 import com.google.gson.Gson
 import log
+import modules.chatbot.chatModules.Cats
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.HttpClientBuilder
@@ -11,12 +12,18 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.util.*
 
 object TelegramPlatform : PlatformApiInterface {
     private val gson = Gson()
     private val client = HttpClient.newHttpClient()
     private val chatIds = setOf<Long>(-445009017)
     private const val token = telApiToken
+    private val catPhotos: Queue<String> = LinkedList()
+
+    init {
+        catPhotos.add(Cats.getCatUrl())
+    }
 
     override fun send(text: String, chatId: Long, attachments: List<String>) {
         if(attachments.isEmpty()) sendMessage(chatId, text)
@@ -43,6 +50,11 @@ object TelegramPlatform : PlatformApiInterface {
     }
 
     override fun getUserIdByName(username: String): Long? = TelegramUsersDataBase.getIdByNick(username)
+
+    override fun sendCat(id: Long) {
+        send("", id, listOf(catPhotos.poll()))
+        catPhotos.add(Cats.getCatUrl())
+    }
 
     override fun kickUserFromChat(chatId: Long, userId: Long) {
         val values = mapOf(
