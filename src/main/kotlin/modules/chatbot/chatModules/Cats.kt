@@ -1,10 +1,13 @@
 package modules.chatbot.chatModules
 
+import api.DiscordPlatform.uploadPhoto
+import api.VkPlatform
 import com.google.gson.JsonParser
 import modules.Active
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollEventBase
 import java.net.URI
+import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
@@ -30,8 +33,15 @@ object Cats {
 
     @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
     fun cat(event: LongPollEventBase) {
+        val url = getCatUrl()
         val api = event.api
-        api.sendCat(event.chatId)
+        if (api is VkPlatform) {
+            if (api.catPhotos.isEmpty())
+                api.catPhotos.add(api.convertUrlToVkPhoto(null, getCatUrl()))
+            api.sendPhotos("", event.chatId, listOf(api.catPhotos.poll()))
+            api.catPhotos.add(api.convertUrlToVkPhoto(null, url))
+        }
+        else api.send("", event.chatId, listOf(url))
     }
 }
 

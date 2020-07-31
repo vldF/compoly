@@ -17,9 +17,6 @@ object DiscordPlatform : PlatformApiInterface {
         }
     }
     override fun getUserIdByName(username: String): Long? = client.getUsersByName(username, false).first().idLong
-    override fun sendCat(id: Long) {
-        TODO("Not yet implemented")
-    }
 
     override fun kickUserFromChat(chatId: Long, userId: Long) {
     }

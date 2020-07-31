@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import log
-import modules.chatbot.chatModules.Cats
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
@@ -22,17 +21,7 @@ import java.util.*
 class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
-    private val catPhotos: Queue<String> = LinkedList()
-
-    init {
-        uploadCat()
-    }
-
-    private fun uploadCat() {
-        val imageConnection = URL(Cats.getCatUrl()).openConnection()
-        val imageStream = imageConnection.getInputStream()
-        catPhotos.add(uploadPhoto(null, imageStream.readBytes()) ?: "")
-    }
+    val catPhotos: Queue<String> = LinkedList()
 
     fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
         val resp = post(
@@ -75,25 +64,22 @@ class VkPlatform : PlatformApiInterface {
         ))
     }
 
+    fun convertUrlToVkPhoto(chatId: Long?, url: String): String? {
+        val imageConnection = URL(url).openConnection()
+        val imageStream = imageConnection.getInputStream()
+        return uploadPhoto(chatId, imageStream.readBytes())
+    }
+
     override fun send(text: String, chatId: Long, urls: List<String>) {
         val attachments = mutableListOf<String>()
-        for (url in urls) {
-            val imageConnection = URL(url).openConnection()
-            val imageStream = imageConnection.getInputStream()
-            attachments.add(uploadPhoto(chatId, imageStream.readBytes()) ?: "")
-        }
+        for (url in urls) attachments.add(convertUrlToVkPhoto(chatId, url) ?: "")
+        sendPhotos(text, chatId, attachments)
+    }
 
+    fun sendPhotos(text: String, chatId: Long, attachments: List<String>) {
         val message = Message(text, listOf(chatId), attachments)
         SendMessageThread.addInList(message)
     }
-
-    override fun sendCat(chatId: Long) {
-        val message = Message("", listOf(chatId), listOf(catPhotos.poll()))
-        SendMessageThread.addInList(message)
-        uploadCat()
-    }
-
-
 
     @OptIn(ExperimentalStdlibApi::class)
     fun uploadPhoto(peer_id: Long?, data: ByteArray): String? {

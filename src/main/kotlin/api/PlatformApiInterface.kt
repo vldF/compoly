@@ -7,7 +7,5 @@ interface PlatformApiInterface {
 
     fun getUserIdByName(username: String): Long?
 
-    fun sendCat(id: Long)
-
     fun kickUserFromChat(chatId: Long, userId: Long)
 }
