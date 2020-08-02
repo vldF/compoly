@@ -1,5 +1,9 @@
 package modules.chatbot
 
+@Target(AnnotationTarget.CLASS)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class ModuleObject
+
 @Target(AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class OnCommand(

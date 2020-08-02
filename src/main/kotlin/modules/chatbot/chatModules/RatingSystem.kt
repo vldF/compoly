@@ -6,6 +6,7 @@ import database.dbQuery
 import log
 import modules.Active
 import modules.chatbot.CommandPermission
+import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.OnMessage
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
@@ -17,94 +18,92 @@ import kotlin.math.ceil
 import kotlin.math.floor
 
 @Suppress("DuplicatedCode")
-@Active
-class RatingSystem {
+@ModuleObject
+object RatingSystem {
     private val regex = Regex("^(.+)\\s(.+)\\s(-?\\d+)\$")
     private val mentionRegex = Regex("id(\\d+)(.*)")
     private val respects = mutableMapOf<Pair<Long, Long>, Long>()
     private val disrespects = mutableMapOf<Pair<Long, Long>, Long>()
 
-    companion object {
-        private val levels = mapOf(
-                10..110 to "октябрёнок",
-                111..220 to "пионер",
-                221..450 to "пролетарий",
-                451..680 to "комсомолец",
-                681..1400 to "член профсоюза",
-                1401..2600 to "посол",
-                2601..6000 to "генсек",
-                6001..Integer.MAX_VALUE to "Гелич"
-        )
+    private val levels = mapOf(
+            10..110 to "октябрёнок",
+            111..220 to "пионер",
+            221..450 to "пролетарий",
+            451..680 to "комсомолец",
+            681..1400 to "член профсоюза",
+            1401..2600 to "посол",
+            2601..6000 to "генсек",
+            6001..Integer.MAX_VALUE to "Гелич"
+    )
 
-        fun buyCommand(chatId: Long, userId: Long, cost: Int, api: PlatformApiInterface): Boolean {
-            var canBuy = true
-            dbQuery {
-                val selected = UserScore.select {
-                    (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
-                }.firstOrNull()
-                val senderPoints = selected?.get(UserScore.score) ?: 0
-                if (senderPoints < cost) {
-                    canBuy = false
-                }
-            }
-
-            if (canBuy) {
-                addPoints(-cost, userId, chatId, api)
-            }
-            return canBuy
-        }
-
-        fun getLevelName(score: Int): String {
-            for ((key, value) in levels) {
-                if (score in key) return value
-            }
-            return "ЗАСЕКРЕЧЕНО"
-        }
-
-        fun addPoints(count: Int, toUser: Long, chat: Long, api: PlatformApiInterface) {
-            var oldScore = -1
-            var newScore = -1
-            dbQuery {
-                val selected = UserScore.select{
-                    (UserScore.chatId eq chat) and (UserScore.userId eq toUser)
-                }.firstOrNull()
-                if (selected == null) {
-                    UserScore.insert {
-                        it[chatId] = chat
-                        it[userId] = toUser
-                        it[score] = count
-                    }
-                } else {
-                    UserScore.update({ (UserScore.chatId eq chat) and (UserScore.userId eq toUser) }) {
-                        it[score] = selected[score] +  count
-                    }
-                }
-
-                oldScore = selected?.get(UserScore.score) ?: 0
-                newScore = count + oldScore
-            }
-
-            val level = getLevelName(newScore)
-            val userName = api.getUserNameById(toUser)
-            when {
-                level != getLevelName(oldScore) && count > 0 -> {
-                    api.send("Партия поздравляет $userName с повышением до $level", chat)
-                }
-                level != getLevelName(oldScore) && count < 0 -> {
-                    api.send("Партия сочувствует ${userName}. Он понижен до $level", chat)
-                }
+    fun buyCommand(chatId: Long, userId: Long, cost: Int, api: PlatformApiInterface): Boolean {
+        var canBuy = true
+        dbQuery {
+            val selected = UserScore.select {
+                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+            }.firstOrNull()
+            val senderPoints = selected?.get(UserScore.score) ?: 0
+            if (senderPoints < cost) {
+                canBuy = false
             }
         }
 
-        fun isUserHasScore(chatId: Long, userId: Long): Boolean {
-            val selected = dbQuery {
-                UserScore.select {
-                    (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
-                }.firstOrNull()
+        if (canBuy) {
+            addPoints(-cost, userId, chatId, api)
+        }
+        return canBuy
+    }
+
+    fun getLevelName(score: Int): String {
+        for ((key, value) in levels) {
+            if (score in key) return value
+        }
+        return "ЗАСЕКРЕЧЕНО"
+    }
+
+    fun addPoints(count: Int, toUser: Long, chat: Long, api: PlatformApiInterface) {
+        var oldScore = -1
+        var newScore = -1
+        dbQuery {
+            val selected = UserScore.select{
+                (UserScore.chatId eq chat) and (UserScore.userId eq toUser)
+            }.firstOrNull()
+            if (selected == null) {
+                UserScore.insert {
+                    it[chatId] = chat
+                    it[userId] = toUser
+                    it[score] = count
+                }
+            } else {
+                UserScore.update({ (UserScore.chatId eq chat) and (UserScore.userId eq toUser) }) {
+                    it[score] = selected[score] +  count
+                }
             }
 
-            return selected != null
+            oldScore = selected?.get(UserScore.score) ?: 0
+            newScore = count + oldScore
         }
+
+        val level = getLevelName(newScore)
+        val userName = api.getUserNameById(toUser)
+        when {
+            level != getLevelName(oldScore) && count > 0 -> {
+                api.send("Партия поздравляет $userName с повышением до $level", chat)
+            }
+            level != getLevelName(oldScore) && count < 0 -> {
+                api.send("Партия сочувствует ${userName}. Он понижен до $level", chat)
+            }
+        }
+    }
+
+    fun isUserHasScore(chatId: Long, userId: Long): Boolean {
+        val selected = dbQuery {
+            UserScore.select {
+                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+            }.firstOrNull()
+        }
+
+        return selected != null
     }
 
 

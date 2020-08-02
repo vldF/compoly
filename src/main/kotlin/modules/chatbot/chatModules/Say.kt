@@ -2,11 +2,12 @@ package modules.chatbot.chatModules
 
 import modules.Active
 import modules.chatbot.CommandPermission
+import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 
-@Active
-class Say {
+@ModuleObject
+object Say {
     private val regex = Regex("(/say) (\\d+) ([\\w\\W\\d]*)")
 
     @OnCommand(["say"],

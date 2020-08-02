@@ -5,23 +5,21 @@ import api.TextMessageParser
 import api.VkPlatform
 import modules.Active
 import modules.chatbot.CommandPermission
+import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 
-@Active
-class Gulag {
+@ModuleObject
+object Gulag {
     private val gulagVoting = mutableMapOf<Pair<Long, Long>, Voting>()
     private val gulagTimeout = mutableMapOf<Pair<Long, Long>, Long>()
 
-    private val coefficientForKick = 0.3 // Процент от онлайна, нужный для кика
-    private val minCount = 10 // Минимальное кол-во людей для кика
-    private val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
-
-    companion object {
-        val gulagKickTime = ConcurrentHashMap<Pair<Long, Long>, Long>()
-    }
+    private const val coefficientForKick = 0.3 // Процент от онлайна, нужный для кика
+    private const val minCount = 10 // Минимальное кол-во людей для кика
+    private const val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
+    val gulagKickTime = ConcurrentHashMap<Pair<Long, Long>, Long>()
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
     fun gulag(event: LongPollNewMessageEvent) {

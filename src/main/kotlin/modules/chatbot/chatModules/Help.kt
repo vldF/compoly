@@ -1,14 +1,11 @@
 package modules.chatbot.chatModules
 
 import modules.Active
-import modules.chatbot.CommandPermission
-import modules.chatbot.EventProcessor
-import modules.chatbot.OnCommand
-import modules.chatbot.Permissions
+import modules.chatbot.*
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 
-@Active
-class Help {
+@ModuleObject
+object Help {
     @OnCommand(["помощь", "help", "h", "?"], "отображение справки (из дурки)")
     fun help(event: LongPollNewMessageEvent) {
         val api = event.api

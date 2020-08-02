@@ -64,31 +64,42 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
     private fun initModules() {
         ClassGraph().enableAllInfo().whitelistPackages("modules.chatbot.chatModules")
                 .scan().use { scanResult ->
-                    val classes = scanResult.allClasses
-                    commandListeners = classes.flatMap {
-                        it.methodAndConstructorInfo.filter { method ->
-                            method.hasAnnotation(OnCommand::class.java.name)
-                        }.map { method ->
-                            val loadedMethod = method.loadClassAndGetMethod()
-                            val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
-                            CommandListener(
-                                    annotation.commands,
-                                    annotation.description,
-                                    it.loadClass().getConstructor().newInstance(),
-                                    loadedMethod,
-                                    annotation.permissions,
-                                    annotation.cost
-                            )
-                        }
-                    }
+                    val classes = scanResult.allClasses.filter { it.hasAnnotation(ModuleObject::class.java.name) }
+
+                    commandListeners = classes
+                            .filter { it.isPublic }
+                            .flatMap { clazz ->
+                                val constructor = clazz.loadClass().getDeclaredConstructor()
+
+                                constructor.trySetAccessible()
+                                val clazzInstance = constructor.newInstance()
+
+                                clazz.methodAndConstructorInfo.filter { method ->
+                                    method.hasAnnotation(OnCommand::class.java.name)
+                                }.map { method ->
+                                    val loadedMethod = method.loadClassAndGetMethod()
+                                    val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                                    CommandListener(
+                                            annotation.commands,
+                                            annotation.description,
+                                            clazzInstance,
+                                            loadedMethod,
+                                            annotation.permissions,
+                                            annotation.cost
+                                    )
+                                }
+                            }
 
                     messageListeners = classes.flatMap {
+                        val clazz = it.loadClass().getDeclaredConstructor()
+                        clazz.trySetAccessible()
+                        val clazzInstance = clazz.newInstance()
                         it.methodAndConstructorInfo.filter { method ->
                             method.hasAnnotation(OnMessage::class.java.name)
                         }.map { method ->
                             val loadedMethod = method.loadClassAndGetMethod()
                             MessageListener(
-                                    it.loadClass().getConstructor().newInstance(),
+                                    clazzInstance,
                                     loadedMethod
                             )
                         }
