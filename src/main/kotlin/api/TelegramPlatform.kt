@@ -47,11 +47,6 @@ object TelegramPlatform : PlatformApiInterface {
 
     override fun getUserIdByName(username: String): Long? = TelegramUsersDataBase.getIdByNick(username)
 
-/*    override fun sendCat(id: Long) {
-        send("", id, listOf(catPhotos.poll()))
-        catPhotos.add(Cats.getCatUrl())
-    }*/
-
     override fun kickUserFromChat(chatId: Long, userId: Long) {
         val values = mapOf(
                 "chat_id" to chatId,

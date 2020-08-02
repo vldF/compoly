@@ -15,13 +15,11 @@ import testMode
 import vkApiToken
 import java.io.ByteArrayInputStream
 import java.net.URL
-import java.util.*
 
 
 class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
-    val catPhotos: Queue<String> = LinkedList()
 
     fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
         val resp = post(
@@ -64,7 +62,7 @@ class VkPlatform : PlatformApiInterface {
         ))
     }
 
-    fun convertUrlToVkPhoto(chatId: Long?, url: String): String? {
+    fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String? {
         val imageConnection = URL(url).openConnection()
         val imageStream = imageConnection.getInputStream()
         return uploadPhoto(chatId, imageStream.readBytes())
@@ -72,7 +70,7 @@ class VkPlatform : PlatformApiInterface {
 
     override fun send(text: String, chatId: Long, urls: List<String>) {
         val attachments = mutableListOf<String>()
-        for (url in urls) attachments.add(convertUrlToVkPhoto(chatId, url) ?: "")
+        for (url in urls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
         sendPhotos(text, chatId, attachments)
     }
 
