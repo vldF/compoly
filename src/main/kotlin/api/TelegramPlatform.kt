@@ -91,17 +91,31 @@ object TelegramPlatform : PlatformApiInterface {
     }
 
     @ExperimentalStdlibApi
-    fun sendPhotoFile(chatId: Int, photoByteArray: ByteArray, caption: String?): String {
-        val parameters = mapOf(
+    fun sendPhotoFile(chatId: Long, photoByteArray: ByteArray, caption: String?): String {
+        val values = mapOf(
                 "chat_id" to chatId.toString(),
                 "caption" to caption
         )
-        return makeMultipartRequest(parameters, photoByteArray)
+        return makeMultipartRequest(values, photoByteArray)
+    }
+
+    fun sendDice(chatId: Long): Int {
+        println("diceStart")
+        val values = mapOf(
+                "chat_id" to chatId.toString(),
+                "emoji" to "\uD83C\uDFAF"
+        )
+        val result = makeJsonRequest<MessageResponse>("sendDice", values)
+        println("converting")
+        val message = result as TGMessage?
+        println("diceEnd")
+        return message?.dice?.value ?: -1
     }
 
     private inline fun <reified T> makeJsonRequest(
             method: String, values: Map<String, Any?>?
     ): Any? {
+        println("makeJsonRequestStart")
         val requestBody = gson.toJson(values)
         log.info("json of request: $requestBody")
 
@@ -113,9 +127,13 @@ object TelegramPlatform : PlatformApiInterface {
 
         val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
         log.info("json of response: $json")
+        log.info("waiting")
         val response = gson.fromJson(json, T::class.java)
-
-        return if (response is Response && response.ok) response.result
+        log.info("response: $response")
+        return if (response is Response && response.ok) {
+            log.info("response.result: $response.result")
+            response.result
+        }
         else null
     }
 
@@ -209,7 +227,8 @@ data class TGMessage(
         val from: TGUser,
         val date: Int,
         val chat: TGChat,
-        val text: String?
+        val text: String?,
+        val dice: TGDice
 )
 
 data class TGUpdate(
@@ -220,4 +239,9 @@ data class TGUpdate(
 data class TGInputMedia(
         val type: String,
         val media: String
+)
+
+data class TGDice(
+        val emoji: String,
+        val value: Int
 )
