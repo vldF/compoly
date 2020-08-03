@@ -2,7 +2,6 @@ package modules.chatbot.chatModules
 
 import api.VkPlatform
 import com.google.gson.JsonParser
-import modules.Active
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollEventBase

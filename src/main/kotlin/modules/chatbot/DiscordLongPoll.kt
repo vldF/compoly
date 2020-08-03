@@ -20,4 +20,8 @@ class DiscordLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase
             }
         }
     }
+
+    override fun run() {
+        DiscordPlatform.addListener(discordListener)
+    }
 }

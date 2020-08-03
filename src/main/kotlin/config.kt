@@ -7,7 +7,8 @@ const val telApiToken = "1294496718:AAH4zTnxURHRth60AtJVvwpzlkY7OroWue4"
 const val telTestToken = "1377903420:AAEyegzv9nB70mfroXRXjCRbAh-aSUlZZYw"
 const val telBotUsername = "compoly"
 
-const val disApiToken = "NzM1NzM2MTU4ODUxNjk0NjQz.XxkyUQ.rK-9BHwckLgRyzPxOeGN3JsBgvM"
+//const val disApiToken = "NzM1NzM2MTU4ODUxNjk0NjQz.XxkyUQ.rK-9BHwckLgRyzPxOeGN3JsBgvM"
+const val disApiToken = "NzMyNDE3MzQ5OTgyMDkzMzgy.Xw0Szw.U-zkN0_8ywgnUZEeTYjzyzgNbak"
 
 const val useTestChatId = true
 val chatIds = if (!useTestChatId) listOf(  // todo: remove 1?
