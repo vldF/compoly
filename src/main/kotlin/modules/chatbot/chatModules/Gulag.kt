@@ -70,7 +70,7 @@ object Gulag {
             gulagVoting[targetId to chatId] = newVoting
             api.send(
                "Голосование на отправление $screenName в лагерь началось - 1/${newVoting.rightNumToVote}\n" +
-                    "Отправь /гулаг $screenName",
+                    "Отправь /гулаг ${target.rawText}",
                     chatId
             )
         } else {

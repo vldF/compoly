@@ -100,22 +100,22 @@ object TelegramPlatform : PlatformApiInterface {
     }
 
     fun sendDice(chatId: Long): Int {
-        println("diceStart")
+        log.info("diceStart")
         val values = mapOf(
                 "chat_id" to chatId.toString(),
                 "emoji" to "\uD83C\uDFAF"
         )
         val result = makeJsonRequest<MessageResponse>("sendDice", values)
-        println("converting")
+        log.info("converting")
         val message = result as TGMessage?
-        println("diceEnd")
+        log.info("diceEnd")
         return message?.dice?.value ?: -1
     }
 
     private inline fun <reified T> makeJsonRequest(
             method: String, values: Map<String, Any?>?
     ): Any? {
-        println("makeJsonRequestStart")
+        log.info("makeJsonRequestStart")
         val requestBody = gson.toJson(values)
         log.info("json of request: $requestBody")
 

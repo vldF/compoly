@@ -127,7 +127,7 @@ object RatingSystem {
                 return
             }
 
-            if (targetId == null || deltaScore == null) {
+            if (targetId == null) {
                 log.info("arguments: $target, $deltaScore")
                 api.send("Неверные аргументы, товарищ", chatId)
                 return
@@ -141,7 +141,7 @@ object RatingSystem {
                 api.send("Теперь у $screenName на ${-deltaScore} e-балл меньше!", chatId)
 
         } catch (e: NumberFormatException) {
-            api.send("Слишком большое число, товарищ", chatId)
+            api.send("Некорректное число, товарищ", chatId)
             return
         }
     }

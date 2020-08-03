@@ -1,6 +1,5 @@
 package modules.chatbot.chatModules
 
-import modules.Active
 import modules.chatbot.CommandPermission
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand

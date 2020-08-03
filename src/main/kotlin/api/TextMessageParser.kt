@@ -1,6 +1,7 @@
 package api
 
 import modules.chatbot.chatBotEvents.Platform
+import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 class TextMessageParser(private val platform : Platform) {
@@ -9,7 +10,7 @@ class TextMessageParser(private val platform : Platform) {
     private val mentionRegex = Regex("id(\\d+)\\|(.*)]")
 
     fun parse(text: String): ParseObject {
-        val words = text.split(" ")
+        val words = text.split(Pattern.compile("\\s+"))
         val parseObject = ParseObject()
 
         for ((i, word) in words.withIndex()) {
@@ -67,8 +68,8 @@ class TextMessageParser(private val platform : Platform) {
     }
 
     private fun processDiscordMention(text: String): Mention? {
-        val mentRegex = Regex("<@(\\d+)>")
-        val regex = mentRegex.find(text)
+        val mentionRegex = Regex("<@(\\d+)>")
+        val regex = mentionRegex.find(text)
         val id = regex?.groupValues?.getOrNull(1)?.removeSurrounding("<@", ">")?.toLongOrNull() ?: return null
         val nick = dsApi.getUserNameById(id) ?: return null
         return Mention(id, nick, text)
