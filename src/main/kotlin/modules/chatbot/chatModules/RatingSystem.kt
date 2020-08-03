@@ -1,10 +1,12 @@
 package modules.chatbot.chatModules
 
+import api.IntegerNumber
+import api.Mention
 import api.PlatformApiInterface
+import api.TextMessageParser
 import database.UserScore
 import database.dbQuery
 import log
-import modules.Active
 import modules.chatbot.CommandPermission
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
@@ -115,41 +117,33 @@ object RatingSystem {
     fun add(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val messageParts = regex.find(event.text)
-        val target = messageParts?.groupValues?.get(2)
-        val deltaScore = messageParts?.groupValues?.get(3)?.let {
-            Integer.parseInt(it)
-        }
-
-        val targetId = target?.let {
-            if (it.contains("id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                api.getUserIdByName(name)
+        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val target = parsed.get<Mention>(1)
+        val targetId = target?.targetId
+        try {
+            val deltaScore = parsed.get<IntegerNumber>(2)?.number!!.toInt()
+            if (target == null) {
+                api.send("Не указан ссыльный", chatId)
+                return
             }
-        }
-            if (
-                messageParts?.groupValues == null ||
-                messageParts.groupValues.size != 4 ||
-                target == null ||
-                targetId == null ||
-                deltaScore == null
-            ) {
+
+            if (targetId == null || deltaScore == null) {
                 log.info("arguments: $target, $deltaScore")
                 api.send("Неверные аргументы, товарищ", chatId)
                 return
-        }
+            }
+            val screenName = target.targetScreenName
 
-        addPoints(deltaScore, targetId, chatId, api)
-        if (deltaScore >= 0)
-            api.send("Теперь у $target на $deltaScore e-балл больше!", chatId)
-        else
-            api.send("Теперь у $target на ${-deltaScore} e-балл меньше!", chatId)
+            addPoints(deltaScore, targetId, chatId, api)
+            if (deltaScore >= 0)
+                api.send("Теперь у $screenName на $deltaScore e-балл больше!", chatId)
+            else
+                api.send("Теперь у $screenName на ${-deltaScore} e-балл меньше!", chatId)
+
+        } catch (e: NumberFormatException) {
+            api.send("Слишком большое число, товарищ", chatId)
+            return
+        }
     }
 
     @OnMessage
@@ -198,26 +192,14 @@ object RatingSystem {
         val api = event.api
         val peerId = event.chatId
         val sender = event.userId
-        val parts = event.text.split(" ")
-        if (parts.size < 2) {
+        val parsed = TextMessageParser(event.platform).parse(event.text)
+        if (parsed.size < 2) {
             api.send("Не указан одобряемый", peerId)
             return
         }
 
-        val target = parts[1]
-        val targetId = target.let {
-            if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                api.getUserIdByName(name)
-            }
-        }
-
+        val target = parsed.get<Mention>(1)
+        val targetId = target?.targetId
         if (targetId == null || !isUserHasScore(peerId, targetId)) {
             api.send("Партии неизвестно это лицо", peerId)
             return
@@ -247,26 +229,14 @@ object RatingSystem {
         val api = event.api
         val peerId = event.chatId
         val sender = event.userId
-        val parts = event.text.split(" ")
-        if (parts.size < 2) {
-            api.send("Не указан осуждаемый", peerId)
+        val parsed = TextMessageParser(event.platform).parse(event.text)
+        if (parsed.size < 2) {
+            api.send("Не указан одобряемый", peerId)
             return
         }
 
-        val target = parts[1]
-        val targetId = target.let {
-            if (it.contains("[id"))
-                mentionRegex.find(it)?.groupValues?.get(1)?.toLongOrNull()
-            else {
-                val name = when {
-                    it.contains("vk.com/") -> it.split("vk.com/")[1]
-                    it.startsWith("@") -> it.removePrefix("@")
-                    else -> it
-                }
-                api.getUserIdByName(name)
-            }
-        }
-
+        val target = parsed.get<Mention>(1)
+        val targetId = target?.targetId
         if (targetId == null || !isUserHasScore(peerId, targetId)) {
             api.send("Партии неизвестно это лицо", peerId)
             return

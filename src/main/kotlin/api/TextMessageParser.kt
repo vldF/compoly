@@ -1,12 +1,11 @@
 package api
 
 import modules.chatbot.chatBotEvents.Platform
-import telTestToken
 import kotlin.reflect.KClass
 
 class TextMessageParser(private val platform : Platform) {
     private val tgApi = TelegramPlatform
-
+    private val dsApi = DiscordPlatform
     private val mentionRegex = Regex("id(\\d+)\\|(.*)]")
 
     fun parse(text: String): ParseObject {
@@ -20,8 +19,9 @@ class TextMessageParser(private val platform : Platform) {
                     parseObject.add(command)
                 }
 
-                word.startsWith("@") || word.startsWith("[id") -> {
+                word.startsWith("@") || word.startsWith("[id") || word.startsWith("<@") -> {
                     val processedMention = processMention(word)
+                    print(processedMention)
                     if (processedMention == null) {
                         parseObject.add(Text(word))
                     } else {
@@ -46,7 +46,7 @@ class TextMessageParser(private val platform : Platform) {
         return when (platform) {
             Platform.VK -> { processVkMention(text) }
             Platform.TELEGRAM -> { processTelegramMention(text) }
-            Platform.DISCORD -> { null }
+            Platform.DISCORD -> { processDiscordMention(text) }
         }
     }
 
@@ -64,6 +64,14 @@ class TextMessageParser(private val platform : Platform) {
         val screenName = regex.groupValues.getOrNull(2) ?: return null
 
         return Mention(id, screenName, text)
+    }
+
+    private fun processDiscordMention(text: String): Mention? {
+        val mentRegex = Regex("<@(\\d+)>")
+        val regex = mentRegex.find(text)
+        val id = regex?.groupValues?.getOrNull(1)?.removeSurrounding("<@", ">")?.toLongOrNull() ?: return null
+        val nick = dsApi.getUserNameById(id) ?: return null
+        return Mention(id, nick, text)
     }
 }
 
@@ -84,8 +92,14 @@ class ParseObject {
     fun isObjectOnIndexHasType(index: Int, type: KClass<*>): Boolean =
         data.getOrNull(index) != null && data.getOrNull(index)!!::class == type
 
+    override fun toString(): String {
+        return "ParseObject(data=$data)"
+    }
+
     val size: Int
         get() = data.size
+
+
 }
 
 
