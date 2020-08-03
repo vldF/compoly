@@ -87,7 +87,7 @@ object TelegramPlatform : PlatformApiInterface {
                 "chat_id" to chatId,
                 "media" to media
         )
-        return makeJsonRequest<MessagesResponse>("sendMediaGroup", values) as Array<TGMessage>?
+        return makeJsonRequest<MultiMessagesResponse>("sendMediaGroup", values) as Array<TGMessage>?
     }
 
     @ExperimentalStdlibApi
@@ -180,7 +180,7 @@ data class MessageResponse(
         override val description: String?
 ): Response()
 
-data class MessagesResponse(
+data class MultiMessagesResponse(
         override val ok: Boolean,
         override val result: Array<TGMessage>,
         override val description: String?
