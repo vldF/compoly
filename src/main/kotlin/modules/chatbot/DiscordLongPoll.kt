@@ -14,10 +14,17 @@ class DiscordLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase
     private class DiscordListener(private val platform: DiscordPlatform, private val poll: DiscordLongPoll) : ListenerAdapter() {
         override fun onMessageReceived(event: MessageReceivedEvent) {
             val msg = event.message
-            if (msg.contentRaw.startsWith("/")) {
-                val channel = event.channel
-                poll.queue.add(LongPollNewMessageEvent(Platform.DISCORD, platform, channel.idLong, msg.contentRaw, msg.author.idLong))
-            }
+            val channel = event.channel
+            poll.queue.add(
+                    LongPollNewMessageEvent(
+                        Platform.DISCORD,
+                        platform,
+                        channel.idLong,
+                        msg.contentRaw,
+                        msg.author.idLong
+                    )
+            )
+
         }
     }
 
