@@ -4,16 +4,15 @@ import api.TelegramPlatform
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
+import modules.chatbot.chatBotEvents.LongPollNewTGMessageEvent
 
 @ExperimentalStdlibApi
 @ModuleObject
 class Lottery {
-    @OnCommand(["lottery", "darts", "дартс"], "Дартс, дартс, дартс, дартс", cost = 20)
+    @OnCommand(["\uD83C\uDFAF", "\uD83C\uDFB2", "⚽", "\uD83C\uDFC0"], cost = 20)
     fun play(event: LongPollNewMessageEvent) {
-        if (event.api !is TelegramPlatform) return
-        val telegram = event.api
-        when(telegram.sendDice(event.chatId)
-            ) {
+        if (event.api is TelegramPlatform)
+        when((event as LongPollNewTGMessageEvent).diceResult) {
             1 -> sendResult(event,
                     "вы потеряли 20 е-баллов. Партия собалезнует вам",
                     0)

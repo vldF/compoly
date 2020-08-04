@@ -228,7 +228,7 @@ data class TGMessage(
         val date: Int,
         val chat: TGChat,
         val text: String?,
-        val dice: TGDice
+        val dice: TGDice?
 )
 
 data class TGUpdate(
