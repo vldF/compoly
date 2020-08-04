@@ -35,10 +35,12 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
     private fun process(event: LongPollEventBase) {
         when (event) {
             is LongPollNewMessageEvent -> {
-                //messageListeners.forEach { it.call.invoke(it.baseClass, event) }
+                messageListeners.forEach { it.call.invoke(it.baseClass, event) }
+
 
                 val text = event.text
                 if (text.isEmpty()) return
+                if (!text.startsWith("/")) return
                 log.info("new message: $text")
 
                 val commandName = text.split(" ")[0].removePrefix("/")
