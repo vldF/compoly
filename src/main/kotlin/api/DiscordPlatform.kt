@@ -26,10 +26,14 @@ object DiscordPlatform : PlatformApiInterface {
     override fun getUserIdByName(username: String): Long? = client.getUsersByName(username, false).first().idLong
 
     override fun kickUserFromChat(chatId: Long, userId: Long) {
-        client.guilds.first().ban(userId.toString(), 1).queue()
+        client.guilds.firstOrNull()?.ban(userId.toString(), 1)?.queue()
     }
 
     override fun getUserNameById(id: Long): String? = client.getUserById(id)?.name ?: "ЗАСЕКРЕЧЕНО"
+
+    override fun isUserAdmin(chatId: Long, userId: Long): Boolean =
+        client.guilds.firstOrNull()?.getMemberById(userId)?.roles?.any { it.name == "Админ" } == true
+
 
     fun uploadPhoto(chatId: Long, data: ByteArray) {
         client.getTextChannelById(chatId)?.sendFile(data, "cat")

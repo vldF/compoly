@@ -9,7 +9,7 @@ annotation class ModuleObject
 annotation class OnCommand(
         val commands: Array<String>,
         val description: String = "",
-        val permissions: CommandPermission = CommandPermission.ALL,
+        val permissions: CommandPermission = CommandPermission.USER,
         val cost: Int = 0
 )
 

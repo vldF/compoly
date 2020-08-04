@@ -55,6 +55,17 @@ object TelegramPlatform : PlatformApiInterface {
         makeJsonRequest<Boolean>("kickChatMember", values)
     }
 
+    override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+        val values = mapOf(
+                "chat_id" to chatId,
+                "user_id" to userId
+        )
+
+        val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
+        val status = (result as TGChatMember).status
+        return status == "creator" || status == "owner"
+    }
+
     fun getMe() = makeJsonRequest<UserResponse>("getMe", null) as TGUser?
 
     fun getUpdates(offset: Int): Array<TGUpdate>? {

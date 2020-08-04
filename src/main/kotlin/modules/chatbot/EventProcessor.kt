@@ -4,6 +4,7 @@ import io.github.classgraph.ClassGraph
 import log
 import modules.chatbot.chatBotEvents.LongPollEventBase
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
+import modules.chatbot.chatModules.RatingSystem
 import modules.chatbot.listeners.CommandListener
 import modules.chatbot.listeners.MessageListener
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -37,18 +38,23 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
             is LongPollNewMessageEvent -> {
                 messageListeners.forEach { it.call.invoke(it.baseClass, event) }
 
-
                 val text = event.text
                 if (text.isEmpty()) return
                 if (!text.startsWith("/")) return
                 log.info("new message: $text")
 
                 val commandName = text.split(" ")[0].removePrefix("/")
+                val api = event.api
                 for (module in commandListeners) {
                     if (module.commands.contains(commandName)) {
-                        //todo: add purchasing and permissions
-                        module.call.invoke(module.baseClass, event)
-                        log.info("command: $text")
+                        if (module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)) {
+                            if (RatingSystem.buyCommand(event.chatId, event.userId, module.cost, api)) {
+                                module.call.invoke(module.baseClass, event)
+                                log.info("command: $text")
+                            } else {
+                                api.send("Товарищь, у Вас недостаточно е-баллов для команды", event.chatId)
+                            }
+                        }
                     }
                 }
             }

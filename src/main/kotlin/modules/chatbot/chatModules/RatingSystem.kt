@@ -112,7 +112,7 @@ object RatingSystem {
     @OnCommand(
         ["добавить", "add"],
         "добавить пользователю очков. /add ID COUNT",
-        CommandPermission.ADMIN_ONLY
+        CommandPermission.ADMIN
     )
     fun add(event: LongPollNewMessageEvent) {
         val api = event.api

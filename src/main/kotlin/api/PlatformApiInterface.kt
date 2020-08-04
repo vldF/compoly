@@ -8,4 +8,6 @@ interface PlatformApiInterface {
     fun getUserIdByName(username: String): Long?
 
     fun kickUserFromChat(chatId: Long, userId: Long)
+
+    fun isUserAdmin(chatId: Long, userId: Long): Boolean
 }

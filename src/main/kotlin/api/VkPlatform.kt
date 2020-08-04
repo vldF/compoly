@@ -62,6 +62,12 @@ class VkPlatform : PlatformApiInterface {
         ))
     }
 
+    override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+        val chatMembers = getChatMembers(chatId, listOf())
+        val userInTheChat = chatMembers?.firstOrNull { it.member_id == chatId }
+        return userInTheChat?.is_admin == true
+    }
+
     fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String? {
         val imageConnection = URL(url).openConnection()
         val imageStream = imageConnection.getInputStream()

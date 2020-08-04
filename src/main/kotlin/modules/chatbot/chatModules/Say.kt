@@ -11,7 +11,7 @@ object Say {
 
     @OnCommand(["say"],
         "отправить сообщение в чат с ID: /say ID СООБЩЕНИЕ",
-        CommandPermission.ADMIN_ONLY
+        CommandPermission.ADMIN
     )
     fun say(event: LongPollNewMessageEvent) {
         val api = event.api

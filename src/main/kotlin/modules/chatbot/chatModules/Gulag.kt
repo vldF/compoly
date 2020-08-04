@@ -2,8 +2,6 @@ package modules.chatbot.chatModules
 
 import api.Mention
 import api.TextMessageParser
-import api.VkPlatform
-import modules.Active
 import modules.chatbot.CommandPermission
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
@@ -90,7 +88,7 @@ object Gulag {
         gulagTimeout[sender to chatId] = currentTime
     }
 
-    @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN_ONLY)
+    @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN)
     fun back(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
@@ -122,7 +120,7 @@ object Gulag {
         api.send("$target может вернуться досрочно", chatId)
     }
 
-    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN_ONLY)
+    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN)
     fun admgulag(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
