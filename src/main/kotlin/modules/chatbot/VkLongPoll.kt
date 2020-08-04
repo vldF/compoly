@@ -1,5 +1,6 @@
 package modules.chatbot
 
+import api.SendMessageThread
 import api.VkPlatform
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -69,6 +70,8 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
 
     override fun run() {
         initLongPoll()
+        SendMessageThread.start()
+
         while (true) {
             val response = longPollRequest().body()
             val jsonAnswer = Gson().fromJson(response, JsonAnswer::class.java)

@@ -64,7 +64,7 @@ class VkPlatform : PlatformApiInterface {
 
     override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
         val chatMembers = getChatMembers(chatId, listOf())
-        val userInTheChat = chatMembers?.firstOrNull { it.member_id == chatId }
+        val userInTheChat = chatMembers?.firstOrNull { it.member_id == userId }
         return userInTheChat?.is_admin == true
     }
 

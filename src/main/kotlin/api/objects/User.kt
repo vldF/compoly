@@ -7,7 +7,6 @@ abstract class BaseUser {
 }
 
 data class VkUser(
-        override val id: Long,
         override val name: String,
         override val nick: String,  // aka `domain`
         val first_name: String,
@@ -18,4 +17,6 @@ data class VkUser(
         val online: Int?,
         val is_admin: Boolean,
         val member_id: Long
-        ) : BaseUser()
+        ) : BaseUser() {
+        override val id = member_id
+        }

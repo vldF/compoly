@@ -98,7 +98,7 @@ object RatingSystem {
         }
     }
 
-    fun isUserHasScore(chatId: Long, userId: Long): Boolean {
+    private fun userHasScore(chatId: Long, userId: Long): Boolean {
         val selected = dbQuery {
             UserScore.select {
                 (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
@@ -178,12 +178,14 @@ object RatingSystem {
         val levelName = getLevelName(score)
         val screenName = api.getUserNameById(userId)
 
-        val showedScore = "$score".let {
-            val l = it.length * 1.0 - 1
-            it.substring(0..floor(l/2).toInt()) + "0".repeat(ceil(l/2).toInt())
-        }
+        val showingScore = "${calculateShowingScore(score)}"
+        api.send("По архивам Партии, у $screenName уровень $levelName. Это примерно $showingScore e-баллов", chatId)
+    }
 
-        api.send("По архивам Партии, у $screenName уровень $levelName. Это примерно $showedScore e-баллов", chatId)
+    fun calculateShowingScore(realScore: Int): Int {
+        val stringPresentation = realScore.toString()
+        val l = stringPresentation.length * 1.0 - 1
+        return (stringPresentation.substring(0..floor(l/2).toInt()) + "0".repeat(ceil(l/2).toInt())).toInt()
     }
 
     @OnCommand(["одобряю", "респект", "respect"],
@@ -200,7 +202,7 @@ object RatingSystem {
 
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
-        if (targetId == null || !isUserHasScore(peerId, targetId)) {
+        if (targetId == null || !userHasScore(peerId, targetId)) {
             api.send("Партии неизвестно это лицо", peerId)
             return
         }
@@ -237,7 +239,7 @@ object RatingSystem {
 
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
-        if (targetId == null || !isUserHasScore(peerId, targetId)) {
+        if (targetId == null || !userHasScore(peerId, targetId)) {
             api.send("Партии неизвестно это лицо", peerId)
             return
         }
