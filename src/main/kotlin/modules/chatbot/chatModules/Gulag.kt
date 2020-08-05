@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 @ModuleObject
 object Gulag {
     private val gulagVoting = mutableMapOf<Pair<Long, Long>, Voting>()
-    private val gulagTimeout = mutableMapOf<Pair<Long, Long>, Long>()
+    private val votedIds = mutableMapOf<Long, MutableSet<Long>>()
 
     private const val coefficientForKick = 0.3 // Процент от онлайна, нужный для кика
     private const val minCount = 10 // Минимальное кол-во людей для кика
@@ -43,21 +43,23 @@ object Gulag {
             return
         }
 
+        if (targetId == api.meId) {
+            api.send("Пара воронков уже выехали", chatId)
+            return
+        }
+
         val screenName = target.targetScreenName
         if (targetId to chatId in gulagKickTime.keys) {
             api.send("Партия уже наказала $screenName", chatId)
             return
         }
 
-        val currentTime = System.currentTimeMillis()
-        if (
-            gulagTimeout[sender to chatId] != null &&
-            currentTime - gulagTimeout[sender to chatId]!! < 1000 * 60 * 60 * 4
-        ) {
-            api.send("Партия не рекомендует отправлять в ГУЛАГ других лиц чаще, чем раз в 4 часа", chatId)
+        if (votedIds[targetId]?.contains(sender) == true) {
+            api.send("Вы уже проголосовали за этого предателя родины", chatId)
             return
         }
 
+        val currentTime = System.currentTimeMillis()
         if (gulagVoting[targetId to chatId] == null ||
             gulagVoting[targetId to chatId]!!.timeOfClosing < currentTime) {
             val onlineCount = 10 // todo: get this value via API
@@ -85,7 +87,12 @@ object Gulag {
                 gulagVoting.remove(targetId to chatId)
             }
         }
-        gulagTimeout[sender to chatId] = currentTime
+
+        if (votedIds[targetId] == null) {
+            votedIds[targetId] = mutableSetOf(sender)
+        } else {
+            votedIds[targetId]!!.add(sender)
+        }
     }
 
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN)
@@ -150,7 +157,5 @@ object Gulag {
         val currentTime = System.currentTimeMillis()
         gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
         gulagVoting.remove(targetId to chatId)
-        gulagTimeout[sender to chatId] = currentTime
-
     }
 }

@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 class TextMessageParser(private val platform : Platform) {
     private val tgApi = TelegramPlatform
     private val dsApi = DiscordPlatform
-    private val mentionRegex = Regex("id(\\d+)\\|(.*)]")
+    private val mentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
 
     fun parse(text: String): ParseObject {
         val words = text.split(Pattern.compile("\\s+"))
@@ -20,7 +20,13 @@ class TextMessageParser(private val platform : Platform) {
                     parseObject.add(command)
                 }
 
-                word.startsWith("@") || word.startsWith("[id") || word.startsWith("<@") -> {
+                word.startsWith("@")
+                        || word.startsWith("[id")
+                        || word.startsWith("[club")
+                        || word.startsWith("[public")
+                        || word.startsWith("[group")
+                        || word.startsWith("<@") ->
+                {
                     val processedMention = processMention(word)
                     print(processedMention)
                     if (processedMention == null) {
@@ -86,6 +92,7 @@ class ParseObject {
         return data[index]
     }
 
+    // WARNING: Pleas, be cautious; it may throws "can't cast X to T" todo
     fun <T : AbstractParseData> get(index: Int): T? = data.getOrNull(index) as? T
 
     fun getTextSlice(start: Int, end: Int) = data.slice(start..end).joinToString(" ") { it.rawText }

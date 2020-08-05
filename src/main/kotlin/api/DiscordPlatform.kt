@@ -14,6 +14,8 @@ object DiscordPlatform : PlatformApiInterface {
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .build()
 
+    override val meId: Long = client.selfUser.idLong
+
     override fun send(text: String, chatId: Long, pixUrls: List<String>) {
         log.info("send discord: msg(channel: $chatId): $text")
         val channel = client.getTextChannelById(chatId)

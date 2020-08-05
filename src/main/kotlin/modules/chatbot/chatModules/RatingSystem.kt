@@ -123,7 +123,7 @@ object RatingSystem {
         try {
             val deltaScore = parsed.get<IntegerNumber>(2)?.number!!.toInt()
             if (target == null) {
-                api.send("Не указан ссыльный", chatId)
+                api.send("Не указан товарищ", chatId)
                 return
             }
 
@@ -195,16 +195,20 @@ object RatingSystem {
         val peerId = event.chatId
         val sender = event.userId
         val parsed = TextMessageParser(event.platform).parse(event.text)
-        if (parsed.size < 2) {
-            api.send("Не указан одобряемый", peerId)
-            return
-        }
 
         val target = parsed.get<Mention>(1)
-        val targetId = target?.targetId
-        if (targetId == null || !userHasScore(peerId, targetId)) {
-            api.send("Партии неизвестно это лицо", peerId)
+        var targetId = target?.targetId
+        if (targetId == api.meId) {
+            api.send("Мы и так знаем, что Вы, Товарищ, одобряете Нас!", peerId)
             return
+        }
+        if (targetId == null || !userHasScore(peerId, targetId)) {
+            if (event.forwardMessageFromId != null) {
+                targetId = event.forwardMessageFromId
+            } else {
+                api.send("Укажите одобряемого", peerId)
+                return
+            }
         }
 
         if (targetId == sender) {
@@ -232,16 +236,20 @@ object RatingSystem {
         val peerId = event.chatId
         val sender = event.userId
         val parsed = TextMessageParser(event.platform).parse(event.text)
-        if (parsed.size < 2) {
-            api.send("Не указан одобряемый", peerId)
-            return
-        }
 
         val target = parsed.get<Mention>(1)
-        val targetId = target?.targetId
-        if (targetId == null || !userHasScore(peerId, targetId)) {
-            api.send("Партии неизвестно это лицо", peerId)
+        var targetId = target?.targetId
+        if (targetId == api.meId) {
+            api.send("Да как ты, враг народа, смеешь осуждать Нашу Партию?", peerId)
             return
+        }
+        if (targetId == null || !userHasScore(peerId, targetId)) {
+            if (event.forwardMessageFromId != null) {
+                targetId = event.forwardMessageFromId
+            } else {
+                api.send("Укажите одобряемого", peerId)
+                return
+            }
         }
 
         if (targetId == sender) {

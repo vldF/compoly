@@ -17,6 +17,7 @@ object TelegramPlatform : PlatformApiInterface {
     private val chatIds = setOf<Long>(-445009017)
     private const val token = telApiToken
 
+    override val meId: Long by lazy { getMe()?.id ?: 0 }
 
     override fun send(text: String, chatId: Long, pixUrls: List<String>) {
         if(pixUrls.isEmpty()) sendMessage(chatId, text)
@@ -236,7 +237,8 @@ data class TGMessage(
         val date: Int,
         val chat: TGChat,
         val text: String?,
-        val dice: TGDice?
+        val dice: TGDice?,
+        val reply_to_message: TGMessage?
 )
 
 data class TGUpdate(

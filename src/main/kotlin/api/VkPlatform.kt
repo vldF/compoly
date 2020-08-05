@@ -21,6 +21,8 @@ class VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
 
+    override val meId: Long = 188281612 // todo: get this value via API
+
     fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
         val resp = post(
                 "messages.getConversationMembers",
@@ -83,6 +85,11 @@ class VkPlatform : PlatformApiInterface {
     fun sendPhotos(text: String, chatId: Long, attachments: List<String>) {
         val message = Message(text, listOf(chatId), attachments)
         SendMessageThread.addInList(message)
+    }
+
+    fun getMe(): Long {
+        val resp = post("users.get", mutableMapOf())
+        return resp?.get("response")?.asJsonObject?.get("id")?.asLong ?: 0
     }
 
     @OptIn(ExperimentalStdlibApi::class)

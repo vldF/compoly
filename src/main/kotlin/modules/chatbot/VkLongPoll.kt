@@ -1,6 +1,5 @@
 package modules.chatbot
 
-import api.SendMessageThread
 import api.VkPlatform
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -84,12 +83,15 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
 
             for (update in jsonAnswer.updates) {
                 if (update.type == "message_new" && (!useTestChatId || update.`object`.peer_id != mainChatPeerId)) {
+                    val forwarded = update.`object`.reply_message
+                    val forwardedFromId = forwarded?.from_id
                     val messageEvent = LongPollNewMessageEvent(
                             Platform.VK,
                             vk,
                             update.`object`.peer_id,
                             update.`object`.text,
-                            update.`object`.from_id
+                            update.`object`.from_id,
+                            forwardedFromId
                     )
 
                     queue.add(messageEvent)
@@ -158,7 +160,7 @@ data class MessageNewObj(
         val peer_id: Long,
         val text: String,
         val conversation_message_id: Int,
-        val fwd_messages: List<Any>,
+        val reply_message: MessageNewObj?,
         val important: Boolean,
         val random_id: Int,
         val attachments: List<Any>,

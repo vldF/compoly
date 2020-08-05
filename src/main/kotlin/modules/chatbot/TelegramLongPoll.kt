@@ -26,13 +26,15 @@ class TelegramLongPoll(
                 }
                 lastUpdateId = update.update_id
                 if (message.text == null && message.dice == null) continue
+
                 val messageEvent = LongPollNewTGMessageEvent(
                         Platform.TELEGRAM,
                         telegram,
                         message.chat.id,
                         message.text ?: "/${message.dice?.emoji}" ?: "",
                         message.from.id,
-                        message.dice?.value
+                        message.dice?.value,
+                        message.reply_to_message?.from?.id
                 )
                 queue.add(messageEvent)
 

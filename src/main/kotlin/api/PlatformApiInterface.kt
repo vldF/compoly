@@ -10,4 +10,6 @@ interface PlatformApiInterface {
     fun kickUserFromChat(chatId: Long, userId: Long)
 
     fun isUserAdmin(chatId: Long, userId: Long): Boolean
+
+    val meId: Long
 }

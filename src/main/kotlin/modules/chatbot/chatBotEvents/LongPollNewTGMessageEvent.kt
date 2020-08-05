@@ -1,6 +1,5 @@
 package modules.chatbot.chatBotEvents
 
-import api.PlatformApiInterface
 import api.TelegramPlatform
 
 class LongPollNewTGMessageEvent(
@@ -9,5 +8,6 @@ class LongPollNewTGMessageEvent(
         chatId: Long,
         text: String,
         userId: Long,
-        val diceResult: Int?
-): LongPollNewMessageEvent(platform, api, chatId, text, userId)
+        val diceResult: Int?,
+        messageForwardedFromId: Long?
+): LongPollNewMessageEvent(platform, api, chatId, text, userId, messageForwardedFromId)
