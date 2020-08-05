@@ -70,7 +70,6 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
 
     override fun run() {
         initLongPoll()
-        SendMessageThread.start()
 
         while (true) {
             val response = longPollRequest().body()
