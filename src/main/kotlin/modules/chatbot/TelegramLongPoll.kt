@@ -30,7 +30,7 @@ class TelegramLongPoll(
                         Platform.TELEGRAM,
                         telegram,
                         message.chat.id,
-                        message.text ?: message.dice!!.emoji,
+                        message.text ?: "/${message.dice?.emoji}" ?: "",
                         message.from.id,
                         message.dice?.value
                 )
