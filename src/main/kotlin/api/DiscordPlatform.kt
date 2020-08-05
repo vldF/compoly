@@ -14,11 +14,11 @@ object DiscordPlatform : PlatformApiInterface {
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .build()
 
-    override fun send(text: String, chatId: Long, attachments: List<String>) {
+    override fun send(text: String, chatId: Long, pixUrls: List<String>) {
         log.info("send discord: msg(channel: $chatId): $text")
         val channel = client.getTextChannelById(chatId)
         val msg = MessageBuilder(text)
-        for (attachment in attachments)
+        for (attachment in pixUrls)
             msg.append(attachment)
         channel?.sendMessage(msg.build())?.queue()
     }

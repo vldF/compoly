@@ -36,10 +36,10 @@ class VkPlatform : PlatformApiInterface {
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    override fun getUserIdByName(showingName: String): Long? {
+    override fun getUserIdByName(username: String): Long? {
         val resp = post(
                 "users.get", mutableMapOf(
-                "user_ids" to showingName
+                "user_ids" to username
             )
         )
         val json = resp?.asJsonObject
@@ -74,9 +74,9 @@ class VkPlatform : PlatformApiInterface {
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
-    override fun send(text: String, chatId: Long, urls: List<String>) {
+    override fun send(text: String, chatId: Long, pixUrls: List<String>) {
         val attachments = mutableListOf<String>()
-        for (url in urls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
+        for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
         sendPhotos(text, chatId, attachments)
     }
 
@@ -91,15 +91,13 @@ class VkPlatform : PlatformApiInterface {
                 if (peer_id != null) post(
                     "photos.getMessagesUploadServer",
                     mutableMapOf("peer_id" to peer_id)
-                )
-                else post("photos.getMessagesUploadServer", mutableMapOf())
-
+                ) else post("photos.getMessagesUploadServer", mutableMapOf())
 
         val jsonServer = serverData?.asJsonObject ?: return null
-        val vkResponse = jsonServer["response"].asJsonObject ?: throw IllegalStateException(serverData.asString)
-        val uploadUrl = vkResponse["upload_url"].asString
+        val vkResponse = jsonServer["response"]?.asJsonObject ?: throw IllegalStateException(serverData.asString)
+        val uploadUrl = vkResponse["upload_url"]?.asString
 
-        val inputStreamBody = InputStreamBody(ByteArrayInputStream(data), "compoly_loves_iknt.jpg")
+        val inputStreamBody = InputStreamBody(ByteArrayInputStream(data), "iknt_top.jpg")
 
         val multipartData = MultipartEntityBuilder
             .create()
@@ -109,7 +107,6 @@ class VkPlatform : PlatformApiInterface {
         val requestUploadImage = HttpPost(uploadUrl)
         requestUploadImage.entity = multipartData
 
-        @ExperimentalStdlibApi
         val responseUpload = HttpClientBuilder
             .create()
             .build()
@@ -148,9 +145,7 @@ class VkPlatform : PlatformApiInterface {
     @Suppress("SameParameterValue")
     @OptIn(ExperimentalStdlibApi::class)
     fun post(methodName: String, params: MutableMap<String, Any>): JsonObject? {
-        if (testMode && methodName == "messages.send") {
-            return null
-        }
+        if (testMode && methodName == "messages.send") return null
 
         val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
@@ -161,10 +156,10 @@ class VkPlatform : PlatformApiInterface {
 
         val request = HttpPost("https://api.vk.com/method/$methodName")
         request.entity = UrlEncodedFormEntity(reqParams, charset("utf-8"))
-        val response = client.execute(request).entity.content.readAllBytes()
-                ?.decodeToString()
+        val response = client.execute(request).entity.content.readAllBytes()?.decodeToString()
         log.info("response: $response")
         request.releaseConnection()
+
         return JsonParser().parse(response).asJsonObject
     }
 }

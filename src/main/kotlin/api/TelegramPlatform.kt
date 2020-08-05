@@ -2,17 +2,14 @@ package api
 
 import com.google.gson.Gson
 import log
-import modules.chatbot.chatModules.Cats
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.HttpClientBuilder
 import telApiToken
-import java.io.File
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.util.*
 
 object TelegramPlatform : PlatformApiInterface {
     private val gson = Gson()
@@ -21,13 +18,13 @@ object TelegramPlatform : PlatformApiInterface {
     private const val token = telApiToken
 
 
-    override fun send(text: String, chatId: Long, attachments: List<String>) {
-        if(attachments.isEmpty()) sendMessage(chatId, text)
+    override fun send(text: String, chatId: Long, pixUrls: List<String>) {
+        if(pixUrls.isEmpty()) sendMessage(chatId, text)
         else {
-            if (attachments.size == 1) sendPhotoURL(chatId, attachments[0], text)
+            if (pixUrls.size == 1) sendPhotoURL(chatId, pixUrls[0], text)
             else sendMediaGroupURL(
                     chatId,
-                    attachments.map { TGInputMedia("photo", it) }.toTypedArray()
+                    pixUrls.map { TGInputMedia("photo", it) }.toTypedArray()
             )
         }
     }
