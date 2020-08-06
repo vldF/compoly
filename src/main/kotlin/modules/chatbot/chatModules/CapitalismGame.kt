@@ -25,7 +25,7 @@ object CapitalismGame {
                 "Choose your destiny",
                 Array(10) { i -> i.toString() },
                 answer,
-                System.currentTimeMillis() / 1000 + 30,
+                System.currentTimeMillis() / 1000 + 10,
                 "quiz"
         )
         if (gameId == null) {
@@ -47,7 +47,6 @@ object CapitalismGame {
 
     @OnPoll
     fun stopGame(event: LongPollNewMessageEvent) {
-        val a = !chatIds.containsValue(event.chatId)
         if (
                 event !is LongPollNewTGMessageEvent
                 || !chatIds.containsValue(event.chatId)

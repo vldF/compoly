@@ -19,7 +19,8 @@ class TelegramLongPoll(
             for (update in updates) {
                 lastUpdateId = update.update_id
                 processMessage(update.message)
-                processPollAnswer(update.pollAnswer)
+                processPollAnswer(update.poll_answer)
+                processPoll(update.poll)
             }
         }
     }

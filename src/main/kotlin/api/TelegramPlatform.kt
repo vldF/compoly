@@ -229,7 +229,7 @@ data class ChatMemberResponse(
 data class TGUpdate(
         val update_id: Int,
         val message: TGMessage?,
-        val pollAnswer: TGPollAnswer?,
+        val poll_answer: TGPollAnswer?,
         val poll: TGPoll?
 )
 

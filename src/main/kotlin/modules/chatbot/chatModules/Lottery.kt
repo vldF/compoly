@@ -8,7 +8,7 @@ import modules.chatbot.chatBotEvents.LongPollNewTGMessageEvent
 
 @ExperimentalStdlibApi
 @ModuleObject
-class Lottery {
+object Lottery {
     @OnCommand(["\uD83C\uDFAF", "\uD83C\uDFB2", "⚽", "\uD83C\uDFC0"], cost = 40)
     fun play(event: LongPollNewMessageEvent) {
         if (event.api is TelegramPlatform)
