@@ -121,6 +121,25 @@ object TelegramPlatform : PlatformApiInterface {
         return message?.dice?.value ?: -1
     }
 
+    fun sendPoll(
+            chatId: Long,
+            question: String,
+            options: Array<String>,
+            answer: Int?,
+            closeDate: Long?,
+            type: String): String? {
+        val values = mapOf(
+                "chat_id" to chatId.toString(),
+                "question" to question,
+                "options" to options,
+                "type" to type,
+                "correct_option_id" to answer,
+                "close_date" to closeDate
+        )
+        val message = makeJsonRequest<MessageResponse>("sendPoll", values) as TGMessage?
+        return message?.poll?.id
+    }
+
     private inline fun <reified T> makeJsonRequest(
             method: String, values: Map<String, Any?>?
     ): Any? {
@@ -207,6 +226,13 @@ data class ChatMemberResponse(
         override val description: String?
 ): Response()
 
+data class TGUpdate(
+        val update_id: Int,
+        val message: TGMessage?,
+        val pollAnswer: TGPollAnswer?,
+        val poll: TGPoll?
+)
+
 
 data class TGUser(
         val id: Long,
@@ -238,12 +264,8 @@ data class TGMessage(
         val chat: TGChat,
         val text: String?,
         val dice: TGDice?,
-        val reply_to_message: TGMessage?
-)
-
-data class TGUpdate(
-        val update_id: Int,
-        val message: TGMessage?
+        val reply_to_message: TGMessage?,
+        val poll: TGPoll?
 )
 
 data class TGInputMedia(
@@ -254,4 +276,28 @@ data class TGInputMedia(
 data class TGDice(
         val emoji: String,
         val value: Int
+)
+
+data class TGPollAnswer(
+        val poll_id: String,
+        val user: TGUser,
+        val option_ids: Array<Int>
+)
+
+data class TGPollOption(
+        val text: String,
+        val voter_count: Int
+)
+
+data class TGPoll(
+    val id: String,
+    val question: String,
+    val options: Array<TGPollOption>,
+    val total_voter_count: Int,
+    val is_closed: Boolean,
+    val is_anonymous: Boolean,
+    val type: String,
+    val allows_multiple_answers: Boolean,
+    val correct_option_id: Int?,
+    val close_date: Int?
 )

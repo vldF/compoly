@@ -9,5 +9,6 @@ class LongPollNewTGMessageEvent(
         text: String,
         userId: Long,
         val diceResult: Int?,
-        messageForwardedFromId: Long?
+        messageForwardedFromId: Long?,
+        val pollId: String?
 ): LongPollNewMessageEvent(platform, api, chatId, text, userId, messageForwardedFromId)

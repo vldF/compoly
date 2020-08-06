@@ -5,6 +5,7 @@ import com.google.gson.JsonParser
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollEventBase
+import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -25,7 +26,7 @@ object Cats {
     }
 
     @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
-    fun cat(event: LongPollEventBase) {
+    fun cat(event: LongPollNewMessageEvent) {
         val api = event.api
         if (api is VkPlatform) {
             val catAttachment = vkCatsQueue.poll()

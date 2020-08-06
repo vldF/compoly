@@ -2,11 +2,10 @@ package modules.chatbot.chatBotEvents
 
 import api.PlatformApiInterface
 
-open class LongPollNewMessageEvent(
+class LongPollNewPollAnswerEvent (
         override val platform: Platform,
         override val api: PlatformApiInterface,
-        val chatId: Long,
-        val text: String,
         val userId: Long,
-        val forwardMessageFromId: Long? = null
-) : LongPollEventBase()
+        val pollId: String,
+        val optionIds: Array<Int>
+): LongPollEventBase()

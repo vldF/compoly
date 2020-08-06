@@ -7,6 +7,8 @@ import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import modules.chatbot.chatModules.RatingSystem
 import modules.chatbot.listeners.CommandListener
 import modules.chatbot.listeners.MessageListener
+import modules.chatbot.listeners.PollAnswerListener
+import modules.chatbot.listeners.PollListener
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 
@@ -17,6 +19,8 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
     companion object {
         lateinit var commandListeners: List<CommandListener>
         lateinit var messageListeners: List<MessageListener>
+        lateinit var pollAnswerListeners: List<PollAnswerListener>
+        lateinit var pollListeners: List<PollListener>
     }
 
     private fun mainLoop() {
@@ -107,6 +111,36 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                         }.map { method ->
                             val loadedMethod = method.loadClassAndGetMethod()
                             MessageListener(
+                                    clazzInstance,
+                                    loadedMethod
+                            )
+                        }
+                    }
+
+                    pollAnswerListeners = classes.flatMap {
+                        val clazz = it.loadClass().getDeclaredConstructor()
+                        clazz.trySetAccessible()
+                        val clazzInstance = clazz.newInstance()
+                        it.methodAndConstructorInfo.filter { method ->
+                            method.hasAnnotation(OnPollAnswer::class.java.name)
+                        }.map { method ->
+                            val loadedMethod = method.loadClassAndGetMethod()
+                            PollAnswerListener(
+                                    clazzInstance,
+                                    loadedMethod
+                            )
+                        }
+                    }
+
+                    pollListeners = classes.flatMap {
+                        val clazz = it.loadClass().getDeclaredConstructor()
+                        clazz.trySetAccessible()
+                        val clazzInstance = clazz.newInstance()
+                        it.methodAndConstructorInfo.filter { method ->
+                            method.hasAnnotation(OnPoll::class.java.name)
+                        }.map { method ->
+                            val loadedMethod = method.loadClassAndGetMethod()
+                            PollListener(
                                     clazzInstance,
                                     loadedMethod
                             )

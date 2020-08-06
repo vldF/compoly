@@ -16,3 +16,11 @@ annotation class OnCommand(
 @Target(AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class OnMessage
+
+@Target(AnnotationTarget.FUNCTION)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class OnPoll
+
+@Target(AnnotationTarget.FUNCTION)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class OnPollAnswer
