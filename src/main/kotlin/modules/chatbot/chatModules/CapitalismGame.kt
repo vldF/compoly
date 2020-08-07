@@ -12,23 +12,48 @@ import kotlin.random.Random
 @ExperimentalStdlibApi
 @ModuleObject
 object CapitalismGame {
-    private var capitals = mutableMapOf<String, Int>()
-    private var answer: Int = -1
+    private val capitals = mutableMapOf<String, Int>()
+    private val price = 10
+    private var answer = -1
+    //todo: надо бы придумать как лучше организовать хранение всех этих id и времени
     private val winnersIds = mutableMapOf<Long, MutableSet<Long>>()
+    private val losersIds = mutableMapOf<Long, MutableSet<Long>>()
     private val chatIds = mutableMapOf<String, Long>()
+    private val chatTimes = mutableMapOf<Long, Long>()
 
-    @OnCommand(["startGame"], cost = 0)
+    @OnCommand(["playCapitalism", "капитализм"], cost = 0, description = "Выбери правильный ответ или отдай e-баллы побеителю")
     fun startGame(event: LongPollNewMessageEvent) {
-        if (chatIds.containsValue(event.chatId) || event.api !is TelegramPlatform) return
+        val currentTime = System.currentTimeMillis() / 1000
+        if (event.api !is TelegramPlatform) {
+            event.api.send(
+                    "Товарищ, данная платворма не предназначена для игр",
+                    event.chatId
+            )
+            return
+        }
+        if(chatIds.containsValue(event.chatId)) {
+            event.api.send(
+                    "Товарищ, игра уже идет",
+                    event.chatId
+            )
+            return
+        }
+        if (chatTimes[event.chatId] ?: 0 > currentTime) {
+            event.api.send(
+                    "Партия не рекомендует отвлекаться от работы более чем раз в час",
+                    event.chatId
+            )
+            return
+        }
         val telegram = event.api as TelegramPlatform
-        answer = 3
-        val durationInSec = 3
+        answer = Random.nextInt(0, 9)
+        val durationInSec = 10
         val gameId = telegram.sendPoll(
                 event.chatId,
                 "Choose your destiny",
                 Array(10) { i -> i.toString() },
                 answer,
-                System.currentTimeMillis() / 1000 + durationInSec,
+                currentTime + durationInSec,
                 "quiz",
                 false
         )
@@ -38,6 +63,7 @@ object CapitalismGame {
         }
         chatIds[gameId] = event.chatId
         winnersIds[event.chatId] = mutableSetOf()
+        losersIds[event.chatId] = mutableSetOf()
         capitals[gameId] = 40
 
         Timer().schedule(
@@ -46,31 +72,43 @@ object CapitalismGame {
                         stopGame(event.chatId, gameId, event.api)
                     }
                 },
-                durationInSec * 1000L
+                durationInSec * 1000L + 10
         )
+
+        chatTimes[event.chatId] = currentTime + 3600
     }
 
     @OnPollAnswer
     fun processPollAnswer(event: LongPollNewPollAnswerEvent) {
         if (!chatIds.containsKey(event.pollId)) return
-        RatingSystem.addPoints(-5, event.userId, chatIds[event.pollId]!!, event.api)
+        RatingSystem.addPoints(-price, event.userId, chatIds[event.pollId]!!, event.api)
         capitals[event.pollId] = capitals[event.pollId]!! + 10
         if (event.optionIds.contains(answer))
             winnersIds[chatIds[event.pollId]!!]!!.add(event.userId)
+        else  losersIds[chatIds[event.pollId]!!]!!.add(event.userId)
+        val  a = losersIds.isEmpty()
     }
 
     fun stopGame(chatId: Long, pollId: String, api: PlatformApiInterface) {
-        val prize = capitals[pollId]!! / winnersIds[chatId]!!.size
-        for (userId in winnersIds[chatId]!!) {
-            RatingSystem.addPoints(prize, userId, chatId, api)
+        if (winnersIds[chatId]!!.isNotEmpty()) {
+            val winnersNames = mutableListOf<String>()
+            val prize = capitals[pollId]!! / winnersIds[chatId]!!.size
+            for(userId in winnersIds[chatId]!!) {
+                RatingSystem.addPoints(prize, userId, chatId, api)
+                val userName = api.getUserNameById(userId)
+                if (userName != null ) winnersNames.add("@$userName")
+            }
+            api.send("Наши победители: ${winnersNames.joinToString(", ")}", chatId)
         }
-        val winnerNames = mutableListOf<String>()
-        for(userId in winnersIds[chatId]!!) {
-            val userName = api.getUserNameById(userId)
-            if (userName != null )winnerNames.add("@$userName")
+        else {
+            val losersNames = mutableListOf<String>()
+            for(userId in losersIds[chatId]!!) {
+                RatingSystem.addPoints(price, userId, chatId, api)
+                val userName = api.getUserNameById(userId)
+                if (userName != null ) losersNames.add("@$userName")
+            }
+            api.send("Победителей нет, капитал был возвращен пролетариям", chatId)
         }
-        if (!winnerNames.isEmpty()) api.send("our winners: $winnerNames", chatId)
-        else api.send("we have no winners", chatId)
         winnersIds.remove(chatId)
         chatIds.remove(pollId)
     }
