@@ -1,6 +1,7 @@
 package modules.chatbot.chatModules
 
 import api.Mention
+import api.TelegramPlatform
 import api.TextMessageParser
 import modules.chatbot.CommandPermission
 import modules.chatbot.ModuleObject
@@ -68,11 +69,19 @@ object Gulag {
 
             newVoting.addVote(sender, chatId)
             gulagVoting[targetId to chatId] = newVoting
-            api.send(
-               "Голосование на отправление $screenName в лагерь началось - 1/${newVoting.rightNumToVote}\n" +
-                    "Отправь /гулаг ${target.rawText}",
-                    chatId
-            )
+
+            if (api is TelegramPlatform) api.sendInlineGulag(
+                        chatId,
+                        "Голосование на отправление $screenName в лагерь",
+                            arrayOf("за"),
+                    target.rawText
+                )
+            else api.send(
+                        "Голосование на отправление $screenName в лагерь началось - 1/${newVoting.rightNumToVote}\n" +
+                                "Отправь /гулаг ${target.rawText}",
+                        chatId
+                )
+
         } else {
             val votingIsComplete = gulagVoting[targetId to chatId]!!.addVote(sender, chatId)
             api.send(

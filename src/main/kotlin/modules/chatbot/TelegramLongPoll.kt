@@ -3,6 +3,7 @@ package modules.chatbot
 import api.*
 import modules.chatbot.chatBotEvents.*
 import java.util.concurrent.ConcurrentLinkedQueue
+import javax.security.sasl.AuthorizeCallback
 
 class TelegramLongPoll(
         private val queue: ConcurrentLinkedQueue<LongPollEventBase>
@@ -21,6 +22,7 @@ class TelegramLongPoll(
                 processMessage(update.message)
                 processPollAnswer(update.poll_answer)
                 processPoll(update.poll)
+                processInlineResult(update.callback_query)
             }
         }
     }
@@ -66,7 +68,24 @@ class TelegramLongPoll(
                 poll.id
         )
         queue.add(pollEvent)
+
     }
+
+    fun processInlineResult(callback: TGCallbackQuery?) {
+        if(callback == null) return
+        if (callback.from.username != null) {
+            TelegramUsersDataBase.addId(callback.from.id, callback.from.username)
+        }
+        val messageEvent = LongPollNewMessageEvent(
+                Platform.TELEGRAM,
+                telegram,
+                callback.message!!.chat.id,
+                callback.data ?: "",
+                callback.from.id
+        )
+        queue.add(messageEvent)
+    }
+
 }
 
 

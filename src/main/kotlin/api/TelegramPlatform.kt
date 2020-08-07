@@ -142,6 +142,19 @@ object TelegramPlatform : PlatformApiInterface {
         return message?.poll?.id
     }
 
+    fun sendInlineGulag(chatId: Long, text: String, options: Array<String>, target: String) {
+        val values = mapOf(
+                "chat_id" to chatId,
+                "text" to text,
+                "reply_markup" to TGInlineKeyboardMarkup(
+                        arrayOf(options.map {
+                            TGInlineKeyboardButton(it, "/гулаг $target")
+                        }.toTypedArray())
+                )
+        )
+        val message = makeJsonRequest<MessageResponse>("sendMessage", values)
+    }
+
     private inline fun <reified T> makeJsonRequest(
             method: String, values: Map<String, Any?>?
     ): Any? {
@@ -232,7 +245,8 @@ data class TGUpdate(
         val update_id: Int,
         val message: TGMessage?,
         val poll_answer: TGPollAnswer?,
-        val poll: TGPoll?
+        val poll: TGPoll?,
+        val callback_query: TGCallbackQuery?
 )
 
 
@@ -302,4 +316,20 @@ data class TGPoll(
     val allows_multiple_answers: Boolean,
     val correct_option_id: Int?,
     val close_date: Int?
+)
+
+data class TGCallbackQuery(
+        val id: String,
+        val from: TGUser,
+        val message: TGMessage?,
+        val data: String?
+)
+
+data class TGInlineKeyboardButton(
+        val text: String,
+        val callback_data: String
+)
+
+data class TGInlineKeyboardMarkup(
+        val inline_keyboard: Array<Array<TGInlineKeyboardButton>>
 )
