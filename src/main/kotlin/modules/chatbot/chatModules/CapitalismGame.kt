@@ -26,7 +26,8 @@ object CapitalismGame {
                 Array(10) { i -> i.toString() },
                 answer,
                 System.currentTimeMillis() / 1000 + 10,
-                "quiz"
+                "quiz",
+                false
         )
         if (gameId == null) {
             answer = -1

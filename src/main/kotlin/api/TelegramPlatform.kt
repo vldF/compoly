@@ -127,14 +127,16 @@ object TelegramPlatform : PlatformApiInterface {
             options: Array<String>,
             answer: Int?,
             closeDate: Long?,
-            type: String): String? {
+            type: String,
+            isAnonymous: Boolean): String? {
         val values = mapOf(
                 "chat_id" to chatId.toString(),
                 "question" to question,
                 "options" to options,
                 "type" to type,
                 "correct_option_id" to answer,
-                "close_date" to closeDate
+                "close_date" to closeDate,
+                "is_anonymous" to isAnonymous
         )
         val message = makeJsonRequest<MessageResponse>("sendPoll", values) as TGMessage?
         return message?.poll?.id

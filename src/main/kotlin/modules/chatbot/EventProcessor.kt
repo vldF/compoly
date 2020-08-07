@@ -3,7 +3,9 @@ package modules.chatbot
 import io.github.classgraph.ClassGraph
 import log
 import modules.chatbot.chatBotEvents.LongPollEventBase
+import modules.chatbot.chatBotEvents.LongPollEventNewPoll
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
+import modules.chatbot.chatBotEvents.LongPollNewPollAnswerEvent
 import modules.chatbot.chatModules.RatingSystem
 import modules.chatbot.listeners.CommandListener
 import modules.chatbot.listeners.MessageListener
@@ -62,7 +64,12 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                     }
                 }
             }
-
+            is LongPollNewPollAnswerEvent -> {
+                pollAnswerListeners.forEach{it.call.invoke(it.baseClass, event)}
+            }
+            is LongPollEventNewPoll -> {
+                pollListeners.forEach{it.call.invoke(it.baseClass, event)}
+            }
         }
     }
 
