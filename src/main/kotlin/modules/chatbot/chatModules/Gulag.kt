@@ -3,6 +3,9 @@ package modules.chatbot.chatModules
 import api.Mention
 import api.TelegramPlatform
 import api.TextMessageParser
+import api.keyboards.KeyboardBuilder
+import api.keyboards.KeyboardButton
+import api.keyboards.KeyboardColor
 import modules.chatbot.CommandPermission
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
@@ -56,7 +59,8 @@ object Gulag {
         }
 
         if (votedIds[targetId]?.contains(sender) == true) {
-            api.send("Вы уже проголосовали за этого предателя родины", chatId)
+            val senderScreenName = api.getUserNameById(sender)
+            api.send("$senderScreenName, вы уже проголосовали за этого предателя родины", chatId)
             return
         }
 
@@ -70,22 +74,22 @@ object Gulag {
             newVoting.addVote(sender, chatId)
             gulagVoting[targetId to chatId] = newVoting
 
-            if (api is TelegramPlatform) api.sendInlineGulag(
-                        chatId,
-                        "Голосование на отправление $screenName в лагерь",
-                            arrayOf("за"),
-                    target.rawText
-                )
-            else api.send(
-                        "Голосование на отправление $screenName в лагерь началось - 1/${newVoting.rightNumToVote}\n" +
-                                "Отправь /гулаг ${target.rawText}",
-                        chatId
-                )
+            val keyboard = KeyboardBuilder()
+                    .addButton(KeyboardButton("/гулаг ${target.rawText}", "за", KeyboardColor.NEGATIVE))
+                    .build()
+
+            api.send(
+                    "Голосование на отправление $screenName в лагерь началось - 1/${newVoting.rightNumToVote}\n" +
+                            "Отправь /гулаг ${target.rawText}",
+                    chatId,
+                    keyboard = keyboard
+            )
 
         } else {
             val votingIsComplete = gulagVoting[targetId to chatId]!!.addVote(sender, chatId)
+            val senderScreenName = api.getUserNameById(sender)
             api.send(
-                "Отправление $screenName в лагерь - ${gulagVoting[targetId to chatId]!!.getVotes()}/${gulagVoting[targetId to chatId]!!.rightNumToVote}",
+                "$senderScreenName проголосовал за отправление $screenName в лагерь [${gulagVoting[targetId to chatId]!!.getVotes()}/${gulagVoting[targetId to chatId]!!.rightNumToVote}]",
                 chatId
             )
             if (votingIsComplete) {

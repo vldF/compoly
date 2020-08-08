@@ -1,5 +1,6 @@
 package api
 
+import api.keyboards.Keyboard
 import api.objects.VkUser
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -76,10 +77,15 @@ class VkPlatform : PlatformApiInterface {
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
-    override fun send(text: String, chatId: Long, pixUrls: List<String>) {
-        val attachments = mutableListOf<String>()
-        for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
-        sendPhotos(text, chatId, attachments)
+    override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
+        if (pixUrls.isEmpty()) {
+            val message = Message(text, listOf(chatId), listOf(), keyboard)
+            SendMessageThread.addInList(message)
+        } else {
+            val attachments = mutableListOf<String>()
+            for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
+            sendPhotos(text, chatId, attachments)
+        }
     }
 
     fun sendPhotos(text: String, chatId: Long, attachments: List<String>) {

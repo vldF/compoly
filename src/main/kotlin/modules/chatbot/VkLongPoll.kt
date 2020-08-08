@@ -85,11 +85,15 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                 if (update.type == "message_new" && (!useTestChatId || update.`object`.peer_id != mainChatPeerId)) {
                     val forwarded = update.`object`.reply_message
                     val forwardedFromId = forwarded?.from_id
+                    val vkPayload = Gson().fromJson(update.`object`.payload, Payload::class.java)
+                    val callback = Gson().fromJson(vkPayload?.payload, Callback::class.java)?.callback
+                    val text = callback ?: update.`object`.text
+
                     val messageEvent = LongPollNewMessageEvent(
                             Platform.VK,
                             vk,
                             update.`object`.peer_id,
-                            update.`object`.text,
+                            text,
                             update.`object`.from_id,
                             forwardedFromId
                     )
@@ -140,17 +144,16 @@ data class JsonVK(val response: Response?, val error: Error?) {
 
 data class JsonAnswer(
         val ts: String,
-        val updates: List<UpdatePart>,
+        val updates: List<Update>,
         val failed: Int?
-) {
-    data class UpdatePart(
-            val type: String,
-            val `object`: MessageNewObj,
-            val group_id: Int,
-            val event_id: String
-    )
+)
 
-}
+data class Update(
+        val type: String,
+        val `object`: MessageNewObj,
+        val group_id: Int,
+        val event_id: String
+)
 
 data class MessageNewObj(
         val date: Int,
@@ -165,13 +168,24 @@ data class MessageNewObj(
         val random_id: Int,
         val attachments: List<Any>,
         val is_hidden: Boolean,
-        val action: Action?
-) {
-    data class Action(
-            val type: String,
-            val member_id: Long,
-            val text: String,
-            val email: String,
-            val photo: Any
-    )
-}
+        val action: Action?,
+        val payload: String
+)
+
+data class Action(
+        val type: String,
+        val member_id: Long,
+        val text: String,
+        val email: String,
+        val photo: Any
+)
+
+data class Payload(
+        val command: String,
+        val button_type: String,
+        val payload: String
+)
+
+data class Callback (
+        val callback: String
+)

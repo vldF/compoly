@@ -27,9 +27,9 @@ class TelegramLongPoll(
         }
     }
 
-    fun processMessage(message: TGMessage?) {
+    private fun processMessage(message: TGMessage?) {
         if (message == null) return
-        if (message?.from?.username != null) {
+        if (message.from.username != null) {
             TelegramUsersDataBase.addId(message.from.id, message.from.username)
         }
         val messageEvent = LongPollNewTGMessageEvent(
@@ -45,9 +45,9 @@ class TelegramLongPoll(
         queue.add(messageEvent)
     }
 
-    fun processPollAnswer(pollAnswer: TGPollAnswer?) {
+    private fun processPollAnswer(pollAnswer: TGPollAnswer?) {
         if (pollAnswer == null) return
-        if (pollAnswer?.user.username != null) {
+        if (pollAnswer.user.username != null) {
             TelegramUsersDataBase.addId(pollAnswer.user.id, pollAnswer.user.username)
         }
         val pollAnswerEvent = LongPollNewPollAnswerEvent(
@@ -60,7 +60,7 @@ class TelegramLongPoll(
         queue.add(pollAnswerEvent)
     }
 
-    fun processPoll(poll: TGPoll?) {
+    private fun processPoll(poll: TGPoll?) {
         if (poll == null) return
         val pollEvent = LongPollEventNewPoll(
                 Platform.TELEGRAM,
@@ -71,7 +71,7 @@ class TelegramLongPoll(
 
     }
 
-    fun processInlineResult(callback: TGCallbackQuery?) {
+    private fun processInlineResult(callback: TGCallbackQuery?) {
         if(callback == null) return
         if (callback.from.username != null) {
             TelegramUsersDataBase.addId(callback.from.id, callback.from.username)

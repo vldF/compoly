@@ -1,4 +1,5 @@
 package api
+import api.keyboards.Keyboard
 import log
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -15,19 +16,22 @@ object SendMessageThread: Thread() {
                     val message = messages.poll()
 
                     val text = message.message
+                    val keyboard = message.keyboard?.getVkJson()
                     val attachments = message.attachments.joinToString(",")
                     val chatIds = message.chatIds.map {
                         if (it >= 100000000) it - 2000000000 else it
                     }
                     log.info("text: $text")
+                    log.info("keyboard: $keyboard")
                     for (id in chatIds) {
-                        log.info(text)
                         count++
                         vk.post("messages.send", mutableMapOf(
                             "message" to text,
                             "chat_id" to id,
                             "random_id" to System.currentTimeMillis().toString(),
-                            "attachment" to attachments))
+                            "attachment" to attachments,
+                            "keyboard" to (keyboard ?: "")
+                        ))
                         if (count == maxMessagesInOneSession) {
                             sleep(3000)
                             count = 0
@@ -49,5 +53,6 @@ object SendMessageThread: Thread() {
 data class Message(
         val message: String = "",
         val chatIds: List<Long>,
-        val attachments: List<String>
+        val attachments: List<String> = listOf(),
+        val keyboard: Keyboard? = null
 )

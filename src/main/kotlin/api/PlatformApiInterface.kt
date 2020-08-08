@@ -1,7 +1,9 @@
 package api
 
+import api.keyboards.Keyboard
+
 interface PlatformApiInterface {
-    fun send(text: String, chatId: Long, pixUrls: List<String> = listOf())
+    fun send(text: String, chatId: Long, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null)
 
     fun getUserNameById(id: Long): String?
 

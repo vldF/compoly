@@ -1,5 +1,6 @@
 package api
 
+import api.keyboards.Keyboard
 import com.google.gson.Gson
 import log
 import org.apache.http.client.methods.HttpPost
@@ -19,8 +20,8 @@ object TelegramPlatform : PlatformApiInterface {
 
     override val meId: Long by lazy { getMe()?.id ?: 0 }
 
-    override fun send(text: String, chatId: Long, pixUrls: List<String>) {
-        if(pixUrls.isEmpty()) sendMessage(chatId, text)
+    override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
+        if(pixUrls.isEmpty()) sendMessage(chatId, text, keyboard)
         else {
             if (pixUrls.size == 1) sendPhotoURL(chatId, pixUrls[0], text)
             else sendMediaGroupURL(
@@ -74,10 +75,11 @@ object TelegramPlatform : PlatformApiInterface {
         return makeJsonRequest<UpdatesResponse>("getUpdates", values) as Array<TGUpdate>?
     }
 
-    private fun sendMessage(chatId: Long, text: String): TGMessage? {
+    private fun sendMessage(chatId: Long, text: String, keyboard: Keyboard?): TGMessage? {
         val values = mapOf(
                 "chat_id" to chatId,
-                "text" to text
+                "text" to text,
+                "reply_markup" to (keyboard?.getTgJson() ?: "")
         )
         return makeJsonRequest<MessageResponse>("sendMessage", values) as TGMessage?
     }
@@ -140,19 +142,6 @@ object TelegramPlatform : PlatformApiInterface {
         )
         val message = makeJsonRequest<MessageResponse>("sendPoll", values) as TGMessage?
         return message?.poll?.id
-    }
-
-    fun sendInlineGulag(chatId: Long, text: String, options: Array<String>, target: String) {
-        val values = mapOf(
-                "chat_id" to chatId,
-                "text" to text,
-                "reply_markup" to TGInlineKeyboardMarkup(
-                        arrayOf(options.map {
-                            TGInlineKeyboardButton(it, "/гулаг $target")
-                        }.toTypedArray())
-                )
-        )
-        val message = makeJsonRequest<MessageResponse>("sendMessage", values)
     }
 
     private inline fun <reified T> makeJsonRequest(

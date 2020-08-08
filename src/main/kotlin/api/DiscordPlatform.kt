@@ -1,5 +1,6 @@
 package api
 
+import api.keyboards.Keyboard
 import disApiToken
 import log
 import net.dv8tion.jda.api.JDABuilder
@@ -16,7 +17,7 @@ object DiscordPlatform : PlatformApiInterface {
 
     override val meId: Long = client.selfUser.idLong
 
-    override fun send(text: String, chatId: Long, pixUrls: List<String>) {
+    override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
         log.info("send discord: msg(channel: $chatId): $text")
         val channel = client.getTextChannelById(chatId)
         val msg = MessageBuilder(text)
