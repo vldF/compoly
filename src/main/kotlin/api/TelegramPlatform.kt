@@ -17,6 +17,7 @@ object TelegramPlatform : PlatformApiInterface {
     private val client = HttpClient.newHttpClient()
     private val chatIds = setOf<Long>(-445009017)
     private const val token = telApiToken
+    private val history = ApiHistory(5)
 
     override val meId: Long by lazy { getMe()?.id ?: 0 }
 
@@ -163,6 +164,7 @@ object TelegramPlatform : PlatformApiInterface {
     private inline fun <reified T> makeJsonRequest(
             method: String, values: Map<String, Any?>?
     ): Any? {
+        history.use(method)
         log.info("makeJsonRequestStart")
         val requestBody = gson.toJson(values)
         log.info("json of request: $requestBody")
@@ -191,6 +193,7 @@ object TelegramPlatform : PlatformApiInterface {
     private fun makeMultipartRequest(
             parameters: Map<String, String?>, byteArray: ByteArray
     ): String {
+        history.use("sendPhoto")
         val multipartBuilder = MultipartEntityBuilder
                 .create()
                 .addBinaryBody("photo", byteArray)

@@ -6,7 +6,6 @@ fun main() {
     //EventStream.run()
     //LoopStream.run()
 
-
     //initializing db
     Database.connect(hikari())
 
