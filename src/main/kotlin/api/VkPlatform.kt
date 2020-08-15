@@ -18,9 +18,10 @@ import java.io.ByteArrayInputStream
 import java.net.URL
 
 
-class VkPlatform : PlatformApiInterface {
+object VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
+    private val history = ApiHistory(4)
 
     override val meId: Long = 188281612 // todo: get this value via API
 
@@ -34,7 +35,7 @@ class VkPlatform : PlatformApiInterface {
         ) ?: return null
 
         val vkResponse = resp["response"]?.asJsonObject ?: return null
-        val profiles = vkResponse["items"].asJsonArray
+        val profiles = vkResponse["profiles"].asJsonArray
 
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
@@ -79,8 +80,13 @@ class VkPlatform : PlatformApiInterface {
 
     override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
         if (pixUrls.isEmpty()) {
-            val message = Message(text, listOf(chatId), listOf(), keyboard)
-            SendMessageThread.addInList(message)
+            log.info("text: $text")
+
+            post("messages.send", mutableMapOf(
+                "message" to text,
+                "peer_id" to chatId,
+                "random_id" to System.currentTimeMillis().toString()
+            ))
         } else {
             val attachments = mutableListOf<String>()
             for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
@@ -89,8 +95,12 @@ class VkPlatform : PlatformApiInterface {
     }
 
     fun sendPhotos(text: String, chatId: Long, attachments: List<String>) {
-        val message = Message(text, listOf(chatId), attachments)
-        SendMessageThread.addInList(message)
+        post("messages.send", mutableMapOf(
+            "message" to text,
+            "peer_id" to chatId,
+            "random_id" to System.currentTimeMillis().toString(),
+            "attachment" to attachments
+        ))
     }
 
     fun getMe(): Long {
@@ -100,6 +110,7 @@ class VkPlatform : PlatformApiInterface {
 
     @OptIn(ExperimentalStdlibApi::class)
     fun uploadPhoto(peer_id: Long?, data: ByteArray): String? {
+        history.use("photos.getMessagesUploadServer")
         val serverData =
                 if (peer_id != null) post(
                     "photos.getMessagesUploadServer",
@@ -134,6 +145,7 @@ class VkPlatform : PlatformApiInterface {
         val photo = jsonUpload["photo"].asString
         val hash = jsonUpload["hash"].asString
 
+        history.use("photos.saveMessagesPhoto")
         val saveData = post(
             "photos.saveMessagesPhoto",
             mutableMapOf(
@@ -158,6 +170,7 @@ class VkPlatform : PlatformApiInterface {
     @Suppress("SameParameterValue")
     @OptIn(ExperimentalStdlibApi::class)
     fun post(methodName: String, params: MutableMap<String, Any>): JsonObject? {
+        history.use(methodName)
         if (testMode && methodName == "messages.send") return null
 
         val reqParams = mutableListOf<BasicNameValuePair>()
