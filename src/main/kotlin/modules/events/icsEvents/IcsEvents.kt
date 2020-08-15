@@ -16,7 +16,7 @@ class IcsEvents : Event {
 
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
     private val scope = 5 //days
-    private val vk = VkPlatform()
+    private val vk = VkPlatform
 
     override fun call() {
         val reader = Reader()

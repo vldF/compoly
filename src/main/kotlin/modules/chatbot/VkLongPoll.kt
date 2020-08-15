@@ -23,7 +23,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
     private lateinit var server: String
     private lateinit var key: String
     private lateinit var ts: String
-    private val vk = VkPlatform()
+    private val vk = VkPlatform
 
 
     private fun initLongPoll() {

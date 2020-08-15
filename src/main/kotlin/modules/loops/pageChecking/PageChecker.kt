@@ -15,7 +15,7 @@ class PageChecker : Loop {
 
     private val pages = listOf<Link>()
 
-    private val vk = VkPlatform()
+    private val vk = VkPlatform
 
     override fun call() {
         for (page in pages) {

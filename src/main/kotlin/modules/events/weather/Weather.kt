@@ -15,7 +15,7 @@ class Weather : Event {
     override val schedule = listOf<Time>()
     override val name = "Погода сейчас"
 
-    private val vk = VkPlatform()
+    private val vk = VkPlatform
 
     private fun apparentTemperature(temperature: Double, wind: Double, humidity: Double): String {
         val e = (humidity / 100) * 6.105 * exp((17.27 * temperature) / (237.7 + temperature))

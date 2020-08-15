@@ -1,8 +1,6 @@
 package modules.chatbot.chatModules
 
-import api.Mention
-import api.TelegramPlatform
-import api.TextMessageParser
+import api.*
 import api.keyboards.KeyboardBuilder
 import api.keyboards.KeyboardButton
 import api.keyboards.KeyboardColor
@@ -10,6 +8,8 @@ import modules.chatbot.CommandPermission
 import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
+import modules.chatbot.chatBotEvents.Platform
+import java.lang.Integer.max
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 
@@ -67,9 +67,9 @@ object Gulag {
         val currentTime = System.currentTimeMillis()
         if (gulagVoting[targetId to chatId] == null ||
             gulagVoting[targetId to chatId]!!.timeOfClosing < currentTime) {
-            val onlineCount = 10 // todo: get this value via API
+            val onlineCount = getOnlineMemberCount(chatId, api)
             val count = (onlineCount * coefficientForKick).toInt()
-            val newVoting = Voting(currentTime + 1000 * 60 * 5, if (count > minCount) count else minCount)
+            val newVoting = Voting(currentTime + 1000 * 60 * 5, max(count, minCount))
 
             newVoting.addVote(sender, chatId)
             gulagVoting[targetId to chatId] = newVoting
@@ -118,7 +118,7 @@ object Gulag {
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         if (target == null) {
-            api.send("Не указан ссыльный", chatId)
+            api.send("Не указан сосланный", chatId)
             return
         }
 
@@ -170,5 +170,13 @@ object Gulag {
         val currentTime = System.currentTimeMillis()
         gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
         gulagVoting.remove(targetId to chatId)
+    }
+
+    private fun getOnlineMemberCount(chatId: Long, api: PlatformApiInterface): Int {
+        return when (api) {
+            is VkPlatform -> api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
+            is TelegramPlatform -> api.getMemberCount(chatId)
+            else -> 0
+        }
     }
 }

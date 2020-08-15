@@ -14,7 +14,7 @@ class HappyBirthday : Event {
     override val schedule = listOf(Time(9, 0))
     override val name = "Birthday today"
 
-    private val vk = VkPlatform()
+    private val vk = VkPlatform
 
     override fun call() {
         val cal = Calendar.getInstance()

@@ -62,16 +62,26 @@ object TelegramPlatform : PlatformApiInterface {
 
         val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
         val status = (result as TGChatMember).status
+
         return status == "creator" || status == "owner"
     }
 
     fun getMe() = makeJsonRequest<UserResponse>("getMe", null) as TGUser?
+
+    fun getMemberCount(chatId: Long): Int {
+        val values = mapOf(
+                "chat_id" to chatId
+        )
+
+        return makeJsonRequest<TgMemberCount>("getChatMembersCount", values) as? Int ?: 0
+    }
 
     fun getUpdates(offset: Int): Array<TGUpdate>? {
         val values = mapOf(
                 "offset" to offset,
                 "timeout" to 25
         )
+
         return makeJsonRequest<UpdatesResponse>("getUpdates", values) as Array<TGUpdate>?
     }
 
@@ -81,6 +91,7 @@ object TelegramPlatform : PlatformApiInterface {
                 "text" to text,
                 "reply_markup" to (keyboard?.getTgJson() ?: "")
         )
+
         return makeJsonRequest<MessageResponse>("sendMessage", values) as TGMessage?
     }
 
@@ -90,6 +101,7 @@ object TelegramPlatform : PlatformApiInterface {
                 "photo" to photo,
                 "caption" to caption
         )
+
         return makeJsonRequest<MessageResponse>("sendPhoto", values) as TGMessage?
     }
 
@@ -98,6 +110,7 @@ object TelegramPlatform : PlatformApiInterface {
                 "chat_id" to chatId,
                 "media" to media
         )
+
         return makeJsonRequest<MultiMessagesResponse>("sendMediaGroup", values) as Array<TGMessage>?
     }
 
@@ -107,6 +120,7 @@ object TelegramPlatform : PlatformApiInterface {
                 "chat_id" to chatId.toString(),
                 "caption" to caption
         )
+
         return makeMultipartRequest(values, photoByteArray)
     }
 
@@ -120,6 +134,7 @@ object TelegramPlatform : PlatformApiInterface {
         log.info("converting")
         val message = result as TGMessage?
         log.info("diceEnd")
+
         return message?.dice?.value ?: -1
     }
 
@@ -141,6 +156,7 @@ object TelegramPlatform : PlatformApiInterface {
                 "is_anonymous" to isAnonymous
         )
         val message = makeJsonRequest<MessageResponse>("sendPoll", values) as TGMessage?
+
         return message?.poll?.id
     }
 
@@ -162,6 +178,7 @@ object TelegramPlatform : PlatformApiInterface {
         log.info("waiting")
         val response = gson.fromJson(json, T::class.java)
         log.info("response: $response")
+
         return if (response is Response && response.ok) {
             log.info("response.result: $response.result")
             response.result
@@ -183,6 +200,7 @@ object TelegramPlatform : PlatformApiInterface {
         val multipartData = multipartBuilder.build()
         val requestUploadImage = HttpPost("https://api.telegram.org/bot$token/sendPhoto")
         requestUploadImage.entity = multipartData
+
         return HttpClientBuilder
                 .create()
                 .build()
@@ -319,6 +337,8 @@ data class TGInlineKeyboardButton(
         val callback_data: String
 )
 
-data class TGInlineKeyboardMarkup(
-        val inline_keyboard: Array<Array<TGInlineKeyboardButton>>
-)
+data class TgMemberCount(
+        override val ok: Boolean,
+        override val result: Int,
+        override val description: String?
+) : Response()

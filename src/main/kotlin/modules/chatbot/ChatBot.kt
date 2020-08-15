@@ -11,7 +11,7 @@ object ChatBot: Thread() {
         // longpolls
         VkLongPoll(queue).start()
         //DiscordLongPoll(queue).start()
-        TelegramLongPoll(queue).start()
+        //TelegramLongPoll(queue).start()
 
         EventProcessor(queue).start()
     }
