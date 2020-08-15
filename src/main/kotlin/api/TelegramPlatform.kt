@@ -17,7 +17,7 @@ object TelegramPlatform : PlatformApiInterface {
     private val client = HttpClient.newHttpClient()
     private val chatIds = setOf<Long>(-445009017)
     private const val token = telApiToken
-    private val history = ApiHistory(5)
+    private val history = ApiHistory(1)
 
     override val meId: Long by lazy { getMe()?.id ?: 0 }
 
