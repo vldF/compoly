@@ -65,8 +65,6 @@ object VkPlatform : PlatformApiInterface {
 
     override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
         if (pixUrls.isEmpty()) {
-            log.info("text: $text")
-
             post("messages.send", mutableMapOf(
                 "message" to text,
                 "peer_id" to chatId,
@@ -165,6 +163,7 @@ object VkPlatform : PlatformApiInterface {
     @Suppress("SameParameterValue")
     @OptIn(ExperimentalStdlibApi::class)
     fun post(methodName: String, params: MutableMap<String, Any>): JsonObject? {
+        log.info("vk api query: methodName=$methodName, params=$params")
         history.use(methodName)
         if (testMode && methodName == "messages.send") return null
 
