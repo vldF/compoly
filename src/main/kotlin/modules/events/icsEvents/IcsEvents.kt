@@ -15,8 +15,7 @@ class IcsEvents : Event {
     override val schedule = listOf(Time(8, 0))
 
     private val formatter = SimpleDateFormat("EEEE, d MMMM yyyy")
-    private val scope = 5 //days
-    private val vk = VkPlatform
+    private val scope = 5 // days
 
     override fun call() {
         val reader = Reader()
@@ -49,6 +48,6 @@ class IcsEvents : Event {
         else
             msg.append(nextEvents.joinToString(separator = "\n"))
 
-        chatIds.forEach { vk.send(msg.toString(), it) }
+        chatIds.forEach { VkPlatform.send(msg.toString(), it) }
     }
 }

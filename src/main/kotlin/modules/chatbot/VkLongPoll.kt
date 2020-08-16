@@ -23,11 +23,10 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
     private lateinit var server: String
     private lateinit var key: String
     private lateinit var ts: String
-    private val vk = VkPlatform
 
 
     private fun initLongPoll() {
-        val response = vk.post(
+        val response = VkPlatform.post(
                 "groups.getLongPollServer",
                 mutableMapOf(
                         "group_id" to group_id
@@ -90,12 +89,12 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                     val text = callback ?: update.`object`.text
 
                     val messageEvent = LongPollNewMessageEvent(
-                            Platform.VK,
-                            vk,
-                            update.`object`.peer_id,
-                            text,
-                            update.`object`.from_id,
-                            forwardedFromId
+                        Platform.VK,
+                        VkPlatform,
+                        update.`object`.peer_id,
+                        text,
+                        update.`object`.from_id,
+                        forwardedFromId
                     )
 
                     queue.add(messageEvent)
@@ -116,11 +115,11 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                                 val seconds = fullSec % 60
                                 val message = "Еще наказан ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}"
 
-                                vk.send(message, peerId)
+                                VkPlatform.send(message, peerId)
                                 sleep(400)
-                                vk.kickUserFromChat(targetId, peerId)
+                                VkPlatform.kickUserFromChat(targetId, peerId)
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
-                        } else vk.send("Приветствуем ${vk.getUserNameById(targetId)}", peerId)
+                        } else VkPlatform.send("Приветствуем ${VkPlatform.getUserNameById(targetId)}", peerId)
                     }
                 }
             }

@@ -15,7 +15,6 @@ class DaysUntil : Event {
     override val name = "Days until..."
 
     private val myFormat = SimpleDateFormat("dd MM yyyy HH")
-    private val vk = VkPlatform
     private val days = listOf(
             Day("☀Дней до начала лета: ", myFormat.parse("01 06 2020 23"), "☀☀☀☀☀☀☀☀"),
             Day("\uD83D\uDCD9Дней до физики: ", myFormat.parse("08 06 2020 23"), "Время сдавать физику...")
@@ -25,9 +24,9 @@ class DaysUntil : Event {
         for (day in days) {
             val daysUntil = daysUntil(Date(getTime()), day.date)
             if (daysUntil > 0) {
-                chatIds.forEach { vk.send(day.message + daysUntil, it) }
+                chatIds.forEach { VkPlatform.send(day.message + daysUntil, it) }
             } else if (daysUntil == 0L) {
-                chatIds.forEach { vk.send(day.finalMessage, it) }
+                chatIds.forEach { VkPlatform.send(day.finalMessage, it) }
             }
         }
     }

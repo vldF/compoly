@@ -15,8 +15,6 @@ class Weather : Event {
     override val schedule = listOf<Time>()
     override val name = "Погода сейчас"
 
-    private val vk = VkPlatform
-
     private fun apparentTemperature(temperature: Double, wind: Double, humidity: Double): String {
         val e = (humidity / 100) * 6.105 * exp((17.27 * temperature) / (237.7 + temperature))
         return String.format("%.1f", temperature + 0.348 * e - 0.7 * wind - 4.25)
@@ -36,7 +34,7 @@ class Weather : Event {
                         🌡Температура: ${info.main.temp} °C
                         🖐Ощущается как: ${apparentTemperature(info.main.temp, info.main.temp, info.main.humidity.toDouble())} °C
                     """.trimIndent()
-                chatIds.forEach { vk.send(text, it) }
+                chatIds.forEach { VkPlatform.send(text, it) }
             } catch (e: Exception) {
                 log.warning("Weather casting exception")
             }

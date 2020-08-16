@@ -14,11 +14,9 @@ class HappyBirthday : Event {
     override val schedule = listOf(Time(9, 0))
     override val name = "Birthday today"
 
-    private val vk = VkPlatform
-
     override fun call() {
         val cal = Calendar.getInstance()
-        val profiles = vk.getChatMembers(mainChatPeerId, listOf("bdata", "domain"))
+        val profiles = VkPlatform.getChatMembers(mainChatPeerId, listOf("bdata", "domain"))
                 ?: throw IllegalStateException()
         val currentDate = "${cal.get(Calendar.DAY_OF_MONTH)}.${cal.get(Calendar.MONTH) + 1}"
         val needToCongratulate = mutableListOf<String>()
@@ -42,7 +40,7 @@ class HappyBirthday : Event {
                     Желаем им благополучия и такого же упорства в развитии нашей Великой Партии!🎉🎉🎉
                 """.trimIndent()
             }
-            chatIds.forEach { vk.send(message, it) }
+            chatIds.forEach { VkPlatform.send(message, it) }
         }
     }
 }

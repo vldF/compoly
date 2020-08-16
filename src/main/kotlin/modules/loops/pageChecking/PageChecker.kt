@@ -15,13 +15,11 @@ class PageChecker : Loop {
 
     private val pages = listOf<Link>()
 
-    private val vk = VkPlatform
-
     override fun call() {
         for (page in pages) {
             if (isUpdated(page.trueUrl) == true) {
                 log.info("Page ${page.showingUrl} was updated")
-                chatIds.forEach { vk.send("Страница ${page.showingUrl} была обновлена", it) }
+                chatIds.forEach { VkPlatform.send("Страница ${page.showingUrl} была обновлена", it) }
             }
         }
     }

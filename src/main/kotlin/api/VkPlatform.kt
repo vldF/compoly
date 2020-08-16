@@ -25,21 +25,6 @@ object VkPlatform : PlatformApiInterface {
 
     override val meId: Long = 188281612 // todo: get this value via API
 
-    fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
-        val resp = post(
-                "messages.getConversationMembers",
-                mutableMapOf(
-                        "peer_id" to peer_id,
-                        "fields" to fields.joinToString(separator = ",")
-                )
-        ) ?: return null
-
-        val vkResponse = resp["response"]?.asJsonObject ?: return null
-        val profiles = vkResponse["profiles"].asJsonArray
-
-        return profiles.map { gson.fromJson(it, VkUser::class.java) }
-    }
-
     override fun getUserIdByName(username: String): Long? {
         val resp = post(
                 "users.get", mutableMapOf(
@@ -103,13 +88,23 @@ object VkPlatform : PlatformApiInterface {
         ))
     }
 
-    fun getMe(): Long {
-        val resp = post("users.get", mutableMapOf())
-        return resp?.get("response")?.asJsonObject?.get("id")?.asLong ?: 0
+    fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
+        val resp = post(
+            "messages.getConversationMembers",
+            mutableMapOf(
+                "peer_id" to peer_id,
+                "fields" to fields.joinToString(separator = ",")
+            )
+        ) ?: return null
+
+        val vkResponse = resp["response"]?.asJsonObject ?: return null
+        val profiles = vkResponse["profiles"].asJsonArray
+
+        return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    fun uploadPhoto(peer_id: Long?, data: ByteArray): String? {
+    private fun uploadPhoto(peer_id: Long?, data: ByteArray): String? {
         history.use("photos.getMessagesUploadServer")
         val serverData =
                 if (peer_id != null) post(

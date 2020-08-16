@@ -52,10 +52,9 @@ object Cats {
     }
 
     private fun addCatsToQueue(count: Int = 1) {
-        val vkApi = VkPlatform
         for (i in 0 until count) {
             val url = getCatUrl()
-            val attachment = vkApi.uploadPhotoByUrlAsAttachment(null, url) ?: continue
+            val attachment = VkPlatform.uploadPhotoByUrlAsAttachment(null, url) ?: continue
             vkCatsQueue.add(attachment)
         }
     }
