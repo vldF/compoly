@@ -5,37 +5,53 @@ import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 import modules.chatbot.chatBotEvents.LongPollNewTGMessageEvent
+import kotlin.random.Random
 
 @ExperimentalStdlibApi
 @ModuleObject
 object Lottery {
-    @OnCommand(["\uD83C\uDFAF", "\uD83C\uDFB2", "⚽", "\uD83C\uDFC0"], cost = 40)
+    @OnCommand(
+            [
+                "\uD83C\uDFAF",
+                "\uD83C\uDFB2",
+                "⚽",
+                "\uD83C\uDFC0",
+                "lottery",
+                "лотерея"
+            ],
+            cost = 0
+    )
     fun play(event: LongPollNewMessageEvent) {
-        if (event.api is TelegramPlatform)
-        when((event as LongPollNewTGMessageEvent).diceResult) {
+        val result =
+                if (
+                        event.api is TelegramPlatform &&
+                        (event as LongPollNewTGMessageEvent).diceResult != null
+                ) event.diceResult
+                else Random.nextInt(1, 6)
+        when(result) {
             1 -> sendResult(event,
                     "вы потеряли 40 е-баллов. Партия собалезнует вам",
-                    0)
+                    -40)
             2 -> sendResult(
                     event,
                     "вы потеряли 20 е-баллов",
-                    10)
+                    -20)
             3 -> sendResult(
                     event,
                     "вы потеряли 10 е-баллов",
-                    30)
+                    -10)
             4 -> sendResult(
                     event,
                     "вы ничего не получили (но и не потеряли)",
-                    40)
+                    0)
             5 -> sendResult(
                     event,
                     "ваш выигрыш: 10 е-баллов",
-                    50)
+                    10)
             6 -> sendResult(
                     event,
                     "ваш выигрыш: 20 е-баллов. Партия поздравляет вас",
-                    60)
+                    20)
         }
     }
 

@@ -21,7 +21,7 @@ object CapitalismGame {
     private val chatIds = mutableMapOf<String, Long>()
     private val chatTimes = mutableMapOf<Long, Long>()
 
-    @OnCommand(["playCapitalism", "капитализм"], cost = 0, description = "Выбери правильный ответ или отдай e-баллы побеителю")
+    @OnCommand(["capitalism", "капитализм"], cost = 0, description = "Выбери правильный ответ или отдай e-баллы побеителю")
     fun startGame(event: LongPollNewMessageEvent) {
         val currentTime = System.currentTimeMillis() / 1000
         if (event.api !is TelegramPlatform) {

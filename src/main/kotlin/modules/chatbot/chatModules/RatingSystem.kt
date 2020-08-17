@@ -230,7 +230,7 @@ object RatingSystem {
         api.send("Одобрение выражено", peerId)
     }
 
-    @OnCommand(["осуждаю"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
+    @OnCommand(["осуждаю", "condemn"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
     fun disrespect(event: LongPollNewMessageEvent) {
         val api = event.api
         val peerId = event.chatId
