@@ -16,7 +16,14 @@ class TextMessageParser(private val platform : Platform) {
         for ((i, word) in words.withIndex()) {
             when {
                 i == 0 && word.startsWith("/") -> {
-                    val command = Command(words[0].removePrefix("/"), word)
+                    val rawText = words[0].removePrefix("/")
+                    val commandText = if(rawText.contains("@")) {
+                        rawText.split("@")[0]
+                    } else {
+                        rawText
+                    }
+
+                    val command = Command(commandText, word)
                     parseObject.add(command)
                 }
 
@@ -83,7 +90,7 @@ class TextMessageParser(private val platform : Platform) {
 }
 
 class ParseObject {
-    private val data = mutableListOf<AbstractParseData>()
+    val data = mutableListOf<AbstractParseData>()
 
     fun add(newData: AbstractParseData) = data.add(newData)
 
@@ -93,7 +100,7 @@ class ParseObject {
     }
 
     // WARNING: Pleas, be cautious; it may throws "can't cast X to T" todo
-    fun <T : AbstractParseData> get(index: Int): T? = data.getOrNull(index) as? T
+    inline fun <reified T : AbstractParseData> get(index: Int): T? = data.getOrNull(index) as? T
 
     fun getTextSlice(start: Int, end: Int) = data.slice(start..end).joinToString(" ") { it.rawText }
 

@@ -49,7 +49,13 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 if (!text.startsWith("/")) return
                 log.info("new message: $text")
 
-                val commandName = text.split(" ")[0].removePrefix("/")
+
+                val rawCommandName = text.split(" ")[0].removePrefix("/")
+                val commandName = if (rawCommandName.contains("@")) {
+                    rawCommandName.split("@")[0]
+                } else {
+                    rawCommandName
+                }
                 val api = event.api
                 for (module in commandListeners) {
                     if (module.commands.contains(commandName)) {
