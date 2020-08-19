@@ -13,15 +13,16 @@ import kotlin.random.Random
 @ModuleObject
 object CapitalismGame {
     private val capitals = mutableMapOf<String, Int>()
-    private val price = 10
+    private const val price = 10
+    private const val cooldownInSec = 3600 * 3
     private var answer = -1
     //todo: надо бы придумать как лучше организовать хранение всех этих id и времени
     private val winnersIds = mutableMapOf<Long, MutableSet<Long>>()
     private val losersIds = mutableMapOf<Long, MutableSet<Long>>()
     private val chatIds = mutableMapOf<String, Long>()
-    private val chatTimes = mutableMapOf<Long, Long>()
+    private val chatsCooldown = mutableMapOf<Long, Long>()
 
-    @OnCommand(["capitalism", "капитализм"], cost = 0, description = "Выбери правильный ответ или отдай e-баллы побеителю")
+    @OnCommand(["капитализм", "capitalism"], cost = 20, description = "Выбери правильный ответ или отдай e-баллы побеителю")
     fun startGame(event: LongPollNewMessageEvent) {
         val currentTime = System.currentTimeMillis() / 1000
         if (event.api !is TelegramPlatform) {
@@ -38,7 +39,7 @@ object CapitalismGame {
             )
             return
         }
-        if (chatTimes[event.chatId] ?: 0 > currentTime) {
+        if (chatsCooldown[event.chatId] ?: 0 > currentTime) {
             event.api.send(
                     "Партия не рекомендует отвлекаться от работы более чем раз в час",
                     event.chatId
@@ -47,7 +48,7 @@ object CapitalismGame {
         }
         val telegram = event.api as TelegramPlatform
         answer = Random.nextInt(0, 9)
-        val durationInSec = 10
+        val durationInSec = 600
         val gameId = telegram.sendPoll(
                 event.chatId,
                 "Choose your destiny",
@@ -75,7 +76,7 @@ object CapitalismGame {
                 durationInSec * 1000L + 10
         )
 
-        chatTimes[event.chatId] = currentTime + 3600
+        chatsCooldown[event.chatId] = currentTime + cooldownInSec
     }
 
     @OnPollAnswer
