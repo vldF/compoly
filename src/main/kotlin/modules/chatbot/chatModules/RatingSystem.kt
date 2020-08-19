@@ -199,17 +199,24 @@ object RatingSystem {
 
         val target = parsed.get<Mention>(1)
         var targetId = target?.targetId
-        if (targetId == api.meId) {
-            api.send("Мы и так знаем, что Вы, Товарищ, одобряете Нас!", peerId)
-            return
-        }
-        if (targetId == null || !userHasScore(peerId, targetId)) {
+
+        if (targetId == null) {
             if (event.forwardMessageFromId != null) {
                 targetId = event.forwardMessageFromId
             } else {
                 api.send("Укажите одобряемого", peerId)
                 return
             }
+        }
+
+        if (targetId == api.meId || targetId == -api.meId) {
+            api.send("Мы и так знаем, что Вы, Товарищ, одобряете Нас!", peerId)
+            return
+        }
+
+        if (!userHasScore(peerId, targetId)) {
+            api.send("Этого человека нет в архивах", peerId)
+            return
         }
 
         if (targetId == sender) {
@@ -240,17 +247,23 @@ object RatingSystem {
 
         val target = parsed.get<Mention>(1)
         var targetId = target?.targetId
-        if (targetId == api.meId) {
-            api.send("Да как ты, враг народа, смеешь осуждать Нашу Партию?", peerId)
-            return
-        }
-        if (targetId == null || !userHasScore(peerId, targetId)) {
+        if (targetId == null) {
             if (event.forwardMessageFromId != null) {
                 targetId = event.forwardMessageFromId
             } else {
-                api.send("Укажите одобряемого", peerId)
+                api.send("Укажите осуждаемого", peerId)
                 return
             }
+        }
+
+        if (targetId == api.meId || targetId == -api.meId) {
+            api.send("Отправляю чёрных воронков", peerId)
+            return
+        }
+
+        if (!userHasScore(peerId, targetId)) {
+            api.send("Этого человека нет в архивах", peerId)
+            return
         }
 
         if (targetId == sender) {

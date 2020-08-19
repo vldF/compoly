@@ -9,7 +9,8 @@ data class CommandListener(
         val baseClass: Any,
         val call: Method,
         val permission: CommandPermission,
-        val cost: Int
+        val cost: Int,
+        val showOnHelp: Boolean
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -33,7 +33,9 @@ object UserTop {
                         val n = index + 1
                         val screenName = api.getUserNameById(resultRow[UserScore.userId])
                         val showingScore = RatingSystem.calculateShowingScore(resultRow[UserScore.score])
-                        text.append("$n. @$screenName [$showingScore]\n")
+                        if (screenName != null) {
+                            text.append("$n. @$screenName [$showingScore]\n")
+                        }
                     }
         }
 

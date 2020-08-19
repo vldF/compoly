@@ -140,7 +140,7 @@ object Gulag {
         api.send("$target может вернуться досрочно", chatId)
     }
 
-    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN)
+    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN, showOnHelp = false)
     fun admgulag(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId

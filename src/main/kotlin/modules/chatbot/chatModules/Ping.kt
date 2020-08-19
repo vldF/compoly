@@ -7,7 +7,7 @@ import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 
 @ModuleObject
 object Ping {
-    @OnCommand(["ping", "пинг"], "Pong!", CommandPermission.ADMIN)
+    @OnCommand(["пинг", "ping"], "Pong!", CommandPermission.ADMIN, showOnHelp = false)
     fun ping(event: LongPollNewMessageEvent) {
         event.api.send("Pong!", event.chatId)
     }

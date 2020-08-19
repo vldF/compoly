@@ -11,7 +11,7 @@ object Help {
         val api = event.api
         val result = StringBuilder()
         val usersPermissions = Permissions.getUserPermissionsByNewMessageEvent(event)
-        val commands = EventProcessor.commandListeners
+        val commands = EventProcessor.commandListeners.filter { it.showOnHelp }
 
         val permissions = CommandPermission.values().filter {
             it.ordinal <= usersPermissions.ordinal
