@@ -27,7 +27,7 @@ object CapitalismGame {
         val currentTime = System.currentTimeMillis() / 1000
         if (event.api !is TelegramPlatform) {
             event.api.send(
-                    "Товарищ, данная платворма не предназначена для игр",
+                    "Товарищ, данная платформа не предназначена для игр",
                     event.chatId
             )
             return
