@@ -18,7 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue
 object Cats {
     private val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b"
     private val client = HttpClient.newHttpClient()
-    private const val VK_PIX_QUEUE_SIZE = 1 // todo: change it to 4 in prod; 1 was set for faster loading
+    private const val VK_PIX_QUEUE_SIZE = 4 // todo: change it to 4 in prod; 1 was set for faster loading
     private val vkCatsQueue = LinkedBlockingQueue<String>(VK_PIX_QUEUE_SIZE)
 
     init {
@@ -54,7 +54,7 @@ object Cats {
     private fun addCatsToQueue(count: Int = 1) {
         for (i in 0 until count) {
             val url = getCatUrl()
-            val attachment = VkPlatform.uploadPhotoByUrlAsAttachment(null, url) ?: continue
+            val attachment = VkPlatform.uploadPhotoByUrlAsAttachment(2000000002, url) ?: continue
             vkCatsQueue.add(attachment)
         }
     }
