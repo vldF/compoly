@@ -22,6 +22,8 @@ object VkPlatform : PlatformApiInterface {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
     private val history = ApiHistory(4)
+    // true if user is admin
+    private val userAdminMap = mutableMapOf<Pair<Long, Long>, Boolean>()
 
     override val meId: Long = 188281612 // todo: get this value via API
 
@@ -52,8 +54,13 @@ object VkPlatform : PlatformApiInterface {
     }
 
     override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+        val fromCache = userAdminMap[chatId to userId]
+        if (fromCache != null) return fromCache
+
         val chatMembers = getChatMembersProfiles(chatId, listOf())
         val userInTheChat = chatMembers?.firstOrNull { it.member_id == userId }
+        userAdminMap[chatId to userId] = userInTheChat?.is_admin == true
+
         return userInTheChat?.is_admin == true
     }
 
@@ -82,7 +89,7 @@ object VkPlatform : PlatformApiInterface {
             "message" to text,
             "peer_id" to chatId,
             "random_id" to System.currentTimeMillis().toString(),
-            "attachment" to attachments
+            "attachment" to attachments.joinToString(separator = ",")
         ))
     }
 
@@ -170,8 +177,9 @@ object VkPlatform : PlatformApiInterface {
 
         val ownerId = dataObject["owner_id"]
         val imageId = dataObject["id"]
+        val accessKey = dataObject["access_key"].asString
 
-        return "photo${ownerId}_$imageId"
+        return "photo${ownerId}_${imageId}_$accessKey"
     }
 
 
