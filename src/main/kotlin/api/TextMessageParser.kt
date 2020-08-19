@@ -99,7 +99,6 @@ class ParseObject {
         return data[index]
     }
 
-    // WARNING: Pleas, be cautious; it may throws "can't cast X to T" todo
     inline fun <reified T : AbstractParseData> get(index: Int): T? = data.getOrNull(index) as? T
 
     fun getTextSlice(start: Int, end: Int) = data.slice(start..end).joinToString(" ") { it.rawText }

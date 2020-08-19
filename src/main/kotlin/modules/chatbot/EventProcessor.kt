@@ -59,7 +59,10 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 val api = event.api
                 for (module in commandListeners) {
                     if (module.commands.contains(commandName)) {
-                        if (module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)) {
+                        if (
+                                module.permission == CommandPermission.USER
+                                || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
+                        ) {
                             if (RatingSystem.buyCommand(event.chatId, event.userId, module.cost, api)) {
                                 module.call.invoke(module.baseClass, event)
                                 log.info("command: $text")

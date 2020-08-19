@@ -39,6 +39,7 @@ object RatingSystem {
     )
 
     fun buyCommand(chatId: Long, userId: Long, cost: Int, api: PlatformApiInterface): Boolean {
+        if (cost == 0) return true
         var canBuy = true
         dbQuery {
             val selected = UserScore.select {

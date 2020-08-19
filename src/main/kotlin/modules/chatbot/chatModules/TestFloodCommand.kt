@@ -4,7 +4,7 @@ import modules.chatbot.ModuleObject
 import modules.chatbot.OnCommand
 import modules.chatbot.chatBotEvents.LongPollNewMessageEvent
 
-@ModuleObject
+//@ModuleObject
 object TestFloodCommand {
 
     @OnCommand(["flood"], "")

@@ -52,7 +52,7 @@ object VkPlatform : PlatformApiInterface {
     }
 
     override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
-        val chatMembers = getChatMembers(chatId, listOf())
+        val chatMembers = getChatMembersProfiles(chatId, listOf())
         val userInTheChat = chatMembers?.firstOrNull { it.member_id == userId }
         return userInTheChat?.is_admin == true
     }
@@ -88,15 +88,30 @@ object VkPlatform : PlatformApiInterface {
 
     fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
         val resp = post(
-            "messages.getConversationMembers",
-            mutableMapOf(
-                "peer_id" to peer_id,
-                "fields" to fields.joinToString(separator = ",")
-            )
+                "messages.getConversationMembers",
+                mutableMapOf(
+                        "peer_id" to peer_id,
+                        "fields" to fields.joinToString(separator = ",")
+                )
         ) ?: return null
 
         val vkResponse = resp["response"]?.asJsonObject ?: return null
         val profiles = vkResponse["profiles"].asJsonArray
+
+        return profiles.map { gson.fromJson(it, VkUser::class.java) }
+    }
+
+    fun getChatMembersProfiles(peer_id: Long, fields: List<String>): List<VkUser>? {
+        val resp = post(
+                "messages.getConversationMembers",
+                mutableMapOf(
+                        "peer_id" to peer_id,
+                        "fields" to fields.joinToString(separator = ",")
+                )
+        ) ?: return null
+
+        val vkResponse = resp["response"]?.asJsonObject ?: return null
+        val profiles = vkResponse["items"].asJsonArray
 
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
