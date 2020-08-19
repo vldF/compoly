@@ -72,11 +72,15 @@ object VkPlatform : PlatformApiInterface {
 
     override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
         if (pixUrls.isEmpty()) {
-            post("messages.send", mutableMapOf(
-                "message" to text,
-                "peer_id" to chatId,
-                "random_id" to System.currentTimeMillis().toString()
-            ))
+            val params = mutableMapOf(
+                    "message" to text,
+                    "peer_id" to chatId,
+                    "random_id" to System.currentTimeMillis().toString()
+            )
+            if (keyboard != null) {
+                params["keyboard"] = keyboard.getVkJson()
+            }
+            post("messages.send", params)
         } else {
             val attachments = mutableListOf<String>()
             for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")

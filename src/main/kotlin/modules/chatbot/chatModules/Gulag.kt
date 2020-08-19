@@ -43,7 +43,7 @@ object Gulag {
         }
 
         if (targetId == sender) {
-            api.send("Товарищ! Вы еще нужны своей родине", chatId)
+            api.send("Товарищ! Вы еще нужны своей Родине", chatId)
             return
         }
 
@@ -60,7 +60,7 @@ object Gulag {
 
         if (votedIds[targetId]?.contains(sender) == true) {
             val senderScreenName = api.getUserNameById(sender)
-            api.send("$senderScreenName, вы уже проголосовали за этого предателя родины", chatId)
+            api.send("$senderScreenName, Вы уже проголосовали за этого предателя Родины", chatId)
             return
         }
 
@@ -128,7 +128,7 @@ object Gulag {
         }
 
         if (targetId == sender) {
-            api.send("Товарищ! Вы еще нужны своей родине", chatId)
+            api.send("Товарищ! Вы еще нужны своей Родине", chatId)
             return
         }
 
@@ -160,7 +160,7 @@ object Gulag {
         }
 
         if (targetId == sender) {
-            api.send("Товарищ! Вы еще нужны своей родине", chatId)
+            api.send("Товарищ! Вы еще нужны своей Родине", chatId)
             return
         }
 
