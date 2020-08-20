@@ -18,6 +18,8 @@ object TelegramPlatform : PlatformApiInterface {
     private val chatIds = setOf<Long>(-445009017)
     private const val token = telApiToken
     private val history = ApiHistory(1)
+    // true if user is admin
+    private val userAdminMap = mutableMapOf<Pair<Long, Long>, Boolean>()
 
     override val meId: Long by lazy { getMe()?.id ?: 0 }
 
@@ -56,6 +58,9 @@ object TelegramPlatform : PlatformApiInterface {
     }
 
     override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+        val cache = userAdminMap[chatId to userId]
+        if (cache != null) return cache
+
         val values = mapOf(
                 "chat_id" to chatId,
                 "user_id" to userId
@@ -64,7 +69,9 @@ object TelegramPlatform : PlatformApiInterface {
         val result = makeJsonRequest<ChatMemberResponse>("getChatMember", values)
         val status = (result as TGChatMember).status
 
-        return status == "creator" || status == "owner"
+        val isUserAdmin = status == "creator" || status == "owner" || status == "administrator"
+        userAdminMap[chatId to userId] = isUserAdmin
+        return isUserAdmin
     }
 
     fun getMe() = makeJsonRequest<UserResponse>("getMe", null) as TGUser?

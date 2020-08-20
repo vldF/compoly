@@ -81,7 +81,8 @@ object CapitalismGame {
     @OnPollAnswer
     fun processPollAnswer(event: LongPollNewPollAnswerEvent) {
         if (!chatIds.containsKey(event.pollId)) return
-        RatingSystem.addPoints(-price, event.userId, chatIds[event.pollId]!!, event.api)
+        val chatId = chatIds[event.pollId]!!
+        RatingSystem.addPoints(-price, event.userId, chatId, chatId, event.api)
         capitals[event.pollId] = capitals[event.pollId]!! + 10
         if (event.optionIds.contains(answer))
             winnersIds[chatIds[event.pollId]!!]!!.add(event.userId)
@@ -94,7 +95,7 @@ object CapitalismGame {
             val winnersNames = mutableListOf<String>()
             val prize = capitals[pollId]!! / winnersIds[chatId]!!.size
             for(userId in winnersIds[chatId]!!) {
-                RatingSystem.addPoints(prize, userId, chatId, api)
+                RatingSystem.addPoints(prize, userId, chatId, chatId, api)
                 val userName = api.getUserNameById(userId)
                 if (userName != null ) winnersNames.add("@$userName")
             }
@@ -103,7 +104,7 @@ object CapitalismGame {
         else {
             val losersNames = mutableListOf<String>()
             for(userId in losersIds[chatId]!!) {
-                RatingSystem.addPoints(price, userId, chatId, api)
+                RatingSystem.addPoints(price, userId, chatId, chatId, api)
                 val userName = api.getUserNameById(userId)
                 if (userName != null ) losersNames.add("@$userName")
             }

@@ -1,9 +1,7 @@
 package chatbot
 
 import api.DiscordPlatform
-import chatbot.chatBotEvents.LongPollEventBase
-import chatbot.chatBotEvents.LongPollNewMessageEvent
-import chatbot.chatBotEvents.Platform
+import chatbot.chatBotEvents.*
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -14,14 +12,17 @@ class DiscordLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase
     private class DiscordListener(private val platform: DiscordPlatform, private val poll: DiscordLongPoll) : ListenerAdapter() {
         override fun onMessageReceived(event: MessageReceivedEvent) {
             val msg = event.message
+            if (msg.author.idLong == platform.meId) return
             val channel = event.channel
+            val serverId = event.guild.idLong
             poll.queue.add(
-                    LongPollNewMessageEvent(
+                    LongPollDSNewMessageEvent(
                         Platform.DISCORD,
                         platform,
                         channel.idLong,
                         msg.contentRaw,
-                        msg.author.idLong
+                        msg.author.idLong,
+                        serverId
                     )
             )
 

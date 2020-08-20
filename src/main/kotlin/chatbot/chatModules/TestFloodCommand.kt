@@ -1,11 +1,11 @@
 package chatbot.chatModules
 
+import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 
-//@ModuleObject
+@ModuleObject
 object TestFloodCommand {
-
     @OnCommand(["flood"], "")
     fun foo(event: LongPollNewMessageEvent) {
         for (i in 0..30) {

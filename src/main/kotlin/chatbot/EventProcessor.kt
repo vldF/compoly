@@ -1,11 +1,8 @@
 package chatbot
 
+import chatbot.chatBotEvents.*
 import io.github.classgraph.ClassGraph
 import log
-import chatbot.chatBotEvents.LongPollEventBase
-import chatbot.chatBotEvents.LongPollEventNewPoll
-import chatbot.chatBotEvents.LongPollNewMessageEvent
-import chatbot.chatBotEvents.LongPollNewPollAnswerEvent
 import chatbot.chatModules.RatingSystem
 import chatbot.listeners.CommandListener
 import chatbot.listeners.MessageListener
@@ -63,7 +60,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                                 module.permission == CommandPermission.USER
                                 || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
                         ) {
-                            if (RatingSystem.buyCommand(event.chatId, event.userId, module.cost, api)) {
+                            if (RatingSystem.buyCommand(module.cost, event)) {
                                 module.call.invoke(module.baseClass, event)
                                 log.info("command: $text")
                             } else {

@@ -58,6 +58,6 @@ object Lottery {
     private fun sendResult(event: LongPollNewMessageEvent, message: String, prize: Int) {
         val username = event.api.getUserNameById(event.userId)
         event.api.send("$username, $message", event.chatId)
-        RatingSystem.addPoints(prize, event.userId, event.chatId, event.api)
+        RatingSystem.addPoints(prize, event.userId, event.chatId, event.chatId, event.api)
     }
 }

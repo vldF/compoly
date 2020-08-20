@@ -5,8 +5,8 @@ import api.PlatformApiInterface
 open class LongPollNewMessageEvent(
         override val platform: Platform,
         override val api: PlatformApiInterface,
-        val chatId: Long,
-        val text: String,
-        val userId: Long,
-        val forwardMessageFromId: Long? = null
+        open val chatId: Long,
+        open val text: String,
+        open val userId: Long,
+        open val forwardMessageFromId: Long? = null
 ) : LongPollEventBase()
