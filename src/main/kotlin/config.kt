@@ -10,7 +10,7 @@ const val telBotUsername = "compoly"
 //const val disApiToken = "NzM1NzM2MTU4ODUxNjk0NjQz.XxkyUQ.rK-9BHwckLgRyzPxOeGN3JsBgvM"
 const val disApiToken = "NzMyNDE3MzQ5OTgyMDkzMzgy.Xw0Szw.U-zkN0_8ywgnUZEeTYjzyzgNbak"
 
-const val useTestChatId = true
+const val useTestChatId = false
 val chatIds = if (!useTestChatId) listOf(  // todo: remove 1?
     1L,
     2L,
