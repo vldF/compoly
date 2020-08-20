@@ -1,6 +1,6 @@
 package api
 
-import modules.chatbot.chatBotEvents.Platform
+import chatbot.chatBotEvents.Platform
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
 

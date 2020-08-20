@@ -1,5 +1,5 @@
 import api.*
-import modules.chatbot.chatBotEvents.Platform
+import chatbot.chatBotEvents.Platform
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

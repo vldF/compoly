@@ -1,5 +1,5 @@
 import database.hikari
-import modules.chatbot.ChatBot
+import chatbot.ChatBot
 import org.jetbrains.exposed.sql.Database
 
 fun main() {
