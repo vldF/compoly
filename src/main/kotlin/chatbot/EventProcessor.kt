@@ -64,7 +64,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                                 module.call.invoke(module.baseClass, event)
                                 log.info("command: $text")
                             } else {
-                                api.send("Товарищь, у Вас недостаточно е-баллов для команды", event.chatId)
+                                api.send("Товарищ, у вас недостаточно е-баллов для команды", event.chatId)
                             }
                         }
                     }
