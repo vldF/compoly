@@ -30,7 +30,7 @@ object Lottery {
                 else Random.nextInt(1, 6)
         when(result) {
             1 -> sendResult(event,
-                    "вы потеряли 40 е-баллов. Партия собалезнует вам",
+                    "вы потеряли 40 е-баллов. Партия соболезнует вам",
                     -40)
             2 -> sendResult(
                     event,
