@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 @ExperimentalStdlibApi
 @ModuleObject
 object Yarn {
-    @OnCommand(["yarn", "нить"], "Да найдите же ее кто-нибудь", cost = 10)
+    @OnCommand(["нить", "yarn"], cost = 10, description = "Да найдите же ее кто-нибудь")
     fun loseYarn(event: LongPollNewMessageEvent) {
         event.api.send("произвожу поиск...", event.chatId)
         val delay = 3000L

@@ -13,7 +13,7 @@ import kotlin.random.Random
 object CapitalismGame {
     private val capitals = mutableMapOf<String, Int>()
     private const val price = 10
-    private const val cooldownInSec = 3600 * 3
+    private const val cooldownInSec = 3600 * 1
     private var answer = -1
     //todo: надо бы придумать как лучше организовать хранение всех этих id и времени
     private val winnersIds = mutableMapOf<Long, MutableSet<Long>>()
@@ -21,7 +21,7 @@ object CapitalismGame {
     private val chatIds = mutableMapOf<String, Long>()
     private val chatsCooldown = mutableMapOf<Long, Long>()
 
-    @OnCommand(["капитализм", "capitalism"], cost = 20, description = "выбери правильный ответ или отдай e-баллы побеителю")
+    @OnCommand(["капитализм", "capitalism"], description = "выбери правильный ответ или отдай e-баллы побеителю")
     fun startGame(event: LongPollNewMessageEvent) {
         val currentTime = System.currentTimeMillis() / 1000
         if (event.api !is TelegramPlatform) {
