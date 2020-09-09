@@ -22,6 +22,7 @@ object Yarn {
             val found = Random.nextInt(0, 10_000)
             if (found <= probability) {
                 event.api.send("Товарищ, вы нашли нить! Этот день войдёт в историю.", event.chatId)
+                probability = 0
             } else {
                 event.api.send("Нить потеряна", event.chatId)
             }
