@@ -20,9 +20,11 @@ object Yarn {
         GlobalScope.launch {
             delay(delay)
             val found = Random.nextInt(0, 10_000)
-            if (found <= probability)
+            if (found <= probability) {
                 event.api.send("Товарищ, вы нашли нить! Этот день войдёт в историю.", event.chatId)
-            else event.api.send("Нить потеряна", event.chatId)
+            } else {
+                event.api.send("Нить потеряна", event.chatId)
+            }
         }
     }
 }
