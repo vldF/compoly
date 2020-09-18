@@ -3,6 +3,7 @@ package modules.events.icsEvents
 import api.VkPlatform
 import chatIds
 import getTime
+import modules.Active
 import modules.events.Event
 import modules.events.Time
 import modules.events.daysUntil

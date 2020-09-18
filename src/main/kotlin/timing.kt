@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat
 
 const val millisecondInDay = 24 * 60 * 60 * 1000L
-const val timeZone = 3 * 60 * 60 * 1000L //Moscow timezone
+const val timeZone = 3 * 60 * 60 * 1000L // Moscow timezone
 
 private val myFormat = SimpleDateFormat("dd.MM.yyyy hh:mm:ss")
 private val debugStartTime = myFormat.parse("10.05.2020 07:59:59").time //see debugTime in configs
