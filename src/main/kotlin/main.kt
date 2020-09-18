@@ -5,8 +5,8 @@ import modules.loops.LoopStream
 import org.jetbrains.exposed.sql.Database
 
 fun main() {
-    //EventStream.run()
-    //LoopStream.run()
+    EventStream.run()
+    LoopStream.run()
 
     //initializing db
     Database.connect(hikari())
