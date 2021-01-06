@@ -6,6 +6,7 @@ import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.RatingSystem.getLevel
 import database.UserScore
 import database.dbQuery
 import org.jetbrains.exposed.sql.SortOrder
@@ -25,12 +26,12 @@ object UserTop {
         dbQuery {
             UserScore
                     .select { UserScore.chatId eq chatId }
-                    .orderBy(UserScore.score, SortOrder.DESC)
+                    .orderBy(UserScore.reputation, SortOrder.DESC)
                     .limit(count)
                     .forEachIndexed { index, resultRow ->
                         val n = index + 1
                         val screenName = api.getUserNameById(resultRow[UserScore.userId])
-                        val showingScore = RatingSystem.calculateShowingScore(resultRow[UserScore.score])
+                        val showingScore = getLevel(resultRow[UserScore.reputation])
                         if (screenName != null) {
                             text.append("$n. @$screenName [$showingScore]\n")
                         }
