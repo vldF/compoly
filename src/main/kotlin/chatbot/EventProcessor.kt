@@ -60,12 +60,8 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                                 module.permission == CommandPermission.USER
                                 || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
                         ) {
-                            if (RatingSystem.buyCommand(module.cost, event)) {
-                                module.call.invoke(module.baseClass, event)
-                                log.info("command: $text")
-                            } else {
-                                api.send("Товарищ, у вас недостаточно е-баллов для команды", event.chatId)
-                            }
+                            module.call.invoke(module.baseClass, event)
+                            log.info("command: $text")
                         }
                     }
                 }

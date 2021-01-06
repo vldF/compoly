@@ -4,20 +4,16 @@ import api.IntegerNumber
 import api.Mention
 import api.TextMessageParser
 import api.VkPlatform
+import database.UserScore
+import database.dbQuery
+import log
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import database.UserScore
-import database.dbQuery
-import log
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.update
-import kotlin.math.ceil
-import kotlin.math.floor
+import org.jetbrains.exposed.sql.*
+import java.lang.IllegalArgumentException
 
 @Suppress("DuplicatedCode")
 @ModuleObject
@@ -25,50 +21,40 @@ object RatingSystem {
     private val respects = mutableMapOf<Pair<Long, Long>, Long>()
     private val disrespects = mutableMapOf<Pair<Long, Long>, Long>()
 
+    enum class Level(val levelName: String) {
+        LEVEL0("ЗАСЕКРЕЧЕНО"),
+        LEVEL1("октябрёнок"),
+        LEVEL2("пионер"),
+        LEVEL3("пролетарий"),
+        LEVEL4("комсомолец"),
+        LEVEL5("член профсоюза"),
+        LEVEL6("посол"),
+        LEVEL7("генсек"),
+        LEVEL8("Гелич")
+    }
+
     private val levels = mapOf(
-            10..110 to "октябрёнок",
-            111..220 to "пионер",
-            221..450 to "пролетарий",
-            451..680 to "комсомолец",
-            681..1400 to "член профсоюза",
-            1401..2600 to "посол",
-            2601..6000 to "генсек",
-            6001..Integer.MAX_VALUE to "Гелич"
+            Integer.MIN_VALUE..-1 to Level.LEVEL0,
+            0..20 to Level.LEVEL1,
+            21..50 to Level.LEVEL2,
+            51..100 to Level.LEVEL3,
+            101..200 to Level.LEVEL4,
+            201..500 to Level.LEVEL5,
+            501..1000 to Level.LEVEL6,
+            1001..5000 to Level.LEVEL7,
+            5001..Integer.MAX_VALUE to Level.LEVEL8
     )
 
-    fun buyCommand(cost: Int, event: LongPollNewMessageEvent): Boolean {
-        if (cost == 0) return true
-        val chatId = event.chatId
-        val userId = event.userId
-        val api = event.api
-
-        var canBuy = true
-        dbQuery {
-            val selected = UserScore.select {
-                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
-            }.firstOrNull()
-            val senderPoints = selected?.get(UserScore.score) ?: 0
-            if (senderPoints < cost) {
-                canBuy = false
-            }
-        }
-
-        if (canBuy) {
-            addPoints(-cost, userId, chatId, chatId, api)
-        }
-        return canBuy
-    }
-
-    private fun getLevelName(score: Int): String {
+    fun getLevel(rep: Int): Level {
         for ((key, value) in levels) {
-            if (score in key) return value
+            if (rep in key) return value
         }
-        return "ЗАСЕКРЕЧЕНО"
+        throw IllegalArgumentException("Can't find proper level in level map")
     }
 
-    fun addPoints(count: Int, toUser: Long, chatId: Long, shadowChatId: Long, api: VkPlatform) {
-        var oldScore = -1
-        var newScore = -1
+    private fun addReputation(count: Int, toUser: Long, chatId: Long, shadowChatId: Long, api: VkPlatform) {
+        var oldRep = -1
+        var newRep = -1
         dbQuery {
             val selected = UserScore.select{
                 (UserScore.chatId eq shadowChatId) and (UserScore.userId eq toUser)
@@ -77,26 +63,26 @@ object RatingSystem {
                 UserScore.insert {
                     it[this.chatId] = shadowChatId
                     it[userId] = toUser
-                    it[score] = count
+                    it[reputation] = count
                 }
             } else {
                 UserScore.update({ (UserScore.chatId eq shadowChatId) and (UserScore.userId eq toUser) }) {
-                    it[score] = selected[score] +  count
+                    it[reputation] = selected[reputation] +  count
                 }
             }
 
-            oldScore = selected?.get(UserScore.score) ?: 0
-            newScore = count + oldScore
+            oldRep = selected?.get(UserScore.reputation) ?: 0
+            newRep = count + oldRep
         }
 
-        val level = getLevelName(newScore)
+        val levelName = getLevel(newRep).levelName
         val userName = api.getUserNameById(toUser)
         when {
-            level != getLevelName(oldScore) && count > 0 -> {
-                api.send("Партия поздравляет $userName с повышением до $level", chatId)
+            levelName != getLevel(oldRep).levelName && count > 0 -> {
+                api.send("Партия поздравляет $userName с повышением до $levelName", chatId)
             }
-            level != getLevelName(oldScore) && count < 0 -> {
-                api.send("Партия сочувствует ${userName}. Он понижен до $level", chatId)
+            levelName != getLevel(oldRep).name && count < 0 -> {
+                api.send("Партия сочувствует ${userName}. Он понижен до $levelName", chatId)
             }
         }
     }
@@ -111,37 +97,36 @@ object RatingSystem {
         return selected != null
     }
 
-
     @OnCommand(
-        ["добавить", "add"],
-        "добавить пользователю очков. /add ID COUNT",
+        ["addRep"],
+        "добавить пользователю репы. /addRep ID COUNT",
         CommandPermission.ADMIN
     )
-    fun add(event: LongPollNewMessageEvent) {
+    fun addRep(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
         val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         try {
-            val deltaScore = parsed.get<IntegerNumber>(2)?.number!!.toInt()
+            val deltaRep = parsed.get<IntegerNumber>(2)?.number!!.toInt()
             if (target == null) {
                 api.send("Не указан товарищ", chatId)
                 return
             }
 
             if (targetId == null) {
-                log.info("arguments: $target, $deltaScore")
+                log.info("arguments: $target, $deltaRep")
                 api.send("Неверные аргументы, товарищ", chatId)
                 return
             }
             val screenName = target.targetScreenName
+            addReputation(deltaRep, targetId, chatId, chatId, api)
 
-            addPoints(deltaScore, targetId, chatId, chatId, api)
-            if (deltaScore >= 0)
-                api.send("Теперь у $screenName на $deltaScore e-балл больше!", chatId)
+            if (deltaRep >= 0)
+                api.send("Теперь у $screenName на $deltaRep реп больше!", chatId)
             else
-                api.send("Теперь у $screenName на ${-deltaScore} e-балл меньше!", chatId)
+                api.send("Теперь у $screenName на ${-deltaRep} реп меньше!", chatId)
 
         } catch (e: NumberFormatException) {
             api.send("Некорректное число, товарищ", chatId)
@@ -151,8 +136,6 @@ object RatingSystem {
 
     @OnMessage
     fun onMessageReceive(event: LongPollNewMessageEvent) {
-        val api = event.api
-        val chatId = event.chatId
         val count = when (event.text.split(" ").filter { it.length > 2 }.size) {
             in 0..1 -> 0
             in 2..6 -> 1
@@ -162,9 +145,21 @@ object RatingSystem {
             else -> 5
         }
 
-        addPoints(count, event.userId, chatId, chatId, api)
-    }
+        val toUser = event.userId
+        val chatId = event.chatId
+        dbQuery {
+            val selected = UserScore.select{
+                (UserScore.chatId eq chatId) and (UserScore.userId eq toUser)
+            }.firstOrNull()
 
+            if (selected == null) {
+                UserScore.insert {
+                    it[this.chatId] = chatId
+                    it[userId] = toUser
+                }
+            }
+        }
+    }
 
     @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов")
     fun showUsersInfo(event: LongPollNewMessageEvent) {
@@ -172,23 +167,16 @@ object RatingSystem {
         val chatId = event.chatId
         val userId = event.userId
 
-        val score = dbQuery {
+        val rep = dbQuery {
             UserScore.select{
                 (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
-            }.firstOrNull()?.get(UserScore.score) ?: 0
+            }.firstOrNull()?.get(UserScore.reputation) ?: 0
         }
 
-        val levelName = getLevelName(score)
+        val levelName = getLevel(rep).levelName
         val screenName = api.getUserNameById(userId)
 
-        val showingScore = "${calculateShowingScore(score)}"
-        api.send("По архивам Партии, у $screenName уровень $levelName. Это примерно $showingScore e-баллов", chatId)
-    }
-
-    fun calculateShowingScore(realScore: Int): Int {
-        val stringPresentation = realScore.toString()
-        val l = stringPresentation.length * 1.0 - 1
-        return (stringPresentation.substring(0..floor(l/2).toInt()) + "0".repeat(ceil(l/2).toInt())).toInt()
+        api.send("По архивам Партии, у $screenName уровень $levelName", chatId)
     }
 
     @OnCommand(["одобряю", "респект", "respect"],
@@ -196,7 +184,7 @@ object RatingSystem {
     fun respect(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val sender = event.userId
+        val senderId = event.userId
         val parsed = TextMessageParser().parse(event.text)
 
         val target = parsed.get<Mention>(1)
@@ -222,30 +210,82 @@ object RatingSystem {
             return
         }
 
-        if (targetId == sender) {
+        if (targetId == senderId) {
             api.send("Партия рекомендует не удалять рёбра", chatId)
             return
         }
 
         val currentTime = System.currentTimeMillis()
         if (
-                respects[sender to chatId] != null &&
-                currentTime - respects[sender to chatId]!! < 1000 * 60 * 60 * 4
+                respects[senderId to chatId] != null &&
+                currentTime - respects[senderId to chatId]!! < 1000 * 60 * 60 * 4
         ) {
             api.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа", chatId)
             return
         }
 
-        respects[sender to chatId] = currentTime
-        addPoints(10, targetId, chatId, chatId, api)
+        respects[senderId to chatId] = currentTime
+        val count = calculateRep(targetId, chatId, event, RepCommandType.RESPECT)
+        addReputation(count, targetId, chatId, chatId, api)
+        updateHistory(chatId, senderId, targetId, UserScore.history_respects)
+
         api.send("Одобрение выражено", chatId)
     }
 
-    @OnCommand(["осуждаю", "condemn"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
+    private fun calculateRep(
+        targetId: Long,
+        shadowChatId: Long,
+        event: LongPollNewMessageEvent,
+        commandType: RepCommandType
+    ): Int {
+        val isRespect = commandType == RepCommandType.RESPECT
+        val dbField = if (isRespect) UserScore.history_respects else UserScore.history_disrespects
+        val historyTxt = dbQuery {
+            UserScore.select{
+                (UserScore.chatId eq shadowChatId) and (UserScore.userId eq event.userId)
+            }.firstOrNull()?.get(dbField)
+        }
+
+        val baseCount = 10
+        return if (historyTxt != null) {
+            val historyList = historyTxt.toString().filter { it.isDigit() || it == ',' }.split(',').toList()
+            val historySize = if(historyList.size > 10) 10 else historyList.size
+            val subList = historyList.subList(0, historySize)
+            val repeatCount = subList.filter { it.toLong() == targetId }.size
+            val count = baseCount - repeatCount
+            if (isRespect) count  else -count
+        } else {
+            if (isRespect) baseCount  else -baseCount
+        }
+    }
+
+    private fun updateHistory(chatId: Long, sender: Long, targetId: Long, historyColumn: Column<String>) {
+        dbQuery {
+            val selected = UserScore.select{
+                (UserScore.chatId eq chatId) and (UserScore.userId eq sender)
+            }.first()
+            UserScore.update({ (UserScore.chatId eq chatId) and (UserScore.userId eq sender) }) {
+                val selectedHistory = selected.getOrNull(historyColumn)
+                if (selectedHistory == null) {
+                    it[historyColumn] = "{$targetId}"
+                } else {
+                    val arrayTextLength = selected[history_respects].length
+                    val openArrayStr = selected[historyColumn].substring(0, arrayTextLength - 1)
+                    it[historyColumn] = "$openArrayStr,$targetId}"
+                }
+            }
+        }
+    }
+
+    private enum class RepCommandType {
+        RESPECT, DISRESPECT
+    }
+
+    @OnCommand(["осуждаю", "disrespect"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
     fun disrespect(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val sender = event.userId
+        val senderId = event.userId
         val parsed = TextMessageParser().parse(event.text)
 
         val target = parsed.get<Mention>(1)
@@ -270,22 +310,46 @@ object RatingSystem {
             return
         }
 
-        if (targetId == sender) {
+        if (targetId == senderId) {
             api.send("Партия рекомендует не удалять рёбра", chatId)
             return
         }
 
         val currentTime = System.currentTimeMillis()
         if (
-                disrespects[sender to chatId] != null &&
-                currentTime - disrespects[sender to chatId]!! < 1000 * 60 * 60 * 4
+                disrespects[senderId to chatId] != null &&
+                currentTime - disrespects[senderId to chatId]!! < 1000 * 60 * 60 * 4
         ) {
             api.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа", chatId)
             return
         }
 
-        disrespects[sender to chatId] = currentTime
-        addPoints(-10, targetId, chatId, chatId, api)
+        disrespects[senderId to chatId] = currentTime
+        val count = calculateRep(targetId, chatId, event, RepCommandType.DISRESPECT)
+        addReputation(count, targetId, chatId, chatId, api)
+        updateHistory(chatId, senderId, targetId, UserScore.history_disrespects)
+
         api.send("Осуждение выражено", chatId)
+    }
+
+    //метод для тестов
+    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN)
+    fun showRespectHistory(event: LongPollNewMessageEvent) {
+        val api = event.api
+        val parsed = TextMessageParser().parse(event.text)
+        val target = parsed.get<Mention>(1)
+        val shadowChatId = event.chatId
+        if (target == null) {
+            api.send("Не указан интересущий член партии", shadowChatId)
+            return
+        }
+        var targetId = target.targetId ?: throw IllegalArgumentException("Target hasn't ID")
+
+        val respectHistoryTxt = dbQuery {
+            UserScore.select{
+                (UserScore.chatId eq shadowChatId) and (UserScore.userId eq targetId)
+            }.firstOrNull()?.get(UserScore.history_respects).toString()
+        }
+        api.send(respectHistoryTxt, shadowChatId)
     }
 }
