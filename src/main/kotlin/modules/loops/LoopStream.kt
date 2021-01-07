@@ -8,7 +8,7 @@ import java.io.StringWriter
 import kotlin.concurrent.thread
 
 
-object LoopStream : Runnable {
+object LoopStream {
 
     private val loops: List<Loop>
 
@@ -30,7 +30,7 @@ object LoopStream : Runnable {
         log.info("LoopStream is initialised")
     }
 
-    override fun run() {
+    fun start() {
         thread {
             log.info("LoopStream is running...")
             runBlocking {

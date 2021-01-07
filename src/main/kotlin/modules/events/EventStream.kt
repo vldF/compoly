@@ -8,16 +8,14 @@ import millisecondInDay
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.Exception
-import java.lang.Runnable
 import kotlin.concurrent.thread
 
-object EventStream : Runnable {
+object EventStream {
 
     private val events: List<Event>
 
     init {
         log.info("Initialising EventStream...")
-
         var loaded: List<Event> = emptyList()
         ClassGraph().enableAllInfo().whitelistPackages("modules.events")
             .scan().use { scanResult ->
@@ -29,9 +27,7 @@ object EventStream : Runnable {
                     .map { it.loadClass() }
                     .map { it.getConstructor().newInstance() } as List<Event>
             }
-
         events = loaded.filter { it.schedule.isNotEmpty() }
-
         log.info("Events: ${events.map { it.javaClass.toString() + ":" + it.schedule.toString() } }")
         log.info("EventStream is initialised")
     }
@@ -43,7 +39,7 @@ object EventStream : Runnable {
                 millisecondInDay - (currentTime - eventTime)
             }
 
-    override fun run() {
+    fun start() {
         thread {
             log.info("EventStream is running...")
             runBlocking {
