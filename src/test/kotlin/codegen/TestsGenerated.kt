@@ -43,4 +43,10 @@ class TestsGenerated {
         runTest("src/test/kotlin/testData/virtualTargets")
     }
     
+    @Test
+    @Order(6)
+    fun virtualcommands() {
+        runTest("src/test/kotlin/testData/virtualcommands")
+    }
+    
 }

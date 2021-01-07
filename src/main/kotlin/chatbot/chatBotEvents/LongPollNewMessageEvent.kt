@@ -1,10 +1,11 @@
 package chatbot.chatBotEvents
 
+import chatbot.Attachment
 import api.VkPlatform
 
 /**
  * @constructor
- * time - время отправки сообщения в секундах, если время не указакно (такое может быть только в тестах),
+ * time - время отправки сообщения в секундах, если время не указанно (такое может быть только в тестах),
  * то используется System.currentTimeMillis()
  */
 open class LongPollNewMessageEvent(
@@ -13,5 +14,6 @@ open class LongPollNewMessageEvent(
         open val text: String,
         open val userId: Int,
         open val forwardMessageFromId: Int? = null,
-        open val time: Long = System.currentTimeMillis() / 1000
+        open val time: Long = System.currentTimeMillis() / 1000,
+        open val attachments: List<Attachment>? = null
 ) : LongPollEventBase()

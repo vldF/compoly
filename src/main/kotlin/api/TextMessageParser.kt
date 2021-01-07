@@ -8,23 +8,20 @@ import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 class TextMessageParser {
-    private val userMentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
-    private val virtualMentionRegex = Regex("@([а-яА-Яa-zA-ZёЁ]+)")
+    companion object {
+        private val userMentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
+        private val virtualMentionRegex = Regex("@([а-яА-Яa-zA-ZёЁ]+)")
+        private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_1-9]+)")
+    }
 
     fun parse(text: String, chatId: Int? = null): ParseObject {
         val words = text.split(Pattern.compile("\\s+"))
         val parseObject = ParseObject()
 
-        for ((i, word) in words.withIndex()) {
+        loop@ for ((i, word) in words.withIndex()) {
             when {
                 i == 0 && word.startsWith("/") -> {
-                    val rawText = words[0].removePrefix("/")
-                    val commandText = if(rawText.contains("@")) {
-                        rawText.split("@")[0]
-                    } else {
-                        rawText
-                    }
-
+                    val commandText = commandRegex.find(words[0])?.groupValues?.get(1) ?: continue@loop
                     val command = Command(commandText, word)
                     parseObject.add(command)
                 }

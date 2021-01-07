@@ -16,6 +16,10 @@ annotation class OnCommand(
 
 @Target(AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class AfterCommandUpdateList
+
+@Target(AnnotationTarget.FUNCTION)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class OnMessage
 
 @Target(AnnotationTarget.FUNCTION)
@@ -25,3 +29,7 @@ annotation class OnPoll
 @Target(AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class OnPollAnswer
+
+@Target(AnnotationTarget.FUNCTION)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class GenerateMock(val args: Array<String>, val defaultValue: String = "")

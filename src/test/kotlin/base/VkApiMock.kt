@@ -1,5 +1,4 @@
 package base
-
 import api.VkPlatform
 import api.keyboards.Keyboard
 import api.objects.VkUser
@@ -8,24 +7,25 @@ import org.mockito.Answers
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 
+//DO NO MODIFY THIS CODE MANUALLY!!!
+
 interface VkApiMock {
-    val meId: Int
-
-    fun getUserIdByName(username: String): Long?
-
-    fun getUserNameById(id: Int): String?
-
-    fun kickUserFromChat(chatId: Int, userId: Int)
-
-    fun isUserAdmin(chatId: Int, userId: Int): Boolean
-
-    fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String): String?
-
-    fun send(text: String, chatId: Int, pixUrls: List<String>, keyboard: Keyboard?)
-
-    fun sendPhotos(text: String, chatId: Int, attachments: List<String>)
-
-    fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>?
+    fun getUserIdByName(username: String?): Long?
+    
+    fun getUserNameById(id: Int?): String?
+    
+    fun kickUserFromChat(chatId: Int?, userId: Int?): Unit
+    
+    fun isUserAdmin(chatId: Int?, userId: Int?): Boolean?
+    
+    fun uploadPhotoByUrlAsAttachment(chatId: Integer?, url: String?): String?
+    
+    fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?): Unit
+    
+    fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Unit
+    
+    fun getChatMembers(peer_id: Int?, fields: List<String>?): List<VkUser>?
+    
 }
 
 fun getMock(api: VkApiMock): VkPlatform {
@@ -36,6 +36,10 @@ fun getMock(api: VkApiMock): VkPlatform {
 }
 
 private fun VkApiMock.executeMockMethod(invocation: InvocationOnMock): Any? {
-    val method = this.javaClass.methods.find { it.name == invocation.method.name } ?: invocation.method
-    return method.invoke(this, *invocation.arguments)
+    val method = this.javaClass.methods.find { it.name == invocation.method.name } 
+    return if (method != null) {
+        method.invoke(this, *invocation.arguments)
+    } else {
+        invocation.callRealMethod()
+    }
 }
