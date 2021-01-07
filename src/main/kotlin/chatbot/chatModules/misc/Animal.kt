@@ -29,7 +29,7 @@ abstract class Animal {
         val api = event.api
         if (vkAnimalQueue.isEmpty()) addAnimalsToQueue(vkPixQueueSize, api, event.chatId)
         val catAttachment = vkAnimalQueue.poll()
-        api.sendPhotos("", event.chatId, listOf(catAttachment))
+        api.sendWithAttachments("", event.chatId, listOf(catAttachment))
         addAnimalsToQueue(api = api, chatId = event.chatId)
     }
 

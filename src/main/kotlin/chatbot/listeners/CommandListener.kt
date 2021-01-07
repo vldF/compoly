@@ -14,21 +14,35 @@ data class CommandListener(
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is CommandListener) return false
+
+        other as CommandListener
 
         if (!commands.contentEquals(other.commands)) return false
-        if (baseClass != other.baseClass) return false
+        if (description != other.description) return false
         if (call != other.call) return false
         if (permission != other.permission) return false
+        if (cost != other.cost) return false
+        if (showOnHelp != other.showOnHelp) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = commands.contentHashCode()
+        result = 31 * result + description.hashCode()
         result = 31 * result + baseClass.hashCode()
         result = 31 * result + call.hashCode()
         result = 31 * result + permission.hashCode()
+        result = 31 * result + cost
+        result = 31 * result + showOnHelp.hashCode()
         return result
     }
 }
+
+data class VirtualCommandBody(
+    val commandId: Int,
+    val chatId: Int,
+    val triggers: List<String>,
+    var text: String,
+    var attachments: String
+)

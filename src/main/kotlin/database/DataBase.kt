@@ -2,9 +2,7 @@ package database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
@@ -30,6 +28,16 @@ object VirtualMentions : Table() {
     val chatId = integer("chat_id")
     val name = text("name")
     val id = integer("id").autoIncrement()
+}
+
+object VirtualCommands: Table() {
+    val commandId = integer("id").autoIncrement()
+    val chatId = integer("chat_id")
+    val commandName = text("trigger")
+    val attachments = text("attachments")
+    val textCommand = text("text")
+
+    override val primaryKey = PrimaryKey(commandId)
 }
 
 fun hikari(): DataSource {

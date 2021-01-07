@@ -1,20 +1,21 @@
 package chatbot
 
-import chatbot.chatBotEvents.*
-import io.github.classgraph.ClassGraph
-import log
-import chatbot.chatModules.RatingSystem
+import chatbot.chatBotEvents.LongPollEventBase
+import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.listeners.CommandListener
 import chatbot.listeners.MessageListener
 import chatbot.listeners.PollAnswerListener
 import chatbot.listeners.PollListener
+import io.github.classgraph.ClassGraph
+import log
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
+
 
 class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>) : Thread() {
     private val pollSize = 4
     private val poll = Executors.newFixedThreadPool(pollSize)
-    private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ]+)")
+    private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_]+)")
 
     companion object {
         lateinit var commandListeners: List<CommandListener>
@@ -56,16 +57,17 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 for (module in commandListeners) {
                     if (module.commands.contains(command)) {
                         if (
-                                module.permission == CommandPermission.USER
-                                || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
+                            module.permission == CommandPermission.USER
+                            || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
                         ) {
                             try {
                                 module.call.invoke(module.baseClass, event)
+                                return
                             } catch (e: Exception) {
                                 e.printStackTrace()
+                                log.severe("Error on processing commandListeners")
+                                log.info("command: $text")
                             }
-                            System.err.println("Error on processing commandListeners")
-                            log.info("command: $text")
                         }
                     }
                 }
@@ -76,84 +78,86 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
     override fun run() {
         log.info("initializing modules")
         initModules()
+        log.info("Modules: "+ commandListeners.joinToString(", ") { it.commands[0] })
         log.info("Starting event processor")
+
         mainLoop()
     }
 
     fun initModules() {
         ClassGraph().enableAllInfo().whitelistPackages("chatbot.chatModules")
-                .scan().use { scanResult ->
-                    val classes = scanResult.allClasses.filter { it.hasAnnotation(ModuleObject::class.java.name) }
+            .scan().use { scanResult ->
+                val classes = scanResult.allClasses.filter { it.hasAnnotation(ModuleObject::class.java.name) }
 
-                    commandListeners = classes
-                            .filter { it.isPublic }
-                            .flatMap { clazz ->
-                                val constructor = clazz.loadClass().getDeclaredConstructor()
+                commandListeners = classes
+                    .filter { it.isPublic }
+                    .flatMap { clazz ->
+                        val constructor = clazz.loadClass().getDeclaredConstructor()
 
-                                constructor.trySetAccessible()
-                                val clazzInstance = constructor.newInstance()
+                        constructor.trySetAccessible()
+                        val clazzInstance = constructor.newInstance()
 
-                                clazz.methodAndConstructorInfo.filter { method ->
-                                    method.hasAnnotation(OnCommand::class.java.name)
-                                }.map { method ->
-                                    val loadedMethod = method.loadClassAndGetMethod()
-                                    val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
-                                    CommandListener(
-                                            annotation.commands,
-                                            annotation.description,
-                                            clazzInstance,
-                                            loadedMethod,
-                                            annotation.permissions,
-                                            annotation.cost,
-                                            annotation.showOnHelp
-                                    )
-                                }
-                            }
-
-                    messageListeners = classes.flatMap {
-                        val clazz = it.loadClass().getDeclaredConstructor()
-                        clazz.trySetAccessible()
-                        val clazzInstance = clazz.newInstance()
-                        it.methodAndConstructorInfo.filter { method ->
-                            method.hasAnnotation(OnMessage::class.java.name)
+                        clazz.methodAndConstructorInfo.filter { method ->
+                            method.hasAnnotation(OnCommand::class.java.name)
                         }.map { method ->
                             val loadedMethod = method.loadClassAndGetMethod()
-                            MessageListener(
-                                    clazzInstance,
-                                    loadedMethod
+                            val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                            CommandListener(
+                                annotation.commands,
+                                annotation.description,
+                                clazzInstance,
+                                loadedMethod,
+                                annotation.permissions,
+                                annotation.cost,
+                                annotation.showOnHelp
                             )
                         }
                     }
 
-                    pollAnswerListeners = classes.flatMap {
-                        val clazz = it.loadClass().getDeclaredConstructor()
-                        clazz.trySetAccessible()
-                        val clazzInstance = clazz.newInstance()
-                        it.methodAndConstructorInfo.filter { method ->
-                            method.hasAnnotation(OnPollAnswer::class.java.name)
-                        }.map { method ->
-                            val loadedMethod = method.loadClassAndGetMethod()
-                            PollAnswerListener(
-                                    clazzInstance,
-                                    loadedMethod
-                            )
-                        }
-                    }
-
-                    pollListeners = classes.flatMap {
-                        val clazz = it.loadClass().getDeclaredConstructor()
-                        clazz.trySetAccessible()
-                        val clazzInstance = clazz.newInstance()
-                        it.methodAndConstructorInfo.filter { method ->
-                            method.hasAnnotation(OnPoll::class.java.name)
-                        }.map { method ->
-                            val loadedMethod = method.loadClassAndGetMethod()
-                            PollListener(
-                                    clazzInstance,
-                                    loadedMethod
-                            )
-                        }
+                messageListeners = classes.flatMap {
+                    val clazz = it.loadClass().getDeclaredConstructor()
+                    clazz.trySetAccessible()
+                    val clazzInstance = clazz.newInstance()
+                    it.methodAndConstructorInfo.filter { method ->
+                        method.hasAnnotation(OnMessage::class.java.name)
+                    }.map { method ->
+                        val loadedMethod = method.loadClassAndGetMethod()
+                        MessageListener(
+                            clazzInstance,
+                            loadedMethod
+                        )
                     }
                 }
+
+                pollAnswerListeners = classes.flatMap {
+                    val clazz = it.loadClass().getDeclaredConstructor()
+                    clazz.trySetAccessible()
+                    val clazzInstance = clazz.newInstance()
+                    it.methodAndConstructorInfo.filter { method ->
+                        method.hasAnnotation(OnPollAnswer::class.java.name)
+                    }.map { method ->
+                        val loadedMethod = method.loadClassAndGetMethod()
+                        PollAnswerListener(
+                            clazzInstance,
+                            loadedMethod
+                        )
+                    }
+                }
+
+                pollListeners = classes.flatMap {
+                    val clazz = it.loadClass().getDeclaredConstructor()
+                    clazz.trySetAccessible()
+                    val clazzInstance = clazz.newInstance()
+                    it.methodAndConstructorInfo.filter { method ->
+                        method.hasAnnotation(OnPoll::class.java.name)
+                    }.map { method ->
+                        val loadedMethod = method.loadClassAndGetMethod()
+                        PollListener(
+                            clazzInstance,
+                            loadedMethod
+                        )
+                    }
+                }
+            }
     }
 }

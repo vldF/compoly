@@ -1,0 +1,13 @@
+[
+    {
+        "text":"Добавленакоманда:testcommand",
+        "chatId":1,
+        "pixUrls":[]
+    },
+    {
+        "text":"Виртуальныекоманды:
+        testcommand",
+        "chatId":1,
+        "pixUrls":[]
+    }
+]

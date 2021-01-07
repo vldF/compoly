@@ -92,7 +92,8 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                         text,
                         update.`object`.from_id,
                         forwardedFromId,
-                        update.`object`.date.toLong()
+                        update.`object`.date.toLong(),
+                        update.`object`.attachments
                     )
 
                     queue.add(messageEvent)
@@ -163,10 +164,52 @@ data class MessageNewObj(
         val reply_message: MessageNewObj?,
         val important: Boolean,
         val random_id: Int,
-        val attachments: List<Any>,
+        val attachments: List<Attachment>,
         val is_hidden: Boolean,
         val action: Action?,
         val payload: String
+)
+data class Attachment(
+    val type: String,
+    val photo: Photo? = null,
+    val video: AttachmentObj? = null,
+    val audio: AttachmentObj? = null,
+    val doc: Doc? = null,
+    val poll: Poll? = null
+)
+data class Photo(
+    val id: Int,
+    val owner_id: Int,
+    val access_key: String? = null,
+    val sizes: List<Size>? = null
+)
+
+data class Doc(
+    val id: Int,
+    val owner_id: Int,
+    val access_key: String? = null,
+    val title: String,
+    val ext: String,
+    val url: String
+)
+
+data class Size(
+    val height: Int,
+    val url: String,
+    val type: String,
+    val width: Int
+)
+
+data class Poll(
+    val owner_id: Int,
+    val id: Int,
+    val access_key: String? = null
+)
+
+data class AttachmentObj(
+    val id: Int,
+    val owner_id: Int,
+    val access_key: String? = null
 )
 
 data class Action(

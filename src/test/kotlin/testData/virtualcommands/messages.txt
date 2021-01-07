@@ -1,0 +1,20 @@
+[
+    {
+            chatId: 1,
+            text: "/виртуальнаякоманда testCommand \nМой дядя честных честных правил!\nЕвгений Онегин",
+            userId: 1,
+            date: 0
+        },
+        {
+            chatId: 1,
+            text: "/testcommand",
+            userId: 1,
+            date: 0
+        },
+        {
+            chatId: 1,
+            text: "/list",
+            userId: 1,
+            date: 0
+        }
+]

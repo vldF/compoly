@@ -4,6 +4,7 @@ import api.keyboards.Keyboard
 import api.objects.VkUser
 import botId
 import chatbot.chatModules.VirtualTargets
+import chatbot.Attachment
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -81,6 +82,12 @@ object VkPlatform {
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
+    fun uploadDocByUrlAsAttachment(chatId: Long?, url: String, fileName: String): String? {
+        val docConnection = URL(url).openConnection()
+        val docStream = docConnection.getInputStream()
+        return uploadDoc(chatId, docStream.readBytes(), fileName)
+    }
+    
     fun send(text: String, chatId: Int, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
         if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
@@ -95,17 +102,62 @@ object VkPlatform {
         } else {
             val attachments = mutableListOf<String>()
             for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
-            sendPhotos(text, chatId, attachments)
+            sendWithAttachments(text, chatId, attachments)
         }
     }
 
-    fun sendPhotos(text: String, chatId: Int, attachments: List<String>) {
+    fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>) {
         post("messages.send", mutableMapOf(
             "message" to text,
             "peer_id" to chatId,
             "random_id" to System.currentTimeMillis().toString(),
             "attachment" to attachments.joinToString(separator = ",")
         ))
+    }
+
+    fun getStringsOfAttachments(attachments: List<Attachment>, chatId: Long): List<String> {
+        val strings = mutableListOf<String>()
+        loop@ for (attachment in attachments) {
+            log.info(attachment.toString())
+            val stringOfAttachment = when (attachment.type) {
+                "photo" -> {
+                    val url = attachment.photo?.sizes?.last()?.url ?: continue@loop
+                    uploadPhotoByUrlAsAttachment(chatId, url) ?: continue@loop
+                }
+                "audio" -> {
+                    val audio = attachment.audio
+                    if (audio?.access_key != null) {
+                        "audio${audio.owner_id}_${audio.id}_${audio.access_key}"
+                    } else {
+                        "audio${audio?.owner_id}_${audio?.id}"
+                    }
+                }
+                "video" -> {
+                    val video = attachment.video
+                    if (video?.access_key != null) {
+                        "video${video.owner_id}_${video.id}_${video.access_key}"
+                    } else {
+                        "video${video?.owner_id}_${video?.id}"
+                    }
+                }
+                "doc" -> {
+                    val doc = attachment.doc
+                    val url = doc?.url ?: continue@loop
+                    uploadDocByUrlAsAttachment(chatId, url, "${doc.title}.${doc.ext}")
+                }
+                "poll" -> {
+                    val poll = attachment.poll
+                    if (poll?.access_key != null) {
+                        "poll${poll.owner_id}_${poll.id}_${poll.access_key}"
+                    } else {
+                        "poll${poll?.owner_id}_${poll?.id}"
+                    }
+                }
+                else -> ""
+            }
+            strings.add(stringOfAttachment.toString())
+        }
+        return strings
     }
 
     fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
@@ -195,6 +247,62 @@ object VkPlatform {
         val accessKey = dataObject["access_key"].asString
 
         return "photo${ownerId}_${imageId}_$accessKey"
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun uploadDoc(peer_id: Long?, data: ByteArray, fileName: String): String? {
+        history.use("docs.getMessagesUploadServer")
+        val serverData =
+            if (peer_id != null) post(
+                "docs.getMessagesUploadServer",
+                mutableMapOf("peer_id" to peer_id)
+            ) else post("docs.getMessagesUploadServer", mutableMapOf())
+
+        val jsonServer = serverData?.asJsonObject ?: return null
+        val vkResponse = jsonServer["response"]?.asJsonObject ?: throw IllegalStateException(serverData.asString)
+        val uploadUrl = vkResponse["upload_url"]?.asString
+        log.info(uploadUrl)
+        log.info(fileName)
+        val inputStreamBody = InputStreamBody(ByteArrayInputStream(data), fileName)
+
+        val multipartData = MultipartEntityBuilder
+            .create()
+            .addPart("file", inputStreamBody)
+            .build()
+
+        val requestUploadFile = HttpPost(uploadUrl)
+        requestUploadFile.entity = multipartData
+
+        val responseUpload = HttpClientBuilder
+            .create()
+            .build()
+            .execute(requestUploadFile)
+            .entity
+            .content
+            .readAllBytes()
+            .decodeToString()
+
+        val jsonUpload = JsonParser().parse(responseUpload).asJsonObject
+        val file = jsonUpload["file"].asString
+        history.use("docs.save")
+        val saveData = post(
+            "docs.save",
+            mutableMapOf(
+                "file" to file
+            )
+        )
+        if (saveData == null) {
+            log.info("EMPTY SAVE DATA")
+            return ""
+        }
+
+        val jsonAnswer = saveData
+            .asJsonObject["response"]
+            .asJsonObject["doc"]
+            .asJsonObject
+        val ownerId = jsonAnswer["owner_id"]
+        val docId = jsonAnswer["id"]
+        return "doc${ownerId}_${docId}"
     }
 
 
