@@ -1,12 +1,11 @@
 import api.*
-import chatbot.chatBotEvents.Platform
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class TextMessageParserTest {
     @Test
     fun simpleTest() {
-        val vkParser = TextMessageParser(Platform.VK)
+        val vkParser = TextMessageParser()
         val text = "/cat покажи самого крутого котика! Потрать мои 20 e-баллов !"
         val res = vkParser.parse(text)
 
@@ -19,7 +18,7 @@ class TextMessageParserTest {
 
     @Test
     fun simpleVkMentionTest() {
-        val vkParser = TextMessageParser(Platform.VK)
+        val vkParser = TextMessageParser()
         val text = "/testCommand [id156594337|@mrvladf]"
         val res = vkParser.parse(text)
 
