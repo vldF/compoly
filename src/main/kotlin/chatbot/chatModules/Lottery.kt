@@ -1,10 +1,8 @@
 package chatbot.chatModules
 
-import api.TelegramPlatform
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import chatbot.chatBotEvents.LongPollNewTGMessageEvent
 import kotlin.random.Random
 
 @ExperimentalStdlibApi
@@ -22,13 +20,7 @@ object Lottery {
             cost = 0
     )
     fun play(event: LongPollNewMessageEvent) {
-        val result =
-                if (
-                        event.api is TelegramPlatform &&
-                        (event as LongPollNewTGMessageEvent).diceResult != null
-                ) event.diceResult
-                else Random.nextInt(1, 6)
-        when(result) {
+        when(Random.nextInt(1, 6)) {
             1 -> sendResult(event,
                     "вы потеряли 40 е-баллов. Партия соболезнует вам",
                     -40)

@@ -27,14 +27,9 @@ object Cats {
     @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
     fun cat(event: LongPollNewMessageEvent) {
         val api = event.api
-        if (api is VkPlatform) {
-            val catAttachment = vkCatsQueue.poll()
-            api.sendPhotos("", event.chatId, listOf(catAttachment))
-            addCatsToQueue(1)
-        } else {
-            val url = getCatUrl()
-            api.send("", event.chatId, listOf(url))
-        }
+        val catAttachment = vkCatsQueue.poll()
+        api.sendPhotos("", event.chatId, listOf(catAttachment))
+        addCatsToQueue(1)
     }
 
     private fun getCatUrl(): String {

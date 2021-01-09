@@ -18,16 +18,16 @@ import java.io.ByteArrayInputStream
 import java.net.URL
 
 
-object VkPlatform : PlatformApiInterface {
+object VkPlatform {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
     private val history = ApiHistory(4)
     // true if user is admin
     private val userAdminMap = mutableMapOf<Pair<Long, Long>, Boolean>()
 
-    override val meId: Long = 188281612 // todo: get this value via API
+    val meId: Long = 188281612 // todo: get this value via API
 
-    override fun getUserIdByName(username: String): Long? {
+    fun getUserIdByName(username: String): Long? {
         val resp = post(
                 "users.get", mutableMapOf(
                 "user_ids" to username
@@ -37,7 +37,7 @@ object VkPlatform : PlatformApiInterface {
         return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asLong
     }
 
-    override fun getUserNameById(id: Long): String? {
+    fun getUserNameById(id: Long): String? {
         val resp = post("users.get", mutableMapOf(
                 "user_ids" to id,
                 "fields" to "screen_name"
@@ -46,14 +46,14 @@ object VkPlatform : PlatformApiInterface {
         return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("screen_name")?.asString
     }
 
-    override fun kickUserFromChat(chatId: Long, userId: Long) {
+    fun kickUserFromChat(chatId: Long, userId: Long) {
         post("messages.removeChatUser", mutableMapOf(
                 "chat_id" to chatId - 2000000000,
                 "user_id" to userId
         ))
     }
 
-    override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+    fun isUserAdmin(chatId: Long, userId: Long): Boolean {
         val fromCache = userAdminMap[chatId to userId]
         if (fromCache != null) return fromCache
 
@@ -70,7 +70,7 @@ object VkPlatform : PlatformApiInterface {
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
-    override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
+    fun send(text: String, chatId: Long, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
         if (pixUrls.isEmpty()) {
             val params = mutableMapOf(
                     "message" to text,

@@ -5,8 +5,6 @@ import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 class TextMessageParser(private val platform : Platform) {
-    private val tgApi = TelegramPlatform
-    private val dsApi = DiscordPlatform
     private val mentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
 
     fun parse(text: String): ParseObject {
@@ -56,36 +54,13 @@ class TextMessageParser(private val platform : Platform) {
         return parseObject
     }
 
-    private fun processMention(text: String) : Mention? {
-        return when (platform) {
-            Platform.VK -> { processVkMention(text) }
-            Platform.TELEGRAM -> { processTelegramMention(text) }
-            Platform.DISCORD -> { processDiscordMention(text) }
-        }
-    }
-
-    private fun processTelegramMention(text: String): Mention? {
-        val nick = text.removePrefix("@")
-        val id = tgApi.getUserIdByName(nick) ?: return null
-
-        return Mention(id, nick, text)
-    }
-
-    private fun processVkMention(text: String): Mention? {
+    private fun processMention(text: String): Mention? {
         val regex = mentionRegex.find(text)
 
         val id = regex?.groupValues?.getOrNull(1)?.toLongOrNull() ?: return null
         val screenName = regex.groupValues.getOrNull(2) ?: return null
 
         return Mention(id, screenName, text)
-    }
-
-    private fun processDiscordMention(text: String): Mention? {
-        val mentionRegex = Regex("<@(\\d+)>")
-        val regex = mentionRegex.find(text)
-        val id = regex?.groupValues?.getOrNull(1)?.removeSurrounding("<@", ">")?.toLongOrNull() ?: return null
-        val nick = dsApi.getUserNameById(id) ?: return null
-        return Mention(id, nick, text)
     }
 }
 

@@ -1,10 +1,10 @@
 package chatbot.chatBotEvents
 
-import api.PlatformApiInterface
+import api.VkPlatform
 
 open class LongPollNewMessageEvent(
         override val platform: Platform,
-        override val api: PlatformApiInterface,
+        override val api: VkPlatform,
         open val chatId: Long,
         open val text: String,
         open val userId: Long,

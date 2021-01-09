@@ -70,12 +70,6 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                     }
                 }
             }
-            is LongPollNewPollAnswerEvent -> {
-                pollAnswerListeners.forEach{it.call.invoke(it.baseClass, event)}
-            }
-            is LongPollEventNewPoll -> {
-                pollListeners.forEach{it.call.invoke(it.baseClass, event)}
-            }
         }
     }
 

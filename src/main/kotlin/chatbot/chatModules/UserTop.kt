@@ -2,13 +2,12 @@ package chatbot.chatModules
 
 import api.IntegerNumber
 import api.TextMessageParser
-import database.UserScore
-import database.dbQuery
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
-import chatbot.chatBotEvents.LongPollDSNewMessageEvent
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import database.UserScore
+import database.dbQuery
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.select
 
@@ -17,7 +16,6 @@ object UserTop {
     @OnCommand(["топ", "top"], "выводит топ пользователей по e-баллам", CommandPermission.ADMIN)
     fun top(event: LongPollNewMessageEvent) {
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val api = event.api
         val parser = TextMessageParser(event.platform).parse(event.text)
         val count = parser.get<IntegerNumber>(1)?.number?.toInt() ?: 10
@@ -26,7 +24,7 @@ object UserTop {
 
         dbQuery {
             UserScore
-                    .select { UserScore.chatId eq shadowChatId }
+                    .select { UserScore.chatId eq chatId }
                     .orderBy(UserScore.score, SortOrder.DESC)
                     .limit(count)
                     .forEachIndexed { index, resultRow ->

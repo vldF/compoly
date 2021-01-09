@@ -1,10 +1,10 @@
 package chatbot.chatBotEvents
 
-import api.PlatformApiInterface
+import api.VkPlatform
 
 abstract class LongPollEventBase {
     abstract val platform: Platform
-    abstract val api: PlatformApiInterface
+    abstract val api: VkPlatform
 }
 
 enum class Platform {

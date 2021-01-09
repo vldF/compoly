@@ -2,17 +2,16 @@ package chatbot.chatModules
 
 import api.IntegerNumber
 import api.Mention
-import api.PlatformApiInterface
 import api.TextMessageParser
-import database.UserScore
-import database.dbQuery
-import log
+import api.VkPlatform
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
-import chatbot.chatBotEvents.LongPollDSNewMessageEvent
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import database.UserScore
+import database.dbQuery
+import log
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -23,8 +22,6 @@ import kotlin.math.floor
 @Suppress("DuplicatedCode")
 @ModuleObject
 object RatingSystem {
-    private val regex = Regex("^(.+)\\s(.+)\\s(-?\\d+)\$")
-    private val mentionRegex = Regex("id(\\d+)(.*)")
     private val respects = mutableMapOf<Pair<Long, Long>, Long>()
     private val disrespects = mutableMapOf<Pair<Long, Long>, Long>()
 
@@ -42,14 +39,13 @@ object RatingSystem {
     fun buyCommand(cost: Int, event: LongPollNewMessageEvent): Boolean {
         if (cost == 0) return true
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val userId = event.userId
         val api = event.api
 
         var canBuy = true
         dbQuery {
             val selected = UserScore.select {
-                (UserScore.chatId eq shadowChatId) and (UserScore.userId eq userId)
+                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
             }.firstOrNull()
             val senderPoints = selected?.get(UserScore.score) ?: 0
             if (senderPoints < cost) {
@@ -58,19 +54,19 @@ object RatingSystem {
         }
 
         if (canBuy) {
-            addPoints(-cost, userId, chatId, shadowChatId, api)
+            addPoints(-cost, userId, chatId, chatId, api)
         }
         return canBuy
     }
 
-    fun getLevelName(score: Int): String {
+    private fun getLevelName(score: Int): String {
         for ((key, value) in levels) {
             if (score in key) return value
         }
         return "ЗАСЕКРЕЧЕНО"
     }
 
-    fun addPoints(count: Int, toUser: Long, chatId: Long, shadowChatId: Long, api: PlatformApiInterface) {
+    fun addPoints(count: Int, toUser: Long, chatId: Long, shadowChatId: Long, api: VkPlatform) {
         var oldScore = -1
         var newScore = -1
         dbQuery {
@@ -124,7 +120,6 @@ object RatingSystem {
     fun add(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val parsed = TextMessageParser(event.platform).parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
@@ -142,7 +137,7 @@ object RatingSystem {
             }
             val screenName = target.targetScreenName
 
-            addPoints(deltaScore, targetId, chatId, shadowChatId, api)
+            addPoints(deltaScore, targetId, chatId, chatId, api)
             if (deltaScore >= 0)
                 api.send("Теперь у $screenName на $deltaScore e-балл больше!", chatId)
             else
@@ -158,7 +153,6 @@ object RatingSystem {
     fun onMessageReceive(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val count = when (event.text.split(" ").filter { it.length > 2 }.size) {
             in 0..1 -> 0
             in 2..6 -> 1
@@ -168,7 +162,7 @@ object RatingSystem {
             else -> 5
         }
 
-        addPoints(count, event.userId, chatId, shadowChatId, api)
+        addPoints(count, event.userId, chatId, chatId, api)
     }
 
 
@@ -176,12 +170,11 @@ object RatingSystem {
     fun showUsersInfo(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val userId = event.userId
 
         val score = dbQuery {
             UserScore.select{
-                (UserScore.chatId eq shadowChatId) and (UserScore.userId eq userId)
+                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
             }.firstOrNull()?.get(UserScore.score) ?: 0
         }
 
@@ -203,7 +196,6 @@ object RatingSystem {
     fun respect(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val sender = event.userId
         val parsed = TextMessageParser(event.platform).parse(event.text)
 
@@ -225,7 +217,7 @@ object RatingSystem {
             return
         }
 
-        if (!userHasScore(shadowChatId, targetId)) {
+        if (!userHasScore(chatId, targetId)) {
             api.send("Этого человека нет в архивах", chatId)
             return
         }
@@ -237,15 +229,15 @@ object RatingSystem {
 
         val currentTime = System.currentTimeMillis()
         if (
-                respects[sender to shadowChatId] != null &&
-                currentTime - respects[sender to shadowChatId]!! < 1000 * 60 * 60 * 4
+                respects[sender to chatId] != null &&
+                currentTime - respects[sender to chatId]!! < 1000 * 60 * 60 * 4
         ) {
             api.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа", chatId)
             return
         }
 
-        respects[sender to shadowChatId] = currentTime
-        addPoints(10, targetId, chatId, shadowChatId, api)
+        respects[sender to chatId] = currentTime
+        addPoints(10, targetId, chatId, chatId, api)
         api.send("Одобрение выражено", chatId)
     }
 
@@ -253,7 +245,6 @@ object RatingSystem {
     fun disrespect(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val shadowChatId = if (event is LongPollDSNewMessageEvent) event.guildId else event.chatId
         val sender = event.userId
         val parsed = TextMessageParser(event.platform).parse(event.text)
 
@@ -274,7 +265,7 @@ object RatingSystem {
             return
         }
 
-        if (!userHasScore(shadowChatId, targetId)) {
+        if (!userHasScore(chatId, targetId)) {
             api.send("Этого человека нет в архивах", chatId)
             return
         }
@@ -286,15 +277,15 @@ object RatingSystem {
 
         val currentTime = System.currentTimeMillis()
         if (
-                disrespects[sender to shadowChatId] != null &&
-                currentTime - disrespects[sender to shadowChatId]!! < 1000 * 60 * 60 * 4
+                disrespects[sender to chatId] != null &&
+                currentTime - disrespects[sender to chatId]!! < 1000 * 60 * 60 * 4
         ) {
             api.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа", chatId)
             return
         }
 
-        disrespects[sender to shadowChatId] = currentTime
-        addPoints(-10, targetId, chatId, shadowChatId, api)
+        disrespects[sender to chatId] = currentTime
+        addPoints(-10, targetId, chatId, chatId, api)
         api.send("Осуждение выражено", chatId)
     }
 }

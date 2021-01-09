@@ -171,11 +171,7 @@ object Gulag {
         gulagVoting.remove(targetId to chatId)
     }
 
-    private fun getOnlineMemberCount(chatId: Long, api: PlatformApiInterface): Int {
-        return when (api) {
-            is VkPlatform -> api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
-            is TelegramPlatform -> api.getMemberCount(chatId)
-            else -> 0
-        }
+    private fun getOnlineMemberCount(chatId: Long, api: VkPlatform): Int {
+        return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 }
