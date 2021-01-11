@@ -33,18 +33,4 @@ class TextMessageParserTest {
         Assertions.assertEquals(156594337L, mentionId)
         Assertions.assertEquals("@mrvladf", mentionScreenName)
     }
-
-    @Test
-    fun simpleTgMentionTest() {
-        val tgParser = TextMessageParser(Platform.TELEGRAM)
-        val text = "/say @vldfx hi from Telegram! Ur freedom in our hands"
-        val res = tgParser.parse(text)
-
-        Assertions.assertEquals(10, res.size)
-        Assertions.assertTrue(res.isObjectOnIndexHasType(1, Mention::class))
-
-        val mention = res.get<Mention>(1)
-        Assertions.assertEquals(null, mention?.targetId)  // error
-        Assertions.assertEquals("vldfx", mention?.targetScreenName)
-    }
 }

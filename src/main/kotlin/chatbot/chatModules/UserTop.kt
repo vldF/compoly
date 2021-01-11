@@ -17,7 +17,7 @@ object UserTop {
     fun top(event: LongPollNewMessageEvent) {
         val chatId = event.chatId
         val api = event.api
-        val parser = TextMessageParser(event.platform).parse(event.text)
+        val parser = TextMessageParser().parse(event.text)
         val count = parser.get<IntegerNumber>(1)?.number?.toInt() ?: 10
 
         val text = StringBuilder("Вот топ пользователей по e-баллам в этом чате:\n")

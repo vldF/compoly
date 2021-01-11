@@ -120,7 +120,7 @@ object RatingSystem {
     fun add(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         try {
@@ -197,7 +197,7 @@ object RatingSystem {
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
-        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val parsed = TextMessageParser().parse(event.text)
 
         val target = parsed.get<Mention>(1)
         var targetId = target?.targetId
@@ -246,7 +246,7 @@ object RatingSystem {
         val api = event.api
         val chatId = event.chatId
         val sender = event.userId
-        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val parsed = TextMessageParser().parse(event.text)
 
         val target = parsed.get<Mention>(1)
         var targetId = target?.targetId

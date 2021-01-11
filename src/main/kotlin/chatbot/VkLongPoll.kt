@@ -9,7 +9,6 @@ import mainChatPeerId
 import chatbot.chatModules.Gulag
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import chatbot.chatBotEvents.Platform
 import useTestChatId
 import java.io.IOException
 import java.net.URI
@@ -89,7 +88,6 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                     val text = callback ?: update.`object`.text
 
                     val messageEvent = LongPollNewMessageEvent(
-                        Platform.VK,
                         VkPlatform,
                         update.`object`.peer_id,
                         text,

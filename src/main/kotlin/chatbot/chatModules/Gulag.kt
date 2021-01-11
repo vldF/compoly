@@ -28,7 +28,7 @@ object Gulag {
         val chatId = event.chatId
         val sender = event.userId
 
-        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         if (target == null) {
@@ -113,7 +113,7 @@ object Gulag {
         val chatId = event.chatId
         val sender = event.userId
 
-        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         if (target == null) {
@@ -145,7 +145,7 @@ object Gulag {
         val chatId = event.chatId
         val sender = event.userId
 
-        val parsed = TextMessageParser(event.platform).parse(event.text)
+        val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         if (target == null) {

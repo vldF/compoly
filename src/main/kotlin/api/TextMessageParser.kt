@@ -1,10 +1,9 @@
 package api
 
-import chatbot.chatBotEvents.Platform
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
-class TextMessageParser(private val platform : Platform) {
+class TextMessageParser {
     private val mentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
 
     fun parse(text: String): ParseObject {
