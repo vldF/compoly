@@ -36,7 +36,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
         }
     }
 
-    private fun process(event: LongPollEventBase) {
+    fun process(event: LongPollEventBase) {
         when (event) {
             is LongPollNewMessageEvent -> {
                 messageListeners.forEach { it.call.invoke(it.baseClass, event) }
@@ -80,7 +80,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
         mainLoop()
     }
 
-    private fun initModules() {
+    fun initModules() {
         ClassGraph().enableAllInfo().whitelistPackages("chatbot.chatModules")
                 .scan().use { scanResult ->
                     val classes = scanResult.allClasses.filter { it.hasAnnotation(ModuleObject::class.java.name) }
