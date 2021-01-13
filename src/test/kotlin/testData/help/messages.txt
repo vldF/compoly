@@ -1,0 +1,12 @@
+[
+    {
+        chatId: 1,
+        text: "/?",
+        userId: 1
+    },
+    {
+        chatId: 1,
+        text: "/help",
+        userId: 2
+    }
+]
