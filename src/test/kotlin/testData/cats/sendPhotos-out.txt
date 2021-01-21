@@ -1,0 +1,4 @@
+text=,
+chatId=1,
+attachments=[photo156594337_457261432_650c9055bd4785d465]
+===[blocks separator]===
