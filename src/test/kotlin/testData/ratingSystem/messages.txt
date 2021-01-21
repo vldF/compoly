@@ -1,0 +1,37 @@
+[
+    {
+        chatId: 1,
+        text: "/respect [id2|@marx]",
+        userId: 1
+    },
+    {
+        chatId: 1,
+        text: "/respect [id2|@marx]",
+        userId: 1
+    },
+    {
+        chatId: 1,
+        text: "/respect [id2|@marx]",
+        userId: 3
+    },
+    {
+        chatId: 1,
+        text: "/lvl",
+        userId: 2
+    },
+    {
+        chatId: 1,
+        text: "/disrespect [id2|@marx]",
+        userId: 1
+    },
+    {
+        chatId: 1,
+        text: "/lvl",
+        userId: 2
+    },
+    {
+        chatId: 1,
+        text: "/showRespectHistory [id1|@lenin]",
+        userId: 3
+    }
+]

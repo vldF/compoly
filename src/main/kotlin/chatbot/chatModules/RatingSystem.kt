@@ -12,6 +12,7 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import database.EMPTY_ARRAY_TEXT
 import org.jetbrains.exposed.sql.*
 import java.lang.IllegalArgumentException
 
@@ -64,6 +65,8 @@ object RatingSystem {
                     it[this.chatId] = shadowChatId
                     it[userId] = toUser
                     it[reputation] = count
+                    it[history_respects] = EMPTY_ARRAY_TEXT
+                    it[history_disrespects] = EMPTY_ARRAY_TEXT
                 }
             } else {
                 UserScore.update({ (UserScore.chatId eq shadowChatId) and (UserScore.userId eq toUser) }) {
@@ -81,7 +84,7 @@ object RatingSystem {
             levelName != getLevel(oldRep).levelName && count > 0 -> {
                 api.send("Партия поздравляет $userName с повышением до $levelName", chatId)
             }
-            levelName != getLevel(oldRep).name && count < 0 -> {
+            levelName != getLevel(oldRep).levelName && count < 0 -> {
                 api.send("Партия сочувствует ${userName}. Он понижен до $levelName", chatId)
             }
         }
@@ -136,15 +139,6 @@ object RatingSystem {
 
     @OnMessage
     fun onMessageReceive(event: LongPollNewMessageEvent) {
-        val count = when (event.text.split(" ").filter { it.length > 2 }.size) {
-            in 0..1 -> 0
-            in 2..6 -> 1
-            in 7..10 -> 2
-            in 11..20 -> 3
-            in 21..50 -> 4
-            else -> 5
-        }
-
         val toUser = event.userId
         val chatId = event.chatId
         dbQuery {
@@ -156,12 +150,15 @@ object RatingSystem {
                 UserScore.insert {
                     it[this.chatId] = chatId
                     it[userId] = toUser
+                    it[reputation] = 0
+                    it[history_respects] = EMPTY_ARRAY_TEXT
+                    it[history_disrespects] = EMPTY_ARRAY_TEXT
                 }
             }
         }
     }
 
-    @OnCommand(["уровень", "level", "lvl"], "посмотреть количество e-баллов")
+    @OnCommand(["уровень", "level", "lvl"], "посмотреть уровень")
     fun showUsersInfo(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
@@ -180,7 +177,7 @@ object RatingSystem {
     }
 
     @OnCommand(["одобряю", "респект", "respect"],
-            "показать одобрение и подкинуть чуть-чуть e-баллов. /одобряю ОДОБРЯЕМЫЙ")
+            "показать одобрение и повысить репутацию. /одобряю ОДОБРЯЕМЫЙ")
     fun respect(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
@@ -248,10 +245,12 @@ object RatingSystem {
 
         val baseCount = 10
         return if (historyTxt != null) {
-            val historyList = historyTxt.toString().filter { it.isDigit() || it == ',' }.split(',').toList()
+            val historyList = historyTxt.toString().filter { it.isDigit() || it == ',' }.split(',')
             val historySize = if(historyList.size > 10) 10 else historyList.size
-            val subList = historyList.subList(0, historySize)
-            val repeatCount = subList.filter { it.toLong() == targetId }.size
+            //если у нас на вход попадает текст пустого массива ("{}"), то мы получаем список из одного элемента ""
+            //это плохо, тк "" нельзя конвертировать в Long и у мы вылетаем с ошибкой
+            val subList = historyList.subList(0, historySize).filter { it.isNotEmpty() }
+            val repeatCount = if(subList.isNotEmpty()) subList.filter { it.toLong() == targetId }.size else 0
             val count = baseCount - repeatCount
             if (isRespect) count  else -count
         } else {
@@ -266,7 +265,7 @@ object RatingSystem {
             }.first()
             UserScore.update({ (UserScore.chatId eq chatId) and (UserScore.userId eq sender) }) {
                 val selectedHistory = selected.getOrNull(historyColumn)
-                if (selectedHistory == null) {
+                if (selectedHistory == EMPTY_ARRAY_TEXT) {
                     it[historyColumn] = "{$targetId}"
                 } else {
                     val arrayTextLength = selected[history_respects].length
@@ -281,7 +280,7 @@ object RatingSystem {
         RESPECT, DISRESPECT
     }
 
-    @OnCommand(["осуждаю", "disrespect"], "показать осуждение и убрать чуть-чуть e-баллов. /осуждаю ОСУЖДАЕМЫЙ")
+    @OnCommand(["осуждаю", "disrespect"], "показать осуждение и понизить репутацию. /осуждаю ОСУЖДАЕМЫЙ")
     fun disrespect(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
