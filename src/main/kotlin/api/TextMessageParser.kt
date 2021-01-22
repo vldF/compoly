@@ -86,8 +86,6 @@ class ParseObject {
 
     val size: Int
         get() = data.size
-
-
 }
 
 
