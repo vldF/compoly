@@ -101,7 +101,7 @@ object RatingSystem {
     }
 
     @OnCommand(
-        ["addRep"],
+        ["add", "добавить"],
         "добавить пользователю репы. /addRep ID COUNT",
         CommandPermission.ADMIN
     )
@@ -224,7 +224,7 @@ object RatingSystem {
         respects[senderId to chatId] = currentTime
         val count = calculateRep(targetId, chatId, event, RepCommandType.RESPECT)
         addReputation(count, targetId, chatId, chatId, api)
-        updateHistory(chatId, senderId, targetId, UserScore.history_respects)
+        updateHistory(chatId, senderId, targetId, RepCommandType.RESPECT)
 
         api.send("Одобрение выражено", chatId)
     }
@@ -246,7 +246,7 @@ object RatingSystem {
         val baseCount = 10
         return if (historyTxt != null) {
             val historyList = historyTxt.toString().filter { it.isDigit() || it == ',' }.split(',')
-            val historySize = if(historyList.size > 10) 10 else historyList.size
+            val historySize = 10.coerceAtMost(historyList.size)
             //если у нас на вход попадает текст пустого массива ("{}"), то мы получаем список из одного элемента ""
             //это плохо, тк "" нельзя конвертировать в Long и у мы вылетаем с ошибкой
             val subList = historyList.subList(0, historySize).filter { it.isNotEmpty() }
@@ -258,7 +258,10 @@ object RatingSystem {
         }
     }
 
-    private fun updateHistory(chatId: Long, sender: Long, targetId: Long, historyColumn: Column<String>) {
+    private fun updateHistory(chatId: Long, sender: Long, targetId: Long, commandType: RepCommandType) {
+        val historyColumn =
+            if(commandType == RepCommandType.RESPECT) UserScore.history_respects
+            else UserScore.history_disrespects
         dbQuery {
             val selected = UserScore.select{
                 (UserScore.chatId eq chatId) and (UserScore.userId eq sender)
@@ -268,7 +271,7 @@ object RatingSystem {
                 if (selectedHistory == EMPTY_ARRAY_TEXT) {
                     it[historyColumn] = "{$targetId}"
                 } else {
-                    val arrayTextLength = selected[history_respects].length
+                    val arrayTextLength = selected[historyColumn].length
                     val openArrayStr = selected[historyColumn].substring(0, arrayTextLength - 1)
                     it[historyColumn] = "$openArrayStr,$targetId}"
                 }
@@ -326,7 +329,7 @@ object RatingSystem {
         disrespects[senderId to chatId] = currentTime
         val count = calculateRep(targetId, chatId, event, RepCommandType.DISRESPECT)
         addReputation(count, targetId, chatId, chatId, api)
-        updateHistory(chatId, senderId, targetId, UserScore.history_disrespects)
+        updateHistory(chatId, senderId, targetId, RepCommandType.DISRESPECT)
 
         api.send("Осуждение выражено", chatId)
     }
