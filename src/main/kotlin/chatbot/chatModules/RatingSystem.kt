@@ -12,7 +12,7 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import database.EMPTY_ARRAY_TEXT
+import database.EMPTY_HISTORY_TEXT
 import org.jetbrains.exposed.sql.*
 import java.lang.IllegalArgumentException
 
@@ -31,7 +31,16 @@ object RatingSystem {
         LEVEL5("член профсоюза"),
         LEVEL6("посол"),
         LEVEL7("генсек"),
-        LEVEL8("Гелич")
+        LEVEL8("Гелич");
+
+        companion object {
+            fun getLevel(rep: Int): Level {
+                for ((key, value) in levels) {
+                    if (rep in key) return value
+                }
+                throw IllegalArgumentException("Can't find proper level in level map")
+            }
+        }
     }
 
     private val levels = mapOf(
@@ -46,13 +55,6 @@ object RatingSystem {
             5001..Integer.MAX_VALUE to Level.LEVEL8
     )
 
-    fun getLevel(rep: Int): Level {
-        for ((key, value) in levels) {
-            if (rep in key) return value
-        }
-        throw IllegalArgumentException("Can't find proper level in level map")
-    }
-
     private fun addReputation(count: Int, toUser: Long, chatId: Long, shadowChatId: Long, api: VkPlatform) {
         var oldRep = -1
         var newRep = -1
@@ -65,8 +67,8 @@ object RatingSystem {
                     it[this.chatId] = shadowChatId
                     it[userId] = toUser
                     it[reputation] = count
-                    it[history_respects] = EMPTY_ARRAY_TEXT
-                    it[history_disrespects] = EMPTY_ARRAY_TEXT
+                    it[history_respects] = EMPTY_HISTORY_TEXT
+                    it[history_disrespects] = EMPTY_HISTORY_TEXT
                 }
             } else {
                 UserScore.update({ (UserScore.chatId eq shadowChatId) and (UserScore.userId eq toUser) }) {
@@ -78,13 +80,13 @@ object RatingSystem {
             newRep = count + oldRep
         }
 
-        val levelName = getLevel(newRep).levelName
+        val levelName = Level.getLevel(newRep).levelName
         val userName = api.getUserNameById(toUser)
         when {
-            levelName != getLevel(oldRep).levelName && count > 0 -> {
+            levelName != Level.getLevel(oldRep).levelName && count > 0 -> {
                 api.send("Партия поздравляет $userName с повышением до $levelName", chatId)
             }
-            levelName != getLevel(oldRep).levelName && count < 0 -> {
+            levelName != Level.getLevel(oldRep).levelName && count < 0 -> {
                 api.send("Партия сочувствует ${userName}. Он понижен до $levelName", chatId)
             }
         }
@@ -102,7 +104,7 @@ object RatingSystem {
 
     @OnCommand(
         ["add", "добавить"],
-        "добавить пользователю репы. /addRep ID COUNT",
+        "добавить пользователю репы. /add ID COUNT",
         CommandPermission.ADMIN
     )
     fun addRep(event: LongPollNewMessageEvent) {
@@ -151,8 +153,8 @@ object RatingSystem {
                     it[this.chatId] = chatId
                     it[userId] = toUser
                     it[reputation] = 0
-                    it[history_respects] = EMPTY_ARRAY_TEXT
-                    it[history_disrespects] = EMPTY_ARRAY_TEXT
+                    it[history_respects] = EMPTY_HISTORY_TEXT
+                    it[history_disrespects] = EMPTY_HISTORY_TEXT
                 }
             }
         }
@@ -170,7 +172,7 @@ object RatingSystem {
             }.firstOrNull()?.get(UserScore.reputation) ?: 0
         }
 
-        val levelName = getLevel(rep).levelName
+        val levelName = Level.getLevel(rep).levelName
         val screenName = api.getUserNameById(userId)
 
         api.send("По архивам Партии, у $screenName уровень $levelName", chatId)
@@ -244,15 +246,13 @@ object RatingSystem {
         }
 
         val baseCount = 10
-        return if (historyTxt != null) {
-            val historyList = historyTxt.toString().filter { it.isDigit() || it == ',' }.split(',')
-            val historySize = 10.coerceAtMost(historyList.size)
-            //если у нас на вход попадает текст пустого массива ("{}"), то мы получаем список из одного элемента ""
-            //это плохо, тк "" нельзя конвертировать в Long и у мы вылетаем с ошибкой
-            val subList = historyList.subList(0, historySize).filter { it.isNotEmpty() }
-            val repeatCount = if(subList.isNotEmpty()) subList.filter { it.toLong() == targetId }.size else 0
-            val count = baseCount - repeatCount
-            if (isRespect) count  else -count
+        return if (historyTxt != null && historyTxt != "") {
+            val historyList = historyTxt.split(',')
+            val historySize = Math.min(historyList.size, 10)
+            val subList = historyList.subList(0, historySize)
+            val repeatCount = subList.filter { it.toLong() == targetId }.size
+            val count = Math.max(baseCount - repeatCount, 0)
+            if (isRespect) count else -count
         } else {
             if (isRespect) baseCount  else -baseCount
         }
@@ -268,12 +268,10 @@ object RatingSystem {
             }.first()
             UserScore.update({ (UserScore.chatId eq chatId) and (UserScore.userId eq sender) }) {
                 val selectedHistory = selected.getOrNull(historyColumn)
-                if (selectedHistory == EMPTY_ARRAY_TEXT) {
-                    it[historyColumn] = "{$targetId}"
+                if (selectedHistory == EMPTY_HISTORY_TEXT) {
+                    it[historyColumn] = "$targetId"
                 } else {
-                    val arrayTextLength = selected[historyColumn].length
-                    val openArrayStr = selected[historyColumn].substring(0, arrayTextLength - 1)
-                    it[historyColumn] = "$openArrayStr,$targetId}"
+                    it[historyColumn] = "${selected[historyColumn]},$targetId"
                 }
             }
         }

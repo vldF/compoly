@@ -38,7 +38,7 @@ chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text={2},
+text=2,
 chatId=1,
 pixUrls=[],
 keyboard=null

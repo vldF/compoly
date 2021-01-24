@@ -10,7 +10,7 @@ import javax.sql.DataSource
 
 const val userName = "compoly"
 const val password = "c0mp0ly"
-const val EMPTY_ARRAY_TEXT = "{}"
+const val EMPTY_HISTORY_TEXT = ""
 
 object UserScore : Table() {
     val userId = long("user_id")
