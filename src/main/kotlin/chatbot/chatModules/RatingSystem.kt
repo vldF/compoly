@@ -13,6 +13,7 @@ import chatbot.OnCommand
 import chatbot.OnMessage
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import database.EMPTY_HISTORY_TEXT
+import database.UserReward
 import org.jetbrains.exposed.sql.*
 import java.lang.IllegalArgumentException
 
@@ -175,7 +176,24 @@ object RatingSystem {
         val levelName = Level.getLevel(rep).levelName
         val screenName = api.getUserNameById(userId)
 
-        api.send("По архивам Партии, у $screenName уровень $levelName", chatId)
+        val rewardsSb = StringBuilder()
+
+        dbQuery {
+            val rowList = UserReward.select {
+                (UserReward.chatId eq chatId) and (UserReward.userId eq userId)
+            }.toList()
+            if (rowList.isNotEmpty()) {
+                for (row in rowList) {
+                    val reward = row[UserReward.rewardName]
+                    rewardsSb.append("$reward, ")
+                }
+                val length = rewardsSb.length
+                val rewardsStr = rewardsSb.delete(length - 2, length).toString()
+                api.send("По архивам Партии, у $screenName уровень $levelName и награды: $rewardsStr", chatId)
+            } else {
+                api.send("По архивам Партии, у $screenName уровень $levelName", chatId)
+            }
+        }
     }
 
     @OnCommand(["одобряю", "респект", "respect"],
