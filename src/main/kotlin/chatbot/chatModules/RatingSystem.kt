@@ -219,7 +219,12 @@ object RatingSystem {
                 respects[senderId to chatId] != null &&
                 currentTime - respects[senderId to chatId]!! < 1000 * 60 * 60 * 4
         ) {
-            api.send("Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа", chatId)
+            val timeLeft = (1000 * 60 * 60 * 4 + respects[senderId to chatId]!! - currentTime) / 1000
+            val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
+            api.send(
+                "Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа.\nСледующее одобрение будет доступно через: $coolDown",
+                chatId
+            )
             return
         }
 
@@ -320,7 +325,12 @@ object RatingSystem {
                 disrespects[senderId to chatId] != null &&
                 currentTime - disrespects[senderId to chatId]!! < 1000 * 60 * 60 * 4
         ) {
-            api.send("Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа", chatId)
+            val timeLeft = (1000 * 60 * 60 * 4 + disrespects[senderId to chatId]!! - currentTime) / 1000
+            val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
+            api.send(
+                "Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа.\nСледующее осуждение будет доступно через: $coolDown",
+                chatId
+            )
             return
         }
 
