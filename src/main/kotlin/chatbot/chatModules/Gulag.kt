@@ -57,15 +57,10 @@ object Gulag {
             return
         }
 
-        if (votedIds[targetId]?.contains(sender) == true) {
-            val senderScreenName = api.getUserNameById(sender)
-            api.send("$senderScreenName, Вы уже проголосовали за этого предателя Родины", chatId)
-            return
-        }
-
         val currentTime = System.currentTimeMillis()
         if (gulagVoting[targetId to chatId] == null ||
             gulagVoting[targetId to chatId]!!.timeOfClosing < currentTime) {
+            votedIds[targetId]?.clear()
             val onlineCount = getOnlineMemberCount(chatId, api)
             val count = (onlineCount * coefficientForKick).toInt()
             val newVoting = Voting(currentTime + 1000 * 60 * 5, max(count, minCount))
@@ -85,6 +80,11 @@ object Gulag {
             )
 
         } else {
+            if (votedIds[targetId]?.contains(sender) == true) {
+                val senderScreenName = api.getUserNameById(sender)
+                api.send("$senderScreenName, Вы уже проголосовали за этого предателя Родины", chatId)
+                return
+            }
             val votingIsComplete = gulagVoting[targetId to chatId]!!.addVote(sender, chatId)
             val senderScreenName = api.getUserNameById(sender)
             api.send(
