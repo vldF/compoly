@@ -83,9 +83,8 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                 if (update.type == "message_new" && (!useTestChatId || update.`object`.peer_id != mainChatPeerId)) {
                     val forwarded = update.`object`.reply_message
                     val forwardedFromId = forwarded?.from_id
-                    val vkPayload = Gson().fromJson(update.`object`.payload, Payload::class.java)
-                    val callback = Gson().fromJson(vkPayload?.payload, Callback::class.java)?.callback
-                    val text = callback ?: update.`object`.text
+                    val callback = Gson().fromJson(update.`object`.payload, Callback::class.java)
+                    val text = callback?.callback ?: update.`object`.text
 
                     val messageEvent = LongPollNewMessageEvent(
                         VkPlatform,
