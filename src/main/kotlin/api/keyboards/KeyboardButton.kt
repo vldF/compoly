@@ -12,7 +12,7 @@ data class KeyboardButton (
         jsonObject.addProperty("color", color.colorName)
 
         val actionObject = JsonObject()
-        actionObject.addProperty("type", "callback")
+        actionObject.addProperty("type", "text")
         actionObject.addProperty("label", showingName)
 
         val payload = JsonObject()
