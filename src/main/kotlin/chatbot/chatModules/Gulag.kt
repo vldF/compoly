@@ -94,7 +94,7 @@ object Gulag {
             if (votingIsComplete) {
                 api.send("Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад", chatId)
                 sleep(500)
-                api.kickUserFromChat(targetId, chatId)
+                api.kickUserFromChat(chatId, targetId)
                 gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
                 gulagVoting.remove(targetId to chatId)
             }
