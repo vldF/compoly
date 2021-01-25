@@ -115,7 +115,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
 
                                 VkPlatform.send(message, peerId)
                                 sleep(400)
-                                VkPlatform.kickUserFromChat(targetId, peerId)
+                                VkPlatform.kickUserFromChat(peerId, targetId)
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
                         } else VkPlatform.send("Приветствуем ${VkPlatform.getUserNameById(targetId)}", peerId)
                     }
