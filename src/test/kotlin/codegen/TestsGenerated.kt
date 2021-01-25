@@ -21,4 +21,9 @@ class TestsGenerated {
         runTest("src\\test\\kotlin\\testData\\ratingSystem")
     }
     
+    @Test
+    fun reward() {
+        runTest("src\\test\\kotlin\\testData\\reward")
+    }
+    
 }

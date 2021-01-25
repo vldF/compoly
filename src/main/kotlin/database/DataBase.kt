@@ -12,12 +12,18 @@ const val userName = "compoly"
 const val password = "c0mp0ly"
 const val EMPTY_HISTORY_TEXT = ""
 
-object UserScore : Table() {
+object UserScore: Table() {
     val userId = long("user_id")
     val chatId = long("chat_id")
     val reputation = integer("reputation")
     val history_respects = text("history_respects")
     val history_disrespects = text("history_disrespects")
+}
+
+object UserReward: Table() {
+    val userId = long("user_id")
+    val chatId = long("chat_id")
+    val rewardName = text("reward_name")
 }
 
 fun hikari(): DataSource {

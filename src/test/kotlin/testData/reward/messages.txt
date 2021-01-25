@@ -1,0 +1,122 @@
+[
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx] [очень важная награда]",
+        userId: 1
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 2
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 3
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 4
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 5
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 6
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 7
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 8
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 9
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 10
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 11
+    },
+    {
+        chatId: 1,
+        text: "/lvl",
+        userId: 2
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx] [еще более важная награда]",
+        userId: 1
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 2
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 3
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 4
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 5
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 6
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 7
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 8
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 9
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 10
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 11
+    },
+    {
+        chatId: 1,
+        text: "/lvl",
+        userId: 2
+    }
+]
