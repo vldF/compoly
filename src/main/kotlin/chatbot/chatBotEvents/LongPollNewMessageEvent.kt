@@ -7,5 +7,6 @@ open class LongPollNewMessageEvent(
         open val chatId: Long,
         open val text: String,
         open val userId: Long,
-        open val forwardMessageFromId: Long? = null
+        open val forwardMessageFromId: Long? = null,
+        open val unixTime: Int
 ) : LongPollEventBase()
