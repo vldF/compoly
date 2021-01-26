@@ -2,11 +2,13 @@
     {
         chatId: 1,
         text: "/?",
-        userId: 1
+        userId: 1,
+        date: 0
     },
     {
         chatId: 1,
         text: "/help",
-        userId: 2
+        userId: 2,
+        date: 0
     }
 ]

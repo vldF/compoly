@@ -64,7 +64,8 @@ chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Голосование за вручение @marx награды еще более важная награда - 1/10
+Отправь /наградить [id2|@marx],
 chatId=1,
 pixUrls=[],
 keyboard=null
@@ -74,52 +75,57 @@ chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [2/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [3/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [4/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [5/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [6/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [7/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [8/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [9/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=Test User, Вы уже проголосовали за награждение этого товарища,
+text=Test User проголосовал за награждение @marx - [10/10],
 chatId=1,
 pixUrls=[],
 keyboard=null
 ===[blocks separator]===
-text=По архивам Партии, у Test User уровень октябрёнок и награды: очень важная награда,
+text=@marx получает награду еще более важная награда,
+chatId=1,
+pixUrls=[],
+keyboard=null
+===[blocks separator]===
+text=По архивам Партии, у Test User уровень октябрёнок и награды: очень важная награда, еще более важная награда,
 chatId=1,
 pixUrls=[],
 keyboard=null
