@@ -3,12 +3,12 @@ package api.objects
 abstract class BaseUser {
         abstract val id: Long
         abstract val name: String
-        abstract val nick: String
+        abstract val domain: String
 }
 
 data class VkUser(
         override val name: String,
-        override val nick: String,  // aka `domain`
+        override val domain: String,  // не парсит json при использовании nick
         val first_name: String,
         val last_name: String,
         val is_closed: Boolean,
