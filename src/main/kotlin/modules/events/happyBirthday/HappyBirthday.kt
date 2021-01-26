@@ -16,15 +16,15 @@ class HappyBirthday : Event {
 
     override fun call() {
         val cal = Calendar.getInstance()
-        val profiles = VkPlatform.getChatMembers(mainChatPeerId, listOf("bdata", "domain"))
-                ?: throw IllegalStateException()
+        val profiles = VkPlatform.getChatMembers(mainChatPeerId, listOf("bdate", "domain"))
+            ?: throw IllegalStateException()
         val currentDate = "${cal.get(Calendar.DAY_OF_MONTH)}.${cal.get(Calendar.MONTH) + 1}"
         val needToCongratulate = mutableListOf<String>()
         for (profile in profiles) {
             var date: String = profile.bdate ?: continue
             date = date.split(".").subList(0, 2).joinToString(separator = ".")
             if (date == currentDate) {
-                needToCongratulate.add("@${profile.nick}")
+                needToCongratulate.add("@${profile.domain}")
             }
         }
         if (needToCongratulate.size >= 1) {
