@@ -8,7 +8,7 @@ abstract class BaseUser {
 
 data class VkUser(
         override val name: String,
-        override val domain: String,  // не парсит json при использовании nick
+        override val domain: String,  // при парсинге значение nick у всех null, поэтому следует использовать domain
         val first_name: String,
         val last_name: String,
         val is_closed: Boolean,
