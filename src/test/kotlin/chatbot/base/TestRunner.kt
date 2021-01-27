@@ -7,6 +7,8 @@ import chatbot.chatBotEvents.LongPollNewMessageEvent
 import com.google.gson.Gson
 import org.junit.jupiter.api.Assertions
 import java.io.File
+import java.io.FileNotFoundException
+import java.lang.Exception
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
@@ -31,6 +33,7 @@ fun runTest(path: String) {
         eventProcessor.process(message)
     }
     checkResults(path, keeper)
+    destroyDB()
 }
 
 private fun checkResults(path: String, keeper: ApiResponseKeeper) {
@@ -47,7 +50,7 @@ private fun checkResults(path: String, keeper: ApiResponseKeeper) {
         val storedData = keeper.read(fileApiName)
             ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
         val fileData = file.readText()
-        Assertions.assertEquals(fileData, storedData, "file: ${file.name}")
+        assertTextEquals(fileData, storedData, "file: ${file.name}")
     }
 
     val unexistsDataFiles = usedApis - files.map { it.apiName }
@@ -61,6 +64,42 @@ private fun checkResults(path: String, keeper: ApiResponseKeeper) {
     if (unexistsDataFiles.isNotEmpty()) {
         throw IllegalStateException("New files were created: ${unexistsDataFiles.joinToString { "$it.txt" }}")
     }
+}
+
+fun checkTables(path: String) {
+    val excepted = File(path).listFiles()?.filter { it.name.endsWith(".sql.dump") } ?: return
+
+    val actual = dumpDB()
+
+    for (exceptedDumpFile in excepted) {
+        val tableName = exceptedDumpFile.nameWithoutExtension
+        val content = exceptedDumpFile.readText()
+        val actualContent = actual[tableName] ?: Assertions.fail("Table $tableName not fount in database")
+
+        assertTextEquals(
+            actualContent,
+            content,
+            "table unequals"
+        )
+    }
+
+    val uncheckedTableNames = actual.map { it.key }.toSet() - excepted.map { it.nameWithoutExtension }
+    for (uncheckedTableName in uncheckedTableNames) {
+        val content = actual[uncheckedTableName]!!
+        File("$path/${uncheckedTableName}.sql.dump").writeText(content)
+    }
+
+    if (uncheckedTableNames.isNotEmpty()) {
+        throw FileNotFoundException("Next sql dumps were created: ${uncheckedTableNames.joinToString(", ")}")
+    }
+}
+
+fun assertTextEquals(excepted: String, actual: String, errorMessage: String = "") {
+    Assertions.assertEquals(
+        excepted.replace("\n\r", "\n"),
+        actual.replace("\n\r", "\n"),
+        errorMessage
+    )
 }
 
 private fun loadMessages(path: String, api: VkPlatform): List<LongPollNewMessageEvent> {

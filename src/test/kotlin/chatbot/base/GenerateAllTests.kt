@@ -16,8 +16,8 @@ fun main() {
         appendln("class TestsGenerated {")
 
         for (file in testFiles) {
-            val testCode = getTestCode(file.name, file.path)
-            appendln(testCode.lines().map { "    $it" }.joinToString(separator = "\n")) // adding spacing
+            val testCode = getTestCode(file.name, file.path.normalizePath)
+            appendln(testCode.lines().joinToString(separator = "\n") { "    $it" }) // adding spacing
         }
         appendln("}")
     }
@@ -39,3 +39,6 @@ private fun getTestCode(testName: String, path: String): String {
         appendln("}")
     }
 }
+
+private val String.normalizePath
+    get() = this.replace("\\", "/")

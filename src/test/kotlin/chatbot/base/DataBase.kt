@@ -14,6 +14,30 @@ fun initInmemoryDB() {
     }
 }
 
+fun destroyDB() {
+    transaction {
+        SchemaUtils.drop(UserScore)
+    }
+}
+
+fun dumpDB(): Map<String, String> {
+    val result = mutableMapOf<String, String>()
+
+    transaction {
+        val allTableNames = TransactionManager.current().db.dialect.allTablesNames()
+        val builder = StringBuilder()
+        for (name in allTableNames) {
+            val dump = exec("select * from $name") {
+                builder.appendln(it.toString())
+            }
+
+            result[name] = builder.toString()
+        }
+    }
+
+    return result
+}
+
 fun loadDBTable(file: File) {
     val content = file.readText()
 

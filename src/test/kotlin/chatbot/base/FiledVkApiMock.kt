@@ -3,12 +3,15 @@ package chatbot.base
 import api.keyboards.Keyboard
 import api.objects.VkUser
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import java.io.File
 
 class FiledVkApiMock(
     private val pathToFile: String,
     private val keeper: ApiResponseKeeper
 ) : VkApiMock {
+    private val gson = Gson()
+
     override val meId: Long = -1
 
     private val valuesReadCount = mutableMapOf<String, Int>()
@@ -88,6 +91,11 @@ class FiledVkApiMock(
     }
 
     private fun writeResponse(methodName: String, vararg values: Pair<String, Any?>) {
-        keeper.write(methodName, values.joinToString(separator = ",\n") { (v, k) -> "$v=$k" } )
+        val json = JsonObject()
+        for ((key, value) in values) {
+            json.add(key, gson.toJsonTree(value))
+        }
+
+        keeper.write(methodName, json )
     }
 }
