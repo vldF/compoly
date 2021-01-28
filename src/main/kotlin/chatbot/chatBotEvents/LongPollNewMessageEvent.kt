@@ -8,5 +8,5 @@ open class LongPollNewMessageEvent(
         open val text: String,
         open val userId: Long,
         open val forwardMessageFromId: Long? = null,
-        open val unixTime: Int
+        open val unixTime: Long = System.currentTimeMillis() / 1000
 ) : LongPollEventBase()

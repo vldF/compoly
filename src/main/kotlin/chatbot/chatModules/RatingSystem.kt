@@ -176,19 +176,13 @@ object RatingSystem {
         val levelName = Level.getLevel(rep).levelName
         val screenName = api.getUserNameById(userId)
 
-        val rewardsSb = StringBuilder()
-
         dbQuery {
             val rowList = UserReward.select {
                 (UserReward.chatId eq chatId) and (UserReward.userId eq userId)
             }.toList()
             if (rowList.isNotEmpty()) {
-                for (row in rowList) {
-                    val reward = row[UserReward.rewardName]
-                    rewardsSb.append("$reward, ")
-                }
-                val length = rewardsSb.length
-                val rewardsStr = rewardsSb.delete(length - 2, length).toString()
+                val rewardsList = rowList.map { it[UserReward.rewardName] }
+                val rewardsStr = rewardsList.joinToString(separator = ", ")
                 api.send("По архивам Партии, у $screenName уровень $levelName и награды: $rewardsStr", chatId)
             } else {
                 api.send("По архивам Партии, у $screenName уровень $levelName", chatId)
