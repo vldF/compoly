@@ -9,6 +9,7 @@ import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import database.UserReward
 import database.dbQuery
+import log
 import org.jetbrains.exposed.sql.insert
 import java.lang.IllegalArgumentException
 import java.lang.StringBuilder
@@ -86,15 +87,20 @@ object Reward {
         chatId: Long,
         api: VkPlatform,
         rewardName: String,
-        currentTime: Int
+        currentTime: Long
     ) {
-        if (rewardName == "") throw IllegalArgumentException("Reward name cannot be empty")
-        val targetId = target.targetId ?: throw IllegalArgumentException("Target Id cannot be null")
+        if (rewardName == "") {
+            log.info("Trying to create reward with empty name")
+            return
+        }
+        val targetId =  if (target.targetId != null) target.targetId else {
+            log.info("Target Id cannot be null")
+            return
+        }
         val screenName = target.targetScreenName
         val onlineCount = getOnlineMemberCount(chatId, api)
         val count = (onlineCount * coefficientForReward).toInt()
-        val closingTime = (currentTime + 60 * 5).toLong()
-        val newVoting = Voting(closingTime, Integer.max(count, minCount))
+        val newVoting = Voting(timeOfClosing = currentTime + 60 * 5, rightNumToVote = Integer.max(count, minCount))
 
         newVoting.addVote(senderId, chatId)
         rewardVoting[targetId to chatId] = newVoting

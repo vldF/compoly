@@ -12,7 +12,7 @@ const val userName = "compoly"
 const val password = "c0mp0ly"
 const val EMPTY_HISTORY_TEXT = ""
 
-object UserScore: Table() {
+object UserScore : Table() {
     val userId = long("user_id")
     val chatId = long("chat_id")
     val reputation = integer("reputation")
@@ -20,7 +20,7 @@ object UserScore: Table() {
     val history_disrespects = text("history_disrespects")
 }
 
-object UserReward: Table() {
+object UserReward : Table() {
     val userId = long("user_id")
     val chatId = long("chat_id")
     val rewardName = text("reward_name")
