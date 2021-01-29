@@ -67,7 +67,7 @@ private fun loadMessages(path: String, api: VkPlatform): List<LongPollNewMessage
     val content = File("$path/messages.txt").readText()
      return Gson()
          .fromJson(content, Array<Message>::class.java).map {
-             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId, it.date)
+             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId, it.date.toLong())
          }
          .toList()
 }

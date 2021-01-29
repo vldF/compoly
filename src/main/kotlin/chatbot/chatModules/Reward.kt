@@ -58,7 +58,7 @@ object Reward {
             return
         }
 
-        val currentTime = event.unixTime
+        val currentTime = event.time
         val screenName = target.targetScreenName
 
         val isNewVoting = rewardVoting[targetId to chatId] == null ||
