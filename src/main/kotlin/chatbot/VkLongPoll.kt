@@ -92,7 +92,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                         text,
                         update.`object`.from_id,
                         forwardedFromId,
-                        update.`object`.date
+                        update.`object`.date.toLong()
                     )
 
                     queue.add(messageEvent)
