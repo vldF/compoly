@@ -136,7 +136,8 @@ data class Message(
     val chatId: Long,
     val text: String,
     val userId: Long,
-    val forwardMessageFromId: Long?
+    val forwardMessageFromId: Long?,
+    val date: Int
 )
 
 private val String.isIgnore

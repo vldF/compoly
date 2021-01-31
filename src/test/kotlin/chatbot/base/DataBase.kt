@@ -1,5 +1,6 @@
 package chatbot.base
 
+import database.UserReward
 import database.UserScore
 import org.h2.jdbc.JdbcResultSet
 import org.jetbrains.exposed.sql.Database
@@ -12,6 +13,9 @@ fun initInmemoryDB() {
     Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
     transaction {
         SchemaUtils.create(UserScore)
+    }
+    transaction {
+        SchemaUtils.create(UserReward)
     }
 }
 

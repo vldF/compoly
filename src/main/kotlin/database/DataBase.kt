@@ -20,6 +20,12 @@ object UserScore : Table() {
     val history_disrespects = text("history_disrespects")
 }
 
+object UserReward : Table() {
+    val userId = long("user_id")
+    val chatId = long("chat_id")
+    val rewardName = text("reward_name")
+}
+
 fun hikari(): DataSource {
     val conf = HikariConfig()
     conf.jdbcUrl = "jdbc:postgresql://130.61.203.95:9997/compoly"

@@ -1,0 +1,6 @@
+peer_id=1,
+fields=[online]
+===[blocks separator]===
+peer_id=1,
+fields=[online]
+===[blocks separator]===
