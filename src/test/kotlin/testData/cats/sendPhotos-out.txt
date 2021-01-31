@@ -3,7 +3,7 @@
     "text": "",
     "chatId": 1,
     "attachments": [
-      "photo156594337_457262063_372fa517cc58d69f8e"
+      "photo_of_cat"
     ]
   }
 ]
