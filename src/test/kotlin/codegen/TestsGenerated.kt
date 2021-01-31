@@ -23,7 +23,7 @@ class TestsGenerated {
     
     @Test
     fun reward() {
-        runTest("src\\test\\kotlin\\testData\\reward")
+        runTest("src/test/kotlin/testData/reward")
     }
     
 }

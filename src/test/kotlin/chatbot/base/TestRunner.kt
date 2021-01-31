@@ -85,9 +85,9 @@ fun checkTables(path: String) {
         val actualContent = actual[tableName] ?: throw IllegalStateException("Table $tableName not fount in database")
 
         assertTextEquals(
-            actualContent,
             content,
-            "table unequals"
+            actualContent,
+            "table unequals $tableName"
         )
     }
 
@@ -107,11 +107,14 @@ fun checkTables(path: String) {
 
 fun assertTextEquals(excepted: String, actual: String, errorMessage: String = "") {
     Assertions.assertEquals(
-        actual.replace("\n\r", "\n"),
-        excepted.replace("\n\r", "\n"),
+        excepted.formatted,
+        actual.formatted,
         errorMessage
     )
 }
+
+private val String.formatted
+    get() = replace("\n\r", "\n").replace("\\n", "\n").replace(" ", "")
 
 private fun loadMessages(path: String, api: VkPlatform): List<LongPollNewMessageEvent> {
     val content = File("$path/messages.txt").readText()
