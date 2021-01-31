@@ -16,12 +16,12 @@ class FiledVkApiMock(
 
     private val valuesReadCount = mutableMapOf<String, Int>()
 
-    override fun getUserIdByName(username: String): Long? {
+    override fun getUserIdByName(username: String): Long {
         writeResponse("getUserIdByName", "username" to username)
         return readValueFromFile(pathToFile, "getUserIdByName", 1L)
     }
 
-    override fun getUserNameById(id: Long): String? {
+    override fun getUserNameById(id: Long): String {
         writeResponse("getUserNameById", "id" to id)
         return readValueFromFile(pathToFile, "getUserNameById", "Test User")
     }
@@ -35,9 +35,9 @@ class FiledVkApiMock(
         return readValueFromFile(pathToFile, "isUserAdmin", false)
     }
 
-    override fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String? {
+    override fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String {
         writeResponse("uploadPhotoByUrlAsAttachment", "chatId" to chatId, "url" to url)
-        return readValueFromFile(pathToFile, "isUserAdmin", "empty_url")
+        return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "empty_url")
     }
 
     override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
@@ -59,7 +59,7 @@ class FiledVkApiMock(
         )
     }
 
-    override fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
+    override fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser> {
         writeResponse("getChatMembers", "peer_id" to peer_id, "fields" to fields)
         return readValueFromFile(pathToFile, "getChatMembers", listOf())
     }

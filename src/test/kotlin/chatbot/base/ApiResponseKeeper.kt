@@ -1,6 +1,5 @@
 package chatbot.base
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -17,7 +16,10 @@ class ApiResponseKeeper {
         fromStorage.add(value)
     }
 
-    fun read(apiMethod: String): String {
-        return prettyPrint.toJson(storage[apiMethod])
+    fun read(apiMethod: String): String? {
+        return if (storage.containsKey(apiMethod))
+            prettyPrint.toJson(storage[apiMethod])
+        else
+            null
     }
 }

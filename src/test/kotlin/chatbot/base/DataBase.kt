@@ -1,6 +1,7 @@
 package chatbot.base
 
 import database.UserScore
+import org.h2.jdbc.JdbcResultSet
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.TransactionManager
@@ -27,11 +28,25 @@ fun dumpDB(): Map<String, String> {
         val allTableNames = TransactionManager.current().db.dialect.allTablesNames()
         val builder = StringBuilder()
         for (name in allTableNames) {
-            val dump = exec("select * from $name") {
-                builder.appendln(it.toString())
+            exec("select * from $name") {
+                while (it.next()) {
+                    var colIndex = 1
+                    while (true) {
+                            try {
+                                builder.append((it as JdbcResultSet).get(colIndex))
+                                builder.append(", ")
+                                colIndex++
+                            } catch (E: Exception) {
+                                break
+                            }
+                    }
+                    builder.appendln()
+                }
             }
 
-            result[name] = builder.toString()
+            if (builder.isNotEmpty()) {
+                result[name] = builder.toString()
+            }
         }
     }
 

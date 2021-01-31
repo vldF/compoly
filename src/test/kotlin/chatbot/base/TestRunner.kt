@@ -16,6 +16,8 @@ private val ignoringFiles = setOf(
     "messages.txt"
 )
 
+private const val ignoreLine = "//ignore"
+
 fun runTest(path: String) {
     initInmemoryDB()
     loadAllTables(path)
@@ -33,6 +35,7 @@ fun runTest(path: String) {
         eventProcessor.process(message)
     }
     checkResults(path, keeper)
+    checkTables(path)
     destroyDB()
 }
 
@@ -47,9 +50,11 @@ private fun checkResults(path: String, keeper: ApiResponseKeeper) {
     val usedApis = keeper.usedApis
     for (file in files) {
         val fileApiName = file.apiName
+        val fileData = file.readText()
+        if (fileData.isIgnore) continue
+
         val storedData = keeper.read(fileApiName)
             ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
-        val fileData = file.readText()
         assertTextEquals(fileData, storedData, "file: ${file.name}")
     }
 
@@ -72,9 +77,12 @@ fun checkTables(path: String) {
     val actual = dumpDB()
 
     for (exceptedDumpFile in excepted) {
-        val tableName = exceptedDumpFile.nameWithoutExtension
+        val tableName = exceptedDumpFile.name.removeSuffix(".sql.dump")
         val content = exceptedDumpFile.readText()
-        val actualContent = actual[tableName] ?: Assertions.fail("Table $tableName not fount in database")
+
+        if (content.isIgnore) continue
+
+        val actualContent = actual[tableName] ?: throw IllegalStateException("Table $tableName not fount in database")
 
         assertTextEquals(
             actualContent,
@@ -83,7 +91,10 @@ fun checkTables(path: String) {
         )
     }
 
-    val uncheckedTableNames = actual.map { it.key }.toSet() - excepted.map { it.nameWithoutExtension }
+    val actualTableNames = actual.map { it.key }.toSet()
+    val exceptedTableNames = excepted.map { it.name.removeSuffix(".sql.dump") }
+    val uncheckedTableNames = actualTableNames - exceptedTableNames
+
     for (uncheckedTableName in uncheckedTableNames) {
         val content = actual[uncheckedTableName]!!
         File("$path/${uncheckedTableName}.sql.dump").writeText(content)
@@ -96,8 +107,8 @@ fun checkTables(path: String) {
 
 fun assertTextEquals(excepted: String, actual: String, errorMessage: String = "") {
     Assertions.assertEquals(
-        excepted.replace("\n\r", "\n"),
         actual.replace("\n\r", "\n"),
+        excepted.replace("\n\r", "\n"),
         errorMessage
     )
 }
@@ -127,3 +138,6 @@ data class Message(
     val userId: Long,
     val forwardMessageFromId: Long?
 )
+
+private val String.isIgnore
+    get() = toLowerCase().replace(" ", "").startsWith(ignoreLine)
