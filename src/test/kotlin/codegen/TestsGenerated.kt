@@ -8,22 +8,22 @@ import org.junit.jupiter.api.Test
 class TestsGenerated {
     @Test
     fun cats() {
-        runTest("src\\test\\kotlin\\testData\\cats")
+        runTest("src/test/kotlin/testData/cats")
     }
     
     @Test
     fun help() {
-        runTest("src\\test\\kotlin\\testData\\help")
+        runTest("src/test/kotlin/testData/help")
     }
     
     @Test
     fun ratingSystem() {
-        runTest("src\\test\\kotlin\\testData\\ratingSystem")
+        runTest("src/test/kotlin/testData/ratingSystem")
     }
     
     @Test
     fun reward() {
-        runTest("src\\test\\kotlin\\testData\\reward")
+        runTest("src/test/kotlin/testData/reward")
     }
     
 }

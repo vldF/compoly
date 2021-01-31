@@ -1,16 +1,25 @@
 package chatbot.base
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+
 class ApiResponseKeeper {
-    private val storage = mutableMapOf<String, StringBuffer>()
+    private val storage = mutableMapOf<String, JsonArray>()
+    private val prettyPrint = GsonBuilder().setPrettyPrinting().create()
+
     val usedApis: Collection<String>
         get() = storage.keys
 
-    fun write(apiMethod: String, value: String) {
-        val fromStorage = storage.getOrPut(apiMethod) { StringBuffer() }
-        fromStorage
-            .appendln(value)
-            .appendln("===[blocks separator]===")
+    fun write(apiMethod: String, value: JsonObject) {
+        val fromStorage = storage.getOrPut(apiMethod) { JsonArray() }
+        fromStorage.add(value)
     }
 
-    fun read(apiMethod: String) = storage[apiMethod]?.toString()
+    fun read(apiMethod: String): String? {
+        return if (storage.containsKey(apiMethod))
+            prettyPrint.toJson(storage[apiMethod])
+        else
+            null
+    }
 }

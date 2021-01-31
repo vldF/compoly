@@ -2,6 +2,7 @@ package chatbot.base
 
 import database.UserReward
 import database.UserScore
+import org.h2.jdbc.JdbcResultSet
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.TransactionManager
@@ -16,6 +17,45 @@ fun initInmemoryDB() {
     transaction {
         SchemaUtils.create(UserReward)
     }
+}
+
+fun destroyDB() {
+    transaction {
+        SchemaUtils.drop(UserScore)
+        SchemaUtils.drop(UserReward)
+    }
+}
+
+fun dumpDB(): Map<String, String> {
+    val result = mutableMapOf<String, String>()
+
+    transaction {
+        val allTableNames = TransactionManager.current().db.dialect.allTablesNames()
+        val builder = StringBuilder()
+        for (name in allTableNames) {
+            exec("select * from $name") {
+                while (it.next()) {
+                    var colIndex = 1
+                    while (true) {
+                            try {
+                                builder.append((it as JdbcResultSet).get(colIndex))
+                                builder.append(", ")
+                                colIndex++
+                            } catch (E: Exception) {
+                                break
+                            }
+                    }
+                    builder.appendln()
+                }
+            }
+
+            if (builder.isNotEmpty()) {
+                result[name] = builder.toString()
+            }
+        }
+    }
+
+    return result
 }
 
 fun loadDBTable(file: File) {

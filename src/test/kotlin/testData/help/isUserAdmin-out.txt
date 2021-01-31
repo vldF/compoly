@@ -1,6 +1,10 @@
-chatId=1,
-userId=1
-===[blocks separator]===
-chatId=1,
-userId=2
-===[blocks separator]===
+[
+  {
+    "chatId": 1,
+    "userId": 1
+  },
+  {
+    "chatId": 1,
+    "userId": 2
+  }
+]

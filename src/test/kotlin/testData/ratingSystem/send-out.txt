@@ -1,45 +1,48 @@
-text=Одобрение выражено,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=Партия поздравляет Karl Marx с повышением до пионер,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=Одобрение выражено,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=По архивам Партии, у Karl Marx уровень пионер,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=Партия сочувствует Karl Marx. Он понижен до октябрёнок,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=Осуждение выражено,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=По архивам Партии, у Karl Marx уровень октябрёнок,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
-text=2,
-chatId=1,
-pixUrls=[],
-keyboard=null
-===[blocks separator]===
+[
+  {
+    "text": "Одобрение выражено",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа.
+Следующее одобрение будет доступно через: 3:59:59",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "Партия поздравляет Karl Marx с повышением до пионер",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "Одобрение выражено",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "По архивам Партии, у Karl Marx уровень пионер и награды: очень важная награда",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "Партия сочувствует Karl Marx. Он понижен до октябрёнок",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "Осуждение выражено",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "По архивам Партии, у Karl Marx уровень октябрёнок и награды: очень важная награда",
+    "chatId": 1,
+    "pixUrls": []
+  },
+  {
+    "text": "2",
+    "chatId": 1,
+    "pixUrls": []
+  }
+]

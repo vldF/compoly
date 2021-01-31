@@ -7,12 +7,16 @@ import chatbot.chatBotEvents.LongPollNewMessageEvent
 import com.google.gson.Gson
 import org.junit.jupiter.api.Assertions
 import java.io.File
+import java.io.FileNotFoundException
+import java.lang.Exception
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
 private val ignoringFiles = setOf(
     "messages.txt"
 )
+
+private const val ignoreLine = "//ignore"
 
 fun runTest(path: String) {
     initInmemoryDB()
@@ -31,6 +35,8 @@ fun runTest(path: String) {
         eventProcessor.process(message)
     }
     checkResults(path, keeper)
+    checkTables(path)
+    destroyDB()
 }
 
 private fun checkResults(path: String, keeper: ApiResponseKeeper) {
@@ -44,10 +50,12 @@ private fun checkResults(path: String, keeper: ApiResponseKeeper) {
     val usedApis = keeper.usedApis
     for (file in files) {
         val fileApiName = file.apiName
+        val fileData = file.readText()
+        if (fileData.isIgnore) continue
+
         val storedData = keeper.read(fileApiName)
             ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
-        val fileData = file.readText()
-        Assertions.assertEquals(fileData, storedData, "file: ${file.name}")
+        assertTextEquals(fileData, storedData, "file: ${file.name}")
     }
 
     val unexistsDataFiles = usedApis - files.map { it.apiName }
@@ -63,11 +71,56 @@ private fun checkResults(path: String, keeper: ApiResponseKeeper) {
     }
 }
 
+fun checkTables(path: String) {
+    val excepted = File(path).listFiles()?.filter { it.name.endsWith(".sql.dump") } ?: return
+
+    val actual = dumpDB()
+
+    for (exceptedDumpFile in excepted) {
+        val tableName = exceptedDumpFile.name.removeSuffix(".sql.dump")
+        val content = exceptedDumpFile.readText()
+
+        if (content.isIgnore) continue
+
+        val actualContent = actual[tableName] ?: throw IllegalStateException("Table $tableName not fount in database")
+
+        assertTextEquals(
+            content,
+            actualContent,
+            "table unequals $tableName"
+        )
+    }
+
+    val actualTableNames = actual.map { it.key }.toSet()
+    val exceptedTableNames = excepted.map { it.name.removeSuffix(".sql.dump") }
+    val uncheckedTableNames = actualTableNames - exceptedTableNames
+
+    for (uncheckedTableName in uncheckedTableNames) {
+        val content = actual[uncheckedTableName]!!
+        File("$path/${uncheckedTableName}.sql.dump").writeText(content)
+    }
+
+    if (uncheckedTableNames.isNotEmpty()) {
+        throw FileNotFoundException("Next sql dumps were created: ${uncheckedTableNames.joinToString(", ")}")
+    }
+}
+
+fun assertTextEquals(excepted: String, actual: String, errorMessage: String = "") {
+    Assertions.assertEquals(
+        excepted.formatted,
+        actual.formatted,
+        errorMessage
+    )
+}
+
+private val String.formatted
+    get() = replace("\n\r", "\n").replace("\\n", "\n").replace(" ", "")
+
 private fun loadMessages(path: String, api: VkPlatform): List<LongPollNewMessageEvent> {
     val content = File("$path/messages.txt").readText()
      return Gson()
          .fromJson(content, Array<Message>::class.java).map {
-             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId, it.date.toLong())
+             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId)
          }
          .toList()
 }
@@ -89,3 +142,6 @@ data class Message(
     val forwardMessageFromId: Long?,
     val date: Int
 )
+
+private val String.isIgnore
+    get() = toLowerCase().replace(" ", "").startsWith(ignoreLine)
