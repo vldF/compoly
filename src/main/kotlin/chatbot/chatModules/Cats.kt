@@ -19,17 +19,19 @@ object Cats {
     private val client = HttpClient.newHttpClient()
     private const val VK_PIX_QUEUE_SIZE = 4 // todo: change it to 4 in prod; 1 was set for faster loading
     private val vkCatsQueue = LinkedBlockingQueue<String>(VK_PIX_QUEUE_SIZE)
-
-    init {
-        addCatsToQueue(VK_PIX_QUEUE_SIZE)
-    }
+    private var isInit = false
 
     @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
     fun cat(event: LongPollNewMessageEvent) {
         val api = event.api
+
+        if (!isInit) {
+            addCatsToQueue(count = VK_PIX_QUEUE_SIZE, api = api)
+        }
+
         val catAttachment = vkCatsQueue.poll()
         api.sendPhotos("", event.chatId, listOf(catAttachment))
-        addCatsToQueue(1)
+        addCatsToQueue(1, event.api)
     }
 
     private fun getCatUrl(): String {
@@ -45,10 +47,10 @@ object Cats {
         return catInfo["url"].asString
     }
 
-    private fun addCatsToQueue(count: Int = 1) {
+    private fun addCatsToQueue(count: Int = 1, api: VkPlatform) {
         for (i in 0 until count) {
             val url = getCatUrl()
-            val attachment = VkPlatform.uploadPhotoByUrlAsAttachment(2000000002, url) ?: continue
+            val attachment = api.uploadPhotoByUrlAsAttachment(2000000002, url) ?: continue
             vkCatsQueue.add(attachment)
         }
     }
