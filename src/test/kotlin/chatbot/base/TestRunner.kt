@@ -120,7 +120,8 @@ private fun loadMessages(path: String, api: VkPlatform): List<LongPollNewMessage
     val content = File("$path/messages.txt").readText()
      return Gson()
          .fromJson(content, Array<Message>::class.java).map {
-             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId)
+             val date = it.date ?: System.currentTimeMillis()
+             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId, date)
          }
          .toList()
 }
@@ -140,7 +141,7 @@ data class Message(
     val text: String,
     val userId: Long,
     val forwardMessageFromId: Long?,
-    val date: Int
+    val date: Long?
 )
 
 private val String.isIgnore
