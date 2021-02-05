@@ -11,7 +11,7 @@ private val timeDifference = System.currentTimeMillis() - debugStartTime
  * @return local time
  */
 fun getTime(): Long {
-    return if (debugTime) {
+    return if (useDebugTime) {
         System.currentTimeMillis() + timeZone - timeDifference
     } else {
         System.currentTimeMillis() + timeZone

@@ -3,7 +3,7 @@ package chatbot
 import api.VkPlatform
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import group_id
+import botId
 import log
 import mainChatPeerId
 import chatbot.chatModules.Gulag
@@ -28,7 +28,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
         val response = VkPlatform.post(
                 "groups.getLongPollServer",
                 mutableMapOf(
-                        "group_id" to group_id
+                        "group_id" to botId
                 )
         )
 
