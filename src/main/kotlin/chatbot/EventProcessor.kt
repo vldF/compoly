@@ -39,8 +39,12 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
     fun process(event: LongPollEventBase) {
         when (event) {
             is LongPollNewMessageEvent -> {
-                messageListeners.forEach { it.call.invoke(it.baseClass, event) }
-
+                try {
+                    messageListeners.forEach { it.call.invoke(it.baseClass, event) }
+                } catch (e: Exception) {
+                    System.err.println("Error on processing messageListeners:")
+                    e.printStackTrace()
+                }
                 val text = event.text
                 if (text.isEmpty()) return
                 if (!text.startsWith("/")) return
@@ -53,14 +57,19 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 } else {
                     rawCommandName
                 }
-                val api = event.api
+
                 for (module in commandListeners) {
                     if (module.commands.contains(commandName)) {
                         if (
                                 module.permission == CommandPermission.USER
                                 || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
                         ) {
-                            module.call.invoke(module.baseClass, event)
+                            try {
+                                module.call.invoke(module.baseClass, event)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                            System.err.println("Error on processing commandListeners")
                             log.info("command: $text")
                         }
                     }
