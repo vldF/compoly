@@ -1,7 +1,7 @@
 package api.objects
 
 abstract class BaseUser {
-        abstract val id: Long
+        abstract val id: Int
         abstract val name: String
         abstract val domain: String
 }
@@ -16,7 +16,7 @@ data class VkUser(
         val bdate: String?,
         val online: Int?,
         val is_admin: Boolean,
-        val member_id: Long
+        val member_id: Int
         ) : BaseUser() {
         override val id = member_id
         }

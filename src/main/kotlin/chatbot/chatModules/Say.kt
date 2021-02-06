@@ -18,7 +18,7 @@ object Say {
         val api = event.api
         val text = event.text
         val regexed = regex.find(text)
-        val receiverChatId = regexed?.groupValues?.get(2)?.toLongOrNull()
+        val receiverChatId = regexed?.groupValues?.get(2)?.toIntOrNull()
         val messageText = regexed?.groupValues?.get(3)
 
         if (receiverChatId == null) {

@@ -20,8 +20,8 @@ import java.lang.IllegalArgumentException
 @Suppress("DuplicatedCode")
 @ModuleObject
 object RatingSystem {
-    private val respects = mutableMapOf<Pair<Long, Long>, Long>()
-    private val disrespects = mutableMapOf<Pair<Long, Long>, Long>()
+    private val respects = mutableMapOf<Pair<Int, Int>, Long>()
+    private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
 
     enum class Level(val levelName: String) {
         LEVEL0("ЗАСЕКРЕЧЕНО"),
@@ -56,7 +56,7 @@ object RatingSystem {
             5001..Integer.MAX_VALUE to Level.LEVEL8
     )
 
-    private fun addReputation(count: Int, toUser: Long, chatId: Long, shadowChatId: Long, api: VkPlatform) {
+    private fun addReputation(count: Int, toUser: Int, chatId: Int, shadowChatId: Int, api: VkPlatform) {
         var oldRep = -1
         var newRep = -1
         dbQuery {
@@ -93,7 +93,7 @@ object RatingSystem {
         }
     }
 
-    private fun userHasScore(chatId: Long, userId: Long): Boolean {
+    private fun userHasScore(chatId: Int, userId: Int): Boolean {
         val selected = dbQuery {
             UserScore.select {
                 (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
@@ -249,8 +249,8 @@ object RatingSystem {
     }
 
     private fun calculateRep(
-        targetId: Long,
-        shadowChatId: Long,
+        targetId: Int,
+        shadowChatId: Int,
         event: LongPollNewMessageEvent,
         commandType: RepCommandType
     ): Int {
@@ -267,7 +267,7 @@ object RatingSystem {
             val historyList = historyTxt.split(',')
             val historySize = Math.min(historyList.size, 10)
             val subList = historyList.subList(0, historySize)
-            val repeatCount = subList.filter { it.toLong() == targetId }.size
+            val repeatCount = subList.filter { it.toInt() == targetId }.size
             val count = Math.max(baseCount - repeatCount, 0)
             if (isRespect) count else -count
         } else {
@@ -275,7 +275,7 @@ object RatingSystem {
         }
     }
 
-    private fun updateHistory(chatId: Long, sender: Long, targetId: Long, commandType: RepCommandType) {
+    private fun updateHistory(chatId: Int, sender: Int, targetId: Int, commandType: RepCommandType) {
         val historyColumn =
             if(commandType == RepCommandType.RESPECT) UserScore.history_respects
             else UserScore.history_disrespects

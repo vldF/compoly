@@ -12,7 +12,7 @@ class FiledVkApiMock(
 ) : VkApiMock {
     private val gson = Gson()
 
-    override val meId: Long = -1
+    override val meId: Int = -1
 
     private val valuesReadCount = mutableMapOf<String, Int>()
 
@@ -21,26 +21,26 @@ class FiledVkApiMock(
         return readValueFromFile(pathToFile, "getUserIdByName", 1L)
     }
 
-    override fun getUserNameById(id: Long): String {
+    override fun getUserNameById(id: Int): String {
         writeResponse("getUserNameById", "id" to id)
         return readValueFromFile(pathToFile, "getUserNameById", "Test User")
     }
 
-    override fun kickUserFromChat(chatId: Long, userId: Long) {
+    override fun kickUserFromChat(chatId: Int, userId: Int) {
         writeResponse("kickUserFromChat", "chatId" to chatId, "userId" to userId)
     }
 
-    override fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+    override fun isUserAdmin(chatId: Int, userId: Int): Boolean {
         writeResponse("isUserAdmin", "chatId" to chatId, "userId" to userId)
         return readValueFromFile(pathToFile, "isUserAdmin", false)
     }
 
-    override fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String {
+    override fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String): String {
         writeResponse("uploadPhotoByUrlAsAttachment", "chatId" to chatId, "url" to url)
         return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "empty_url")
     }
 
-    override fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?) {
+    override fun send(text: String, chatId: Int, pixUrls: List<String>, keyboard: Keyboard?) {
         writeResponse(
             "send",
             "text" to text,
@@ -50,7 +50,7 @@ class FiledVkApiMock(
         )
     }
 
-    override fun sendPhotos(text: String, chatId: Long, attachments: List<String>) {
+    override fun sendPhotos(text: String, chatId: Int, attachments: List<String>) {
         writeResponse(
             "sendPhotos",
             "text" to text,
@@ -59,7 +59,7 @@ class FiledVkApiMock(
         )
     }
 
-    override fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser> {
+    override fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser> {
         writeResponse("getChatMembers", "peer_id" to peer_id, "fields" to fields)
         return readValueFromFile(pathToFile, "getChatMembers", listOf())
     }

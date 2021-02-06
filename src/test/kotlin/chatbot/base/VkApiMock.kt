@@ -11,23 +11,23 @@ import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 
 interface VkApiMock {
-    val meId: Long
+    val meId: Int
 
     fun getUserIdByName(username: String): Long?
 
-    fun getUserNameById(id: Long): String?
+    fun getUserNameById(id: Int): String?
 
-    fun kickUserFromChat(chatId: Long, userId: Long)
+    fun kickUserFromChat(chatId: Int, userId: Int)
 
-    fun isUserAdmin(chatId: Long, userId: Long): Boolean
+    fun isUserAdmin(chatId: Int, userId: Int): Boolean
 
-    fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String?
+    fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String): String?
 
-    fun send(text: String, chatId: Long, pixUrls: List<String>, keyboard: Keyboard?)
+    fun send(text: String, chatId: Int, pixUrls: List<String>, keyboard: Keyboard?)
 
-    fun sendPhotos(text: String, chatId: Long, attachments: List<String>)
+    fun sendPhotos(text: String, chatId: Int, attachments: List<String>)
 
-    fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>?
+    fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>?
 }
 
 fun getMock(api: VkApiMock): VkPlatform {
