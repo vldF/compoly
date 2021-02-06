@@ -2,16 +2,15 @@ package modules.events.weather
 import api.VkPlatform
 import chatIds
 import com.google.gson.Gson
-import key
+import weatherKey
 import log
 import modules.events.Event
 import modules.events.Time
 import modules.sendGet
 import kotlin.math.exp
 
-const val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$key"
-
 class Weather : Event {
+    private val address = "http://api.openweathermap.org/data/2.5/weather?id=498817&units=metric&lang=ru&APPID=$weatherKey"
     override val schedule = listOf<Time>()
     override val name = "Погода сейчас"
 

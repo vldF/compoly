@@ -12,7 +12,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
-import testMode
+import useTestMode
 import vkApiToken
 import java.io.ByteArrayInputStream
 import java.net.URL
@@ -192,7 +192,7 @@ object VkPlatform {
     fun post(methodName: String, params: MutableMap<String, Any>): JsonObject? {
         log.info("vk api query: methodName=$methodName, params=$params")
         history.use(methodName)
-        if (testMode && methodName == "messages.send") return null
+        if (useTestMode && methodName == "messages.send") return null
 
         val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
