@@ -13,4 +13,7 @@ class Voting(
     }
 
     fun getVotes() = voteSet.size
+
+    val completed: Boolean
+        get() = voteSet.size >= rightNumToVote
 }
