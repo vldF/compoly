@@ -1,7 +1,6 @@
 package configs
 
 import java.io.File
-import java.lang.Long.parseLong
 import java.util.*
 import kotlin.reflect.KProperty
 
