@@ -14,13 +14,13 @@ import java.util.concurrent.ConcurrentHashMap
 
 @ModuleObject
 object Gulag {
-    private val gulagVoting = mutableMapOf<Pair<Long, Long>, Voting>()
-    private val votedIds = mutableMapOf<Long, MutableSet<Long>>()
+    private val gulagVoting = mutableMapOf<Pair<Int, Int>, Voting>()
+    private val votedIds = mutableMapOf<Int, MutableSet<Int>>()
 
     private const val coefficientForKick = 0.3 // Процент от онлайна, нужный для кика
     private const val minCount = 10 // Минимальное кол-во людей для кика
     private const val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
-    val gulagKickTime = ConcurrentHashMap<Pair<Long, Long>, Long>()
+    val gulagKickTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
     fun gulag(event: LongPollNewMessageEvent) {
@@ -171,7 +171,7 @@ object Gulag {
         gulagVoting.remove(targetId to chatId)
     }
 
-    private fun getOnlineMemberCount(chatId: Long, api: VkPlatform): Int {
+    private fun getOnlineMemberCount(chatId: Int, api: VkPlatform): Int {
         return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 }

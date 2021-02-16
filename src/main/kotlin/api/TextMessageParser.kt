@@ -56,7 +56,7 @@ class TextMessageParser {
     private fun processMention(text: String): Mention? {
         val regex = mentionRegex.find(text)
 
-        val id = regex?.groupValues?.getOrNull(1)?.toLongOrNull() ?: return null
+        val id = regex?.groupValues?.getOrNull(1)?.toIntOrNull() ?: return null
         val screenName = regex.groupValues.getOrNull(2) ?: return null
 
         return Mention(id, screenName, text)
@@ -99,7 +99,7 @@ data class Command(
 ) : AbstractParseData()
 
 data class Mention(
-    val targetId: Long?,
+    val targetId: Int?,
     val targetScreenName: String,
     override val rawText: String
 ) : AbstractParseData()

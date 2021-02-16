@@ -9,9 +9,9 @@ import api.VkPlatform
  */
 open class LongPollNewMessageEvent(
         override val api: VkPlatform,
-        open val chatId: Long,
+        open val chatId: Int,
         open val text: String,
-        open val userId: Long,
-        open val forwardMessageFromId: Long? = null,
+        open val userId: Int,
+        open val forwardMessageFromId: Int? = null,
         open val time: Long = System.currentTimeMillis() / 1000
 ) : LongPollEventBase()

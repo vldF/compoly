@@ -2,6 +2,7 @@ package api
 
 import api.keyboards.Keyboard
 import api.objects.VkUser
+import botId
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -23,9 +24,9 @@ object VkPlatform {
     private val gson = Gson()
     private val history = ApiHistory(4)
     // true if user is admin
-    private val userAdminMap = mutableMapOf<Pair<Long, Long>, Boolean>()
+    private val userAdminMap = mutableMapOf<Pair<Int, Int>, Boolean>()
 
-    val meId: Long = 188281612 // todo: get this value via API
+    val meId: Int = botId // todo: get this value via API
 
     fun getUserIdByName(username: String): Long? {
         val resp = post(
@@ -37,7 +38,7 @@ object VkPlatform {
         return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asLong
     }
 
-    fun getUserNameById(id: Long): String? {
+    fun getUserNameById(id: Int): String? {
         val resp = post("users.get", mutableMapOf(
                 "user_ids" to id,
                 "fields" to "screen_name"
@@ -46,14 +47,14 @@ object VkPlatform {
         return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("screen_name")?.asString
     }
 
-    fun kickUserFromChat(chatId: Long, userId: Long) {
+    fun kickUserFromChat(chatId: Int, userId: Int) {
         post("messages.removeChatUser", mutableMapOf(
                 "chat_id" to chatId - 2000000000,
                 "user_id" to userId
         ))
     }
 
-    fun isUserAdmin(chatId: Long, userId: Long): Boolean {
+    fun isUserAdmin(chatId: Int, userId: Int): Boolean {
         val fromCache = userAdminMap[chatId to userId]
         if (fromCache != null) return fromCache
 
@@ -64,13 +65,13 @@ object VkPlatform {
         return userInTheChat?.is_admin == true
     }
 
-    fun uploadPhotoByUrlAsAttachment(chatId: Long?, url: String): String? {
+    fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String): String? {
         val imageConnection = URL(url).openConnection()
         val imageStream = imageConnection.getInputStream()
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
-    fun send(text: String, chatId: Long, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
+    fun send(text: String, chatId: Int, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
         if (pixUrls.isEmpty()) {
             val params = mutableMapOf(
                     "message" to text,
@@ -88,7 +89,7 @@ object VkPlatform {
         }
     }
 
-    fun sendPhotos(text: String, chatId: Long, attachments: List<String>) {
+    fun sendPhotos(text: String, chatId: Int, attachments: List<String>) {
         post("messages.send", mutableMapOf(
             "message" to text,
             "peer_id" to chatId,
@@ -97,7 +98,7 @@ object VkPlatform {
         ))
     }
 
-    fun getChatMembers(peer_id: Long, fields: List<String>): List<VkUser>? {
+    fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
         val resp = post(
                 "messages.getConversationMembers",
                 mutableMapOf(
@@ -112,7 +113,7 @@ object VkPlatform {
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    fun getChatMembersProfiles(peer_id: Long, fields: List<String>): List<VkUser>? {
+    private fun getChatMembersProfiles(peer_id: Int, fields: List<String>): List<VkUser>? {
         val resp = post(
                 "messages.getConversationMembers",
                 mutableMapOf(
@@ -128,7 +129,7 @@ object VkPlatform {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun uploadPhoto(peer_id: Long?, data: ByteArray): String? {
+    private fun uploadPhoto(peer_id: Int?, data: ByteArray): String? {
         history.use("photos.getMessagesUploadServer")
         val serverData =
                 if (peer_id != null) post(

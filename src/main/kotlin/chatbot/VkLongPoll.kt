@@ -154,10 +154,10 @@ data class Update(
 
 data class MessageNewObj(
         val date: Int,
-        val from_id: Long,
+        val from_id: Int,
         val id: Long,
         val out: Int,
-        val peer_id: Long,
+        val peer_id: Int,
         val text: String,
         val conversation_message_id: Int,
         val reply_message: MessageNewObj?,
@@ -171,16 +171,10 @@ data class MessageNewObj(
 
 data class Action(
         val type: String,
-        val member_id: Long,
+        val member_id: Int,
         val text: String,
         val email: String,
         val photo: Any
-)
-
-data class Payload(
-        val command: String,
-        val button_type: String,
-        val payload: String
 )
 
 data class Callback (

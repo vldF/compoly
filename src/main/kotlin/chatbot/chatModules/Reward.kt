@@ -1,9 +1,6 @@
 package chatbot.chatModules
 
 import api.*
-import api.keyboards.KeyboardBuilder
-import api.keyboards.KeyboardButton
-import api.keyboards.KeyboardColor
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
@@ -11,13 +8,11 @@ import database.UserReward
 import database.dbQuery
 import log
 import org.jetbrains.exposed.sql.insert
-import java.lang.IllegalArgumentException
-import java.lang.StringBuilder
 
 @ModuleObject
 object Reward {
-    private val rewardVoting = mutableMapOf<Pair<Long, Long>, Voting>()
-    private val votedIds = mutableMapOf<Pair<Long, Long>, MutableSet<Long>>()
+    private val rewardVoting = mutableMapOf<Pair<Int, Int>, Voting>()
+    private val votedIds = mutableMapOf<Pair<Int, Int>, MutableSet<Int>>()
 
     private const val coefficientForReward = 0.3 // Процент от онлайна, нужный для награждения
     private const val minCount = 10 // Минимальное кол-во людей для награждения
@@ -82,9 +77,9 @@ object Reward {
     }
 
     private fun startNewVoting(
-        senderId: Long,
+        senderId: Int,
         target: Mention,
-        chatId: Long,
+        chatId: Int,
         api: VkPlatform,
         rewardName: String,
         currentTime: Long
@@ -113,7 +108,7 @@ object Reward {
         )
     }
 
-    private fun addVote(senderId: Long, target: Mention, chatId: Long, api: VkPlatform): Boolean {
+    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkPlatform): Boolean {
         val targetId = target.targetId ?: throw IllegalArgumentException("target Id cannot be null")
         val screenName = target.targetScreenName
         val votingIsComplete = rewardVoting[targetId to chatId]!!.addVote(senderId, chatId)
@@ -130,7 +125,7 @@ object Reward {
         return votingIsComplete
     }
 
-    private fun endVoting(targetId: Long, screenName: String, chatId: Long, api: VkPlatform) {
+    private fun endVoting(targetId: Int, screenName: String, chatId: Int, api: VkPlatform) {
         dbQuery {
             UserReward.insert {
                 it[this.chatId] = chatId
@@ -163,7 +158,7 @@ object Reward {
         return textAfterMentionSb.trimEnd().toString()
     }
 
-    private fun getOnlineMemberCount(chatId: Long, api: VkPlatform): Int {
+    private fun getOnlineMemberCount(chatId: Int, api: VkPlatform): Int {
         return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 }

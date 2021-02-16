@@ -137,10 +137,10 @@ private val File.apiName
     get() = name.removeSuffix("-out.txt")
 
 data class Message(
-    val chatId: Long,
+    val chatId: Int,
     val text: String,
-    val userId: Long,
-    val forwardMessageFromId: Long?,
+    val userId: Int,
+    val forwardMessageFromId: Int?,
     val date: Long?
 )
 
