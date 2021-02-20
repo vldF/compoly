@@ -1,4 +1,4 @@
-package chatbot.chatModules
+package chatbot.chatModules.misc
 
 import api.VkPlatform
 import chatbot.chatBotEvents.LongPollNewMessageEvent
