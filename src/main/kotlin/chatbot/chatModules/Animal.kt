@@ -52,7 +52,7 @@ abstract class Animal {
     /**
      * Uploading [count] pictures of an animal (max [vkPixQueueSize]) to the [chatId]
      * and adding them to the [vkAnimalQueue]*/
-    private fun addAnimalsToQueue(count: Int = 1, api: VkPlatform, chatId: Long = mainChatPeerId) {
+    private fun addAnimalsToQueue(count: Int = 1, api: VkPlatform, chatId: Int = mainChatPeerId) {
         for (i in 0 until count) {
             val url = getAnimalUrl()
             val attachment = api.uploadPhotoByUrlAsAttachment(chatId, url) ?: continue
