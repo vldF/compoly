@@ -14,6 +14,7 @@ import java.util.concurrent.Executors
 class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>) : Thread() {
     private val pollSize = 4
     private val poll = Executors.newFixedThreadPool(pollSize)
+    private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ]+)")
 
     companion object {
         lateinit var commandListeners: List<CommandListener>
@@ -50,16 +51,10 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 if (!text.startsWith("/")) return
                 log.info("new message: $text")
 
-
-                val rawCommandName = text.split(" ")[0].removePrefix("/")
-                val commandName = if (rawCommandName.contains("@")) {
-                    rawCommandName.split("@")[0]
-                } else {
-                    rawCommandName
-                }
+                val command = commandRegex.find(event.text)?.groupValues?.get(1)
 
                 for (module in commandListeners) {
-                    if (module.commands.contains(commandName)) {
+                    if (module.commands.contains(command)) {
                         if (
                                 module.permission == CommandPermission.USER
                                 || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
