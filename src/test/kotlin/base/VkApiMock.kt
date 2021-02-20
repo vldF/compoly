@@ -1,12 +1,10 @@
-package chatbot.base
+package base
 
 import api.VkPlatform
 import api.keyboards.Keyboard
 import api.objects.VkUser
 import com.nhaarman.mockitokotlin2.*
 import org.mockito.Answers
-import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 

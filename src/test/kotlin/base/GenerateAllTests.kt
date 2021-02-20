@@ -1,4 +1,4 @@
-package chatbot.base
+package base
 
 import java.io.File
 
@@ -8,7 +8,7 @@ fun main() {
     val code = buildString {
         appendln("package codegen")
         appendln()
-        appendln("import chatbot.base.runTest")
+        appendln("import base.runTest")
         appendln("import org.junit.jupiter.api.Test")
         appendln()
         appendln("//DO NOT MODIFY THIS FILE MANUALLY!!!")

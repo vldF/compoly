@@ -1,4 +1,4 @@
-package chatbot.base
+package base
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray

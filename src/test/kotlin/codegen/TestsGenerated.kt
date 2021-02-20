@@ -1,6 +1,6 @@
 package codegen
 
-import chatbot.base.runTest
+import base.runTest
 import org.junit.jupiter.api.Test
 
 //DO NOT MODIFY THIS FILE MANUALLY!!!

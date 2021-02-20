@@ -1,4 +1,4 @@
-package chatbot.base
+package base
 
 import database.UserReward
 import database.UserScore

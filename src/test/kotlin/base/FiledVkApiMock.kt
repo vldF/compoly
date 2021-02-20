@@ -1,4 +1,4 @@
-package chatbot.base
+package base
 
 import api.keyboards.Keyboard
 import api.objects.VkUser
