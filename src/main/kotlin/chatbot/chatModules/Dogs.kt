@@ -3,6 +3,7 @@ package chatbot.chatModules
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.misc.Animal
 import com.google.gson.JsonParser
 
 @ModuleObject

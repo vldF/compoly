@@ -8,6 +8,7 @@ import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.misc.Voting
 import java.lang.Integer.max
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap

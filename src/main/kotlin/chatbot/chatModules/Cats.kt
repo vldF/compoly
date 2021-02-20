@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.misc.Animal
 
 @ModuleObject
 object Cats : Animal() {

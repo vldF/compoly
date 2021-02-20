@@ -4,6 +4,7 @@ import api.*
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.misc.Voting
 import database.UserReward
 import database.dbQuery
 import log
