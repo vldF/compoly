@@ -30,7 +30,7 @@ object UserTop {
                     .forEachIndexed { index, resultRow ->
                         val n = index + 1
                         val screenName = api.getUserNameById(resultRow[UserScore.userId])
-                        val showingScore = RatingSystem.Level.getLevel(resultRow[UserScore.reputation])
+                        val showingScore = RatingSystem.Level.getLevel(resultRow[UserScore.reputation]).levelName
                         if (screenName != null) {
                             text.append("$n. @$screenName [$showingScore]\n")
                         }

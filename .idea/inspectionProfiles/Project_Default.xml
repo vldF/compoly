@@ -31,6 +31,7 @@
     <inspection_tool class="DivideByZeroJS" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="DocumentWriteJS" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="DuplicateConditionJS" enabled="false" level="INFORMATION" enabled_by_default="false" />
+    <inspection_tool class="DuplicatedCode" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="DynamicallyGeneratedCodeJS" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="ES6BindWithArrowFunction" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="ES6CheckImport" enabled="false" level="INFORMATION" enabled_by_default="false" />

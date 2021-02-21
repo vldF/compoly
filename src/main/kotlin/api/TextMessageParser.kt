@@ -1,12 +1,17 @@
 package api
 
+import database.VirtualMentions
+import database.dbQuery
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 class TextMessageParser {
-    private val mentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
+    private val userMentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
+    private val virtualMentionRegex = Regex("@([а-яА-Яa-zA-ZёЁ]+)")
 
-    fun parse(text: String): ParseObject {
+    fun parse(text: String, chatId: Int? = null): ParseObject {
         val words = text.split(Pattern.compile("\\s+"))
         val parseObject = ParseObject()
 
@@ -28,10 +33,9 @@ class TextMessageParser {
                         || word.startsWith("[id")
                         || word.startsWith("[club")
                         || word.startsWith("[public")
-                        || word.startsWith("[group")
-                        || word.startsWith("<@") ->
+                        || word.startsWith("[group") ->
                 {
-                    val processedMention = processMention(word)
+                    val processedMention = processMention(word, chatId)
                     print(processedMention)
                     if (processedMention == null) {
                         parseObject.add(Text(word))
@@ -53,13 +57,31 @@ class TextMessageParser {
         return parseObject
     }
 
-    private fun processMention(text: String): Mention? {
-        val regex = mentionRegex.find(text)
+    private fun processMention(text: String, chatId: Int?): Mention? {
+        val regex = userMentionRegex.find(text)
 
-        val id = regex?.groupValues?.getOrNull(1)?.toIntOrNull() ?: return null
-        val screenName = regex.groupValues.getOrNull(2) ?: return null
+        if (regex != null) {
+            // this is mention of real user
+            val id = regex.groupValues.getOrNull(1)?.toIntOrNull() ?: return null
+            val screenName = regex.groupValues.getOrNull(2) ?: return null
+            return Mention(id, screenName, false, text)
+        } else {
+            // this is virtual mention. Or isn't
+            val virtualRegex = virtualMentionRegex.find(text)
+            val name = virtualRegex?.groupValues?.get(1) ?: return null
+            val targetId = if (chatId != null) {
+                getVirtualUserId(chatId, name)
+            } else null
+            return Mention(targetId, name, true, text)
+        }
+    }
 
-        return Mention(id, screenName, text)
+    private fun getVirtualUserId(chatId: Int, name: String): Int? {
+        return dbQuery {
+            VirtualMentions.select {
+                (VirtualMentions.chatId eq chatId) and (VirtualMentions.name eq name)
+            }.firstOrNull()
+        }?.getOrNull(VirtualMentions.id)
     }
 }
 
@@ -101,6 +123,7 @@ data class Command(
 data class Mention(
     val targetId: Int?,
     val targetScreenName: String,
+    val isVirtual: Boolean,
     override val rawText: String
 ) : AbstractParseData()
 

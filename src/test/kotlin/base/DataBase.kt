@@ -2,6 +2,7 @@ package base
 
 import database.UserReward
 import database.UserScore
+import database.VirtualMentions
 import org.h2.jdbc.JdbcResultSet
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -13,9 +14,8 @@ fun initInmemoryDB() {
     Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
     transaction {
         SchemaUtils.create(UserScore)
-    }
-    transaction {
         SchemaUtils.create(UserReward)
+        SchemaUtils.create(VirtualMentions)
     }
 }
 
