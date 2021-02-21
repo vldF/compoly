@@ -1,0 +1,17 @@
+[
+    {
+            chatId: 1,
+            text: "/addvirtualtarget @trotsky",
+            userId: 10
+   },
+   {
+           chatId: 1,
+           text: "/одобряю @trotsky",
+           userId: 10
+   },
+   {
+           chatId: 1,
+           text: "/осуждаю @trotsky",
+           userId: 10
+   }
+]

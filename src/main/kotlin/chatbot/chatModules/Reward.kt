@@ -28,6 +28,11 @@ object Reward {
         val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
+        if (target?.isVirtual == true) {
+            api.send("Нельзя наградить не настоящего человека", chatId)
+            return
+        }
+
         if (target == null) {
             api.send("Не указан награждаемый", chatId)
             return

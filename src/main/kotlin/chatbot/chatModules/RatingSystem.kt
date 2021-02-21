@@ -1,9 +1,7 @@
 package chatbot.chatModules
 
-import api.IntegerNumber
-import api.Mention
-import api.TextMessageParser
-import api.VkPlatform
+import api.*
+import botId
 import database.UserScore
 import database.dbQuery
 import log
@@ -56,23 +54,23 @@ object RatingSystem {
             5001..Integer.MAX_VALUE to Level.LEVEL8
     )
 
-    private fun addReputation(count: Int, toUser: Int, chatId: Int, shadowChatId: Int, api: VkPlatform) {
+    fun addReputation(count: Int, toUser: Int, chatId: Int, api: VkPlatform) {
         var oldRep = -1
         var newRep = -1
         dbQuery {
             val selected = UserScore.select{
-                (UserScore.chatId eq shadowChatId) and (UserScore.userId eq toUser)
+                (UserScore.chatId eq chatId) and (UserScore.userId eq toUser)
             }.firstOrNull()
             if (selected == null) {
                 UserScore.insert {
-                    it[this.chatId] = shadowChatId
+                    it[this.chatId] = chatId
                     it[userId] = toUser
                     it[reputation] = count
                     it[history_respects] = EMPTY_HISTORY_TEXT
                     it[history_disrespects] = EMPTY_HISTORY_TEXT
                 }
             } else {
-                UserScore.update({ (UserScore.chatId eq shadowChatId) and (UserScore.userId eq toUser) }) {
+                UserScore.update({ (UserScore.chatId eq chatId) and (UserScore.userId eq toUser) }) {
                     it[reputation] = selected[reputation] +  count
                 }
             }
@@ -111,7 +109,7 @@ object RatingSystem {
     fun addRep(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, chatId)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         try {
@@ -122,12 +120,16 @@ object RatingSystem {
             }
 
             if (targetId == null) {
+                if (target.isVirtual) {
+                    api.send("Партии неизвестна личность ${target.rawText}", chatId)
+                    return
+                }
                 log.info("arguments: $target, $deltaRep")
                 api.send("Неверные аргументы, товарищ", chatId)
                 return
             }
             val screenName = target.targetScreenName
-            addReputation(deltaRep, targetId, chatId, chatId, api)
+            addReputation(deltaRep, targetId, chatId, api)
 
             if (deltaRep >= 0)
                 api.send("Теперь у $screenName на $deltaRep реп больше!", chatId)
@@ -176,6 +178,7 @@ object RatingSystem {
         val levelName = Level.getLevel(rep).levelName
         val screenName = api.getUserNameById(userId)
 
+        // todo: add ability to show specifier user's info
         dbQuery {
             val rowList = UserReward.select {
                 (UserReward.chatId eq chatId) and (UserReward.userId eq userId)
@@ -196,7 +199,7 @@ object RatingSystem {
         val api = event.api
         val chatId = event.chatId
         val senderId = event.userId
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, chatId)
 
         val target = parsed.get<Mention>(1)
         var targetId = target?.targetId
@@ -211,12 +214,12 @@ object RatingSystem {
             }
         }
 
-        if (targetId == api.meId || targetId == -api.meId) {
+        if (targetId == botId || targetId == -botId) {
             api.send("Мы и так знаем, что Вы, Товарищ, одобряете Нас!", chatId)
             return
         }
 
-        if (!userHasScore(chatId, targetId)) {
+        if (target?.isVirtual == false && !userHasScore(chatId, targetId)) {
             api.send("Этого человека нет в архивах", chatId)
             return
         }
@@ -242,7 +245,7 @@ object RatingSystem {
 
         respects[senderId to chatId] = currentTime
         val count = calculateRep(targetId, chatId, event, RepCommandType.RESPECT)
-        addReputation(count, targetId, chatId, chatId, api)
+        addReputation(count, targetId, chatId, api)
         updateHistory(chatId, senderId, targetId, RepCommandType.RESPECT)
 
         api.send("Одобрение выражено", chatId)
@@ -265,10 +268,10 @@ object RatingSystem {
         val baseCount = 10
         return if (historyTxt != null && historyTxt != "") {
             val historyList = historyTxt.split(',')
-            val historySize = Math.min(historyList.size, 10)
+            val historySize = historyList.size.coerceAtMost(10)
             val subList = historyList.subList(0, historySize)
             val repeatCount = subList.filter { it.toInt() == targetId }.size
-            val count = Math.max(baseCount - repeatCount, 0)
+            val count = (baseCount - repeatCount).coerceAtLeast(0)
             if (isRespect) count else -count
         } else {
             if (isRespect) baseCount  else -baseCount
@@ -284,7 +287,7 @@ object RatingSystem {
                 (UserScore.chatId eq chatId) and (UserScore.userId eq sender)
             }.first()
             UserScore.update({ (UserScore.chatId eq chatId) and (UserScore.userId eq sender) }) {
-                val selectedHistory = selected.getOrNull(historyColumn)
+                val selectedHistory = selected.getOrNull(historyColumn) ?: EMPTY_HISTORY_TEXT
                 if (selectedHistory == EMPTY_HISTORY_TEXT) {
                     it[historyColumn] = "$targetId"
                 } else {
@@ -303,7 +306,7 @@ object RatingSystem {
         val api = event.api
         val chatId = event.chatId
         val senderId = event.userId
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, chatId)
 
         val target = parsed.get<Mention>(1)
         var targetId = target?.targetId
@@ -317,12 +320,12 @@ object RatingSystem {
             }
         }
 
-        if (targetId == api.meId || targetId == -api.meId) {
+        if (targetId == botId || targetId == -botId) {
             api.send("Отправляю чёрных воронков", chatId)
             return
         }
 
-        if (!userHasScore(chatId, targetId)) {
+        if (target?.isVirtual == false && !userHasScore(chatId, targetId)) {
             api.send("Этого человека нет в архивах", chatId)
             return
         }
@@ -348,24 +351,24 @@ object RatingSystem {
 
         disrespects[senderId to chatId] = currentTime
         val count = calculateRep(targetId, chatId, event, RepCommandType.DISRESPECT)
-        addReputation(count, targetId, chatId, chatId, api)
+        addReputation(count, targetId, chatId, api)
         updateHistory(chatId, senderId, targetId, RepCommandType.DISRESPECT)
 
         api.send("Осуждение выражено", chatId)
     }
 
-    //метод для тестов
-    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN)
+    // for tests only
+    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN, showOnHelp = false)
     fun showRespectHistory(event: LongPollNewMessageEvent) {
         val api = event.api
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, event.chatId)
         val target = parsed.get<Mention>(1)
         val shadowChatId = event.chatId
         if (target == null) {
             api.send("Не указан интересущий член партии", shadowChatId)
             return
         }
-        var targetId = target.targetId ?: throw IllegalArgumentException("Target hasn't ID")
+        val targetId = target.targetId ?: throw IllegalArgumentException("Target hasn't ID")
 
         val respectHistoryTxt = dbQuery {
             UserScore.select{

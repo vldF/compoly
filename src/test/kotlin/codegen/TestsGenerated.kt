@@ -26,4 +26,9 @@ class TestsGenerated {
         runTest("src/test/kotlin/testData/reward")
     }
     
+    @Test
+    fun virtualTargets() {
+        runTest("src/test/kotlin/testData/virtualTargets")
+    }
+    
 }

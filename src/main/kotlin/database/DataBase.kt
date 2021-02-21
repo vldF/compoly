@@ -26,6 +26,12 @@ object UserReward : Table() {
     val rewardName = text("reward_name")
 }
 
+object VirtualMentions : Table() {
+    val chatId = integer("chat_id")
+    val name = text("name")
+    val id = integer("id").autoIncrement()
+}
+
 fun hikari(): DataSource {
     val conf = HikariConfig()
     conf.jdbcUrl = "jdbc:postgresql://130.61.203.95:9997/compoly"

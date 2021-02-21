@@ -3,6 +3,7 @@ package api
 import api.keyboards.Keyboard
 import api.objects.VkUser
 import botId
+import chatbot.chatModules.VirtualTargets
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -39,12 +40,21 @@ object VkPlatform {
     }
 
     fun getUserNameById(id: Int): String? {
-        val resp = post("users.get", mutableMapOf(
+        val resp = post(
+            "users.get", mutableMapOf(
                 "user_ids" to id,
                 "fields" to "screen_name"
-        ))
+            )
+        )
         val json = resp?.asJsonObject
-        return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("screen_name")?.asString
+        return json
+            ?.get("response")
+            ?.asJsonArray
+            ?.get(0)
+            ?.asJsonObject
+            ?.get("screen_name")
+            ?.asString
+            ?: VirtualTargets.getVirtualNameById(id)// hack for virtual mentions
     }
 
     fun kickUserFromChat(chatId: Int, userId: Int) {

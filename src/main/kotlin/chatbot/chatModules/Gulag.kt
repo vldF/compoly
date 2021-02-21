@@ -29,9 +29,15 @@ object Gulag {
         val chatId = event.chatId
         val sender = event.userId
 
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, chatId)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
+
+        if (target?.isVirtual == true) {
+            api.send("Нельзя загулажить не настоящего человека", chatId)
+            return
+        }
+
         if (target == null) {
             api.send("Не указан ссыльный", chatId)
             return
@@ -114,9 +120,13 @@ object Gulag {
         val chatId = event.chatId
         val sender = event.userId
 
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, chatId)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
+        if (target?.isVirtual == true) {
+            api.send("Нельзя вернуть не настоящего человека", chatId)
+            return
+        }
         if (target == null) {
             api.send("Не указан сосланный", chatId)
             return
@@ -146,9 +156,17 @@ object Gulag {
         val chatId = event.chatId
         val sender = event.userId
 
-        val parsed = TextMessageParser().parse(event.text)
+        val parsed = TextMessageParser().parse(event.text, chatId)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
+        if (target?.isVirtual == true) {
+            api.send("Нельзя сослать не настоящего человека", chatId)
+            return
+        }
+        if (target?.isVirtual == true) {
+            api.send("Нельзя сослать не настоящего человека", chatId)
+            return
+        }
         if (target == null) {
             api.send("Не указан ссыльный", chatId)
             return
