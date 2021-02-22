@@ -7,6 +7,7 @@ jdk: oraclejdk12
 
 script:
   - chmod 777 ./gradlew
+  - ./gradle test
   - ./gradlew jar
 deploy:
   provider: releases
