@@ -23,6 +23,7 @@ fun destroyDB() {
     transaction {
         SchemaUtils.drop(UserScore)
         SchemaUtils.drop(UserReward)
+        SchemaUtils.drop(VirtualMentions)
     }
 }
 

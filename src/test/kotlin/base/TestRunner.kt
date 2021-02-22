@@ -35,6 +35,9 @@ fun runTest(path: String) {
     }
     checkResults(path, keeper)
     checkTables(path)
+}
+
+fun afterTest() {
     destroyDB()
 }
 

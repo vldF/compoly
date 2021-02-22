@@ -9,11 +9,17 @@ fun main() {
         appendln("package codegen")
         appendln()
         appendln("import base.runTest")
+        appendln("import base.afterTest")
+        appendln("import org.junit.jupiter.api.AfterEach")
         appendln("import org.junit.jupiter.api.Test")
         appendln()
         appendln("//DO NOT MODIFY THIS FILE MANUALLY!!!")
         appendln()
         appendln("class TestsGenerated {")
+        appendln("    @AfterEach")
+        appendln("        fun after() {")
+        appendln("        afterTest()")
+        appendln("    }")
 
         for (file in testFiles) {
             val testCode = getTestCode(file.name, file.path.normalizePath)
@@ -36,6 +42,7 @@ private fun getTestCode(testName: String, path: String): String {
         appendln("@Test")
         appendln("fun $testName() {")
         appendln("    runTest(\"$path\")")
+        appendln("    afterTest()")
         appendln("}")
     }
 }

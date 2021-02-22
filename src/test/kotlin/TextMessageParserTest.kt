@@ -29,7 +29,7 @@ class TextMessageParserTest {
         val mentionId = mention?.targetId
         val mentionScreenName = mention?.targetScreenName
 
-        Assertions.assertEquals(156594337L, mentionId)
+        Assertions.assertEquals(156594337, mentionId)
         Assertions.assertEquals("@mrvladf", mentionScreenName)
     }
 }
