@@ -3,12 +3,11 @@ install: true
 
 os: linux
 dist: trusty
-jdk: oraclejdk12
+jdk: oraclejdk15
 
 script:
   - chmod 777 ./gradlew
-  - ./gradle test
-  - ./gradlew jar
+  - ./gradlew build --info
 deploy:
   provider: releases
   api_key: ${GH_TOKEN}

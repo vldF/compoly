@@ -32,8 +32,8 @@ fun dumpDB(): Map<String, String> {
 
     transaction {
         val allTableNames = TransactionManager.current().db.dialect.allTablesNames()
-        val builder = StringBuilder()
         for (name in allTableNames) {
+            val builder = StringBuilder()
             exec("select * from $name") {
                 while (it.next()) {
                     var colIndex = 1

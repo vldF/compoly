@@ -11,18 +11,19 @@ fun main() {
         appendln("import base.runTest")
         appendln("import base.afterTest")
         appendln("import org.junit.jupiter.api.AfterEach")
+        appendln("import org.junit.jupiter.api.Order")
         appendln("import org.junit.jupiter.api.Test")
         appendln()
         appendln("//DO NOT MODIFY THIS FILE MANUALLY!!!")
         appendln()
         appendln("class TestsGenerated {")
         appendln("    @AfterEach")
-        appendln("        fun after() {")
+        appendln("    fun after() {")
         appendln("        afterTest()")
         appendln("    }")
 
-        for (file in testFiles) {
-            val testCode = getTestCode(file.name, file.path.normalizePath)
+        for ((order, file) in testFiles.withIndex()) {
+            val testCode = getTestCode(file.name, file.path.normalizePath, order+1)
             appendln(testCode.lines().joinToString(separator = "\n") { "    $it" }) // adding spacing
         }
         appendln("}")
@@ -31,7 +32,7 @@ fun main() {
     codeFile.writeText(code)
 }
 
-private fun getTestCode(testName: String, path: String): String {
+private fun getTestCode(testName: String, path: String, order: Int): String {
     /*
     @Test
     fun TEST_NAME() {
@@ -40,9 +41,9 @@ private fun getTestCode(testName: String, path: String): String {
      */
     return buildString {
         appendln("@Test")
+        appendln("@Order($order)")
         appendln("fun $testName() {")
         appendln("    runTest(\"$path\")")
-        appendln("    afterTest()")
         appendln("}")
     }
 }
