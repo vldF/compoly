@@ -83,7 +83,7 @@ object VkPlatform {
 
     fun send(text: String, chatId: Int, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
         if (pixUrls.isEmpty()) {
-            val params = mutableMapOf(
+            val params = mutableMapOf<String, Any>(
                     "message" to text,
                     "peer_id" to chatId,
                     "random_id" to System.currentTimeMillis().toString()

@@ -3,43 +3,44 @@ package codegen
 import base.runTest
 import base.afterTest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 
 //DO NOT MODIFY THIS FILE MANUALLY!!!
 
 class TestsGenerated {
     @AfterEach
-        fun after() {
+    fun after() {
         afterTest()
     }
     @Test
+    @Order(1)
     fun cats() {
         runTest("src/test/kotlin/testData/cats")
-        afterTest()
     }
     
     @Test
+    @Order(2)
     fun help() {
         runTest("src/test/kotlin/testData/help")
-        afterTest()
     }
     
     @Test
+    @Order(3)
     fun ratingSystem() {
         runTest("src/test/kotlin/testData/ratingSystem")
-        afterTest()
     }
     
     @Test
+    @Order(4)
     fun reward() {
         runTest("src/test/kotlin/testData/reward")
-        afterTest()
     }
     
     @Test
+    @Order(5)
     fun virtualTargets() {
         runTest("src/test/kotlin/testData/virtualTargets")
-        afterTest()
     }
     
 }
