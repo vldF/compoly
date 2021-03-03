@@ -36,7 +36,7 @@ fun getMock(api: VkApiMock): VkPlatform {
 }
 
 private fun VkApiMock.executeMockMethod(invocation: InvocationOnMock): Any? {
-    val method = this.javaClass.methods.find { it.name == invocation.method.name } 
+    val method = this.javaClass.methods.find { it.name == invocation.method.name }
     return if (method != null) {
         method.invoke(this, *invocation.arguments)
     } else {
