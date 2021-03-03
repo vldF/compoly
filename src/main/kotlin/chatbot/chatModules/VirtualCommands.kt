@@ -2,6 +2,7 @@ package chatbot.chatModules
 
 import api.Command
 import api.TextMessageParser
+import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
@@ -22,7 +23,7 @@ object VirtualCommands {
         initVirtualCommandListeners()
     }
 
-    @OnCommand(["виртуальнаякоманда", "виртуальная_команда", "createvirtual"])
+    @OnCommand(["виртуальнаякоманда", "виртуальная_команда", "createvirtual"], permissions = CommandPermission.ADMIN)
     fun createCommand(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
@@ -112,7 +113,7 @@ object VirtualCommands {
         event.api.send("Виртуальные команды:\n$commands", event.chatId)
     }
 
-    @OnCommand(["удалить", "удалитьвиртуальнуюкоманду", "delete", "remove"])
+    @OnCommand(["удалить", "удалитьвиртуальнуюкоманду", "delete", "remove"], permissions = CommandPermission.ADMIN)
     fun removeCommand(event: LongPollNewMessageEvent) {
         val api = event.api
         val parsed = TextMessageParser().parse(event.text)
