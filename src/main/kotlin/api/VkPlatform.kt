@@ -5,6 +5,7 @@ import api.objects.VkUser
 import botId
 import chatbot.chatModules.VirtualTargets
 import chatbot.Attachment
+import chatbot.GenerateMock
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -30,6 +31,7 @@ object VkPlatform {
 
     val meId: Int = botId // todo: get this value via API
 
+    @GenerateMock(["username"], "1")
     fun getUserIdByName(username: String): Long? {
         val resp = post(
                 "users.get", mutableMapOf(
@@ -40,6 +42,7 @@ object VkPlatform {
         return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asLong
     }
 
+    @GenerateMock(["id"], "\"Test User\"")
     fun getUserNameById(id: Int): String? {
         val resp = post(
             "users.get", mutableMapOf(
@@ -58,6 +61,7 @@ object VkPlatform {
             ?: VirtualTargets.getVirtualNameById(id)// hack for virtual mentions
     }
 
+    @GenerateMock(["chatId", "userId"])
     fun kickUserFromChat(chatId: Int, userId: Int) {
         post("messages.removeChatUser", mutableMapOf(
                 "chat_id" to chatId - 2000000000,
@@ -65,6 +69,7 @@ object VkPlatform {
         ))
     }
 
+    @GenerateMock(["chatId", "userId"], "false")
     fun isUserAdmin(chatId: Int, userId: Int): Boolean {
         val fromCache = userAdminMap[chatId to userId]
         if (fromCache != null) return fromCache
@@ -76,18 +81,20 @@ object VkPlatform {
         return userInTheChat?.is_admin == true
     }
 
+    @GenerateMock(["chatId", "url"], "\"photo_by_url_as_attachment\"")
     fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String): String? {
         val imageConnection = URL(url).openConnection()
         val imageStream = imageConnection.getInputStream()
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
-    fun uploadDocByUrlAsAttachment(chatId: Long?, url: String, fileName: String): String? {
+    private fun uploadDocByUrlAsAttachment(chatId: Int?, url: String, fileName: String): String? {
         val docConnection = URL(url).openConnection()
         val docStream = docConnection.getInputStream()
         return uploadDoc(chatId, docStream.readBytes(), fileName)
     }
-    
+
+    @GenerateMock(["text", "chatId", "pixUrls", "keyboard"])
     fun send(text: String, chatId: Int, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
         if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
@@ -106,6 +113,7 @@ object VkPlatform {
         }
     }
 
+    @GenerateMock(["text", "chatId", "attachments"])
     fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>) {
         post("messages.send", mutableMapOf(
             "message" to text,
@@ -115,7 +123,7 @@ object VkPlatform {
         ))
     }
 
-    fun getStringsOfAttachments(attachments: List<Attachment>, chatId: Long): List<String> {
+    fun getStringsOfAttachments(attachments: List<Attachment>, chatId: Int): List<String> {
         val strings = mutableListOf<String>()
         loop@ for (attachment in attachments) {
             log.info(attachment.toString())
@@ -160,6 +168,7 @@ object VkPlatform {
         return strings
     }
 
+    @GenerateMock(["peer_id", "fields"], "listOf()")
     fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
         val resp = post(
                 "messages.getConversationMembers",
@@ -250,7 +259,7 @@ object VkPlatform {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun uploadDoc(peer_id: Long?, data: ByteArray, fileName: String): String? {
+    private fun uploadDoc(peer_id: Int?, data: ByteArray, fileName: String): String? {
         history.use("docs.getMessagesUploadServer")
         val serverData =
             if (peer_id != null) post(
