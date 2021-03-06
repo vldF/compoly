@@ -1,9 +1,6 @@
 package base
 
-import database.UserReward
-import database.UserScore
-import database.VirtualCommands
-import database.VirtualMentions
+import database.*
 import org.h2.jdbc.JdbcResultSet
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -18,6 +15,7 @@ fun initInmemoryDB() {
         SchemaUtils.create(UserReward)
         SchemaUtils.create(VirtualMentions)
         SchemaUtils.create(VirtualCommands)
+        SchemaUtils.create(ScheduleTable)
     }
 }
 
@@ -27,6 +25,7 @@ fun destroyDB() {
         SchemaUtils.drop(UserReward)
         SchemaUtils.drop(VirtualMentions)
         SchemaUtils.drop(VirtualCommands)
+        SchemaUtils.drop(ScheduleTable)
     }
 }
 
