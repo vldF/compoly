@@ -1,0 +1,7 @@
+[
+  {
+    "text": "Задачи на сегодня:\ntest\nmultiline\ntext\n\n",
+    "chatId": 1,
+    "pixUrls": []
+  }
+]

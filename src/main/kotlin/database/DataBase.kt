@@ -40,6 +40,15 @@ object VirtualCommands: Table() {
     override val primaryKey = PrimaryKey(commandId)
 }
 
+object ScheduleTable: Table("schedule") {
+    val id = integer("id").autoIncrement()
+    val chatId = integer("chat_id")
+    val days = integer("days")
+    val text = text("schedule_text")
+
+    override val primaryKey = PrimaryKey(id)
+}
+
 fun hikari(): DataSource {
     val conf = HikariConfig()
     conf.jdbcUrl = "jdbc:postgresql://130.61.203.95:9997/compoly"

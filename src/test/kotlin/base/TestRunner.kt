@@ -41,7 +41,7 @@ fun afterTest() {
     destroyDB()
 }
 
-private fun checkResults(path: String, keeper: ApiResponseKeeper) {
+fun checkResults(path: String, keeper: ApiResponseKeeper) {
     val files = File(path)
         .listFiles(File::isFile)
         ?.filter { it.name !in ignoringFiles }

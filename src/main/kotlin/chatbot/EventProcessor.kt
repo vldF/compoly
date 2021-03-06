@@ -52,7 +52,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                 if (!text.startsWith("/")) return
                 log.info("new message: $text")
 
-                val command = commandRegex.find(event.text)?.groupValues?.get(1)
+                val command = commandRegex.find(event.text)?.groupValues?.get(1)?.toLowerCase() ?: return
 
                 for (module in commandListeners) {
                     if (module.commands.contains(command)) {
