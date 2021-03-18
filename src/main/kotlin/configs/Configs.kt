@@ -1,6 +1,5 @@
 import configs.BooleanConfig
 import configs.IntConfig
-import configs.LongConfig
 import configs.StringConfig
 
 val vkApiToken by StringConfig()
@@ -17,3 +16,10 @@ val chatIds = if (!useTestChatId) listOf(  // todo: remove 1?
 
 val useTestMode by BooleanConfig() // no logging, no messages, println() instead
 val useDebugTime by BooleanConfig() // used in timing.kt
+
+val dbUserName by StringConfig()
+val dbPassword by StringConfig()
+val dbTable by StringConfig()
+val dbIP by StringConfig()
+val dbPort by IntConfig()
+val dbType by StringConfig()

@@ -2,12 +2,16 @@ package database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import dbIP
+import dbPassword
+import dbPort
+import dbTable
+import dbType
+import dbUserName
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
-const val userName = "compoly"
-const val password = "c0mp0ly"
 const val EMPTY_HISTORY_TEXT = ""
 
 object UserScore : Table() {
@@ -51,9 +55,9 @@ object ScheduleTable: Table("schedule") {
 
 fun hikari(): DataSource {
     val conf = HikariConfig()
-    conf.jdbcUrl = "jdbc:postgresql://130.61.203.95:9997/compoly"
-    conf.username = userName
-    conf.password = password
+    conf.jdbcUrl = "jdbc:$dbType://$dbIP:$dbPort/$dbTable"
+    conf.username = dbUserName
+    conf.password = dbPassword
     conf.maximumPoolSize = 5
     conf.isAutoCommit = true
     conf.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
