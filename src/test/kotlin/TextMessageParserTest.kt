@@ -32,4 +32,15 @@ class TextMessageParserTest {
         Assertions.assertEquals(156594337, mentionId)
         Assertions.assertEquals("@mrvladf", mentionScreenName)
     }
+
+    @Test
+    fun mentionWithSpaces() {
+        val parser = TextMessageParser()
+        val text = "/command [id123123|super cool user]"
+        val parsed = parser.parse(text)
+        val mention = parsed.get<Mention>(1)
+
+        Assertions.assertEquals(mention!!.targetScreenName, "super cool user")
+
+    }
 }
