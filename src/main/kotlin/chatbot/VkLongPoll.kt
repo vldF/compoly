@@ -79,10 +79,20 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
 
             ts = jsonAnswer.ts
 
+            // todo refactor
             for (update in jsonAnswer.updates) {
                 if (update.type == "message_new" && (!useTestChatId || update.`object`.peer_id != mainChatPeerId)) {
-                    val forwarded = update.`object`.reply_message
-                    val forwardedFromId = forwarded?.from_id
+                    val replyMessage = update.`object`.reply_message
+                    var replyFromId = replyMessage?.from_id
+
+                    val forwarded = update.`object`.fwd_messages
+                    val forwardedFromId = forwarded.firstOrNull()?.from_id
+                    if (forwarded.all { it.from_id == forwardedFromId }) {
+                        if (replyFromId == null) {
+                            replyFromId = forwardedFromId
+                        }
+                    }
+
                     val callback = Gson().fromJson(update.`object`.payload, Callback::class.java)
                     val text = callback?.callback ?: update.`object`.text
 
@@ -91,14 +101,14 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                         update.`object`.peer_id,
                         text,
                         update.`object`.from_id,
-                        forwardedFromId,
+                        replyFromId,
                         update.`object`.date.toLong(),
                         update.`object`.attachments
                     )
 
                     queue.add(messageEvent)
                 }
-                // todo refactor
+
                 if (update.type == "message_new" && (update.`object`.action != null)) {
                     if (update.`object`.action.type == "chat_invite_user"
                             || update.`object`.action.type == "chat_invite_user_by_link") {
@@ -167,7 +177,8 @@ data class MessageNewObj(
         val attachments: List<Attachment>,
         val is_hidden: Boolean,
         val action: Action?,
-        val payload: String
+        val payload: String,
+        val fwd_messages: Array<MessageNewObj>
 )
 data class Attachment(
     val type: String,
