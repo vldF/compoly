@@ -4,7 +4,6 @@ import database.VirtualMentions
 import database.dbQuery
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
-import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 class TextMessageParser {
@@ -12,45 +11,44 @@ class TextMessageParser {
         private val userMentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
         private val virtualMentionRegex = Regex("@([а-яА-Яa-zA-ZёЁ]+)")
         private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_1-9]+)")
+        private val spaceSeparatorRegex = Regex("[ ](?=[^\\]\\)]*?(?:[\\[\\(]|\$))")
     }
 
     fun parse(text: String, chatId: Int? = null): ParseObject {
-        val words = text.split(Pattern.compile("\\s+"))
+        val tokens = text.split(spaceSeparatorRegex)
         val parseObject = ParseObject()
 
-        loop@ for ((i, word) in words.withIndex()) {
+        loop@for ((i, token) in tokens.withIndex()) {
             when {
-                i == 0 && word.startsWith("/") -> {
-                    val commandText = commandRegex.find(words[0])?.groupValues?.get(1) ?: continue@loop
-                    val command = Command(commandText, word)
+                i == 0 && token.startsWith("/") -> {
+                    val commandText = commandRegex.find(token)?.groupValues?.get(1) ?: continue@loop
+                    val command = Command(commandText, token)
                     parseObject.add(command)
                 }
 
-                word.startsWith("@")
-                        || word.startsWith("[id")
-                        || word.startsWith("[club")
-                        || word.startsWith("[public")
-                        || word.startsWith("[group") ->
-                {
-                    val processedMention = processMention(word, chatId)
-                    print(processedMention)
+                token.startsWith("@")
+                        || token.startsWith("[id")
+                        || token.startsWith("[club")
+                        || token.startsWith("[public")
+                        || token.startsWith("[group") -> {
+                    val processedMention = processMention(token, chatId)
                     if (processedMention == null) {
-                        parseObject.add(Text(word))
+                        parseObject.add(Text(token))
                     } else {
                         parseObject.add(processedMention)
                     }
                 }
 
-                word.toLongOrNull() != null -> {
-                    parseObject.add(IntegerNumber(word.toLong(), word))
+                token.toLongOrNull() != null -> {
+                    parseObject.add(IntegerNumber(token.toLong(), token))
                 }
 
                 else -> {
-                    parseObject.add(Text(word))
+                    parseObject.add(Text(token))
                 }
             }
-        }
 
+        }
         return parseObject
     }
 
