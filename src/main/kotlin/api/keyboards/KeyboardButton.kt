@@ -23,14 +23,6 @@ data class KeyboardButton (
         jsonObject.add("action", actionObject)
         return jsonObject
     }
-
-    fun getTgJson(): JsonObject {
-        val jsonObject = JsonObject()
-        jsonObject.addProperty("text", showingName)
-        jsonObject.addProperty("callback_data", callbackMessage)
-
-        return jsonObject
-    }
 }
 
 enum class KeyboardColor(val colorName: String) {

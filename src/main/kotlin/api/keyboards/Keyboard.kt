@@ -18,17 +18,4 @@ class Keyboard (private val buttons: Collection<KeyboardButton>) {
 
         return jsonObject.toString()
     }
-
-    fun getTgJson(): String {
-        val jsonObject = JsonObject()
-        val jsonListOfButtons = JsonArray(buttons.size)
-        buttons.forEach{ jsonListOfButtons.add(it.getTgJson()) }
-
-        val arrayOfArrayOfButtons = JsonArray()
-        arrayOfArrayOfButtons.add(jsonListOfButtons)
-
-        jsonObject.add("inline_keyboard", arrayOfArrayOfButtons)
-
-        return jsonObject.toString()
-    }
 }
