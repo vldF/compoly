@@ -7,7 +7,7 @@ data class KeyboardButton (
         val showingName: String = callbackMessage,
         val color: KeyboardColor = KeyboardColor.PRIMARY
 ) {
-    fun getVkJson(): JsonObject {
+    fun getJson(): JsonObject {
         val jsonObject = JsonObject()
         jsonObject.addProperty("color", color.colorName)
 

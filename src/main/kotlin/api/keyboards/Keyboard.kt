@@ -4,12 +4,12 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 
 class Keyboard (private val buttons: Collection<KeyboardButton>) {
-    fun getVkJson(): String {
+    fun getJson(): String {
         val jsonObject = JsonObject()
         jsonObject.addProperty("inline", true)
 
         val jsonListOfButtons = JsonArray(buttons.size)
-        buttons.forEach{ jsonListOfButtons.add(it.getVkJson()) }
+        buttons.forEach{ jsonListOfButtons.add(it.getJson()) }
 
         val arrayOfArrayOfButtons = JsonArray()
         arrayOfArrayOfButtons.add(jsonListOfButtons)

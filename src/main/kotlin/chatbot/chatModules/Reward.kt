@@ -86,7 +86,7 @@ object Reward {
         senderId: Int,
         target: Mention,
         chatId: Int,
-        api: VkPlatform,
+        api: VkApi,
         rewardName: String,
         currentTime: Long
     ) {
@@ -114,7 +114,7 @@ object Reward {
         )
     }
 
-    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkPlatform): Boolean {
+    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkApi): Boolean {
         val targetId = target.targetId ?: throw IllegalArgumentException("target Id cannot be null")
         val screenName = target.targetScreenName
         val votingIsComplete = rewardVoting[targetId to chatId]!!.addVote(senderId, chatId)
@@ -131,7 +131,7 @@ object Reward {
         return votingIsComplete
     }
 
-    private fun endVoting(targetId: Int, screenName: String, chatId: Int, api: VkPlatform) {
+    private fun endVoting(targetId: Int, screenName: String, chatId: Int, api: VkApi) {
         dbQuery {
             UserReward.insert {
                 it[this.chatId] = chatId
@@ -164,7 +164,7 @@ object Reward {
         return textAfterMentionSb.trimEnd().toString()
     }
 
-    private fun getOnlineMemberCount(chatId: Int, api: VkPlatform): Int {
+    private fun getOnlineMemberCount(chatId: Int, api: VkApi): Int {
         return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 }

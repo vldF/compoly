@@ -1,7 +1,7 @@
 package modules.events.happyBirthday
 
 
-import api.VkPlatform
+import api.VkApi
 import chatIds
 import mainChatPeerId
 import modules.Active
@@ -16,7 +16,7 @@ class HappyBirthday : Event {
 
     override fun call() {
         val cal = Calendar.getInstance()
-        val profiles = VkPlatform.getChatMembers(mainChatPeerId, listOf("bdate", "domain"))
+        val profiles = VkApi.getChatMembers(mainChatPeerId, listOf("bdate", "domain"))
             ?: throw IllegalStateException()
         val currentDate = "${cal.get(Calendar.DAY_OF_MONTH)}.${cal.get(Calendar.MONTH) + 1}"
         val needToCongratulate = mutableListOf<String>()
@@ -40,7 +40,7 @@ class HappyBirthday : Event {
                     Желаем им благополучия и такого же упорства в развитии нашей Великой Партии!🎉🎉🎉
                 """.trimIndent()
             }
-            chatIds.forEach { VkPlatform.send(message, it) }
+            chatIds.forEach { VkApi.send(message, it) }
         }
     }
 }

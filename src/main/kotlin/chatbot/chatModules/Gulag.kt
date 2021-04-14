@@ -190,7 +190,7 @@ object Gulag {
         gulagVoting.remove(targetId to chatId)
     }
 
-    private fun getOnlineMemberCount(chatId: Int, api: VkPlatform): Int {
+    private fun getOnlineMemberCount(chatId: Int, api: VkApi): Int {
         return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 }

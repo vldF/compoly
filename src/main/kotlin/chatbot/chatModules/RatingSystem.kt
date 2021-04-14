@@ -54,7 +54,7 @@ object RatingSystem {
             5001..Integer.MAX_VALUE to Level.LEVEL8
     )
 
-    fun addReputation(count: Int, toUser: Int, chatId: Int, api: VkPlatform) {
+    fun addReputation(count: Int, toUser: Int, chatId: Int, api: VkApi) {
         var oldRep = -1
         var newRep = -1
         dbQuery {

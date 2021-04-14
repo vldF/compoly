@@ -1,6 +1,6 @@
 package chatbot.chatModules.misc
 
-import api.VkPlatform
+import api.VkApi
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import mainChatPeerId
 import java.net.URI
@@ -52,7 +52,7 @@ abstract class Animal {
     /**
      * Uploading [count] pictures of an animal (max [vkPixQueueSize]) to the [chatId]
      * and adding them to the [vkAnimalQueue]*/
-    private fun addAnimalsToQueue(count: Int = 1, api: VkPlatform, chatId: Int = mainChatPeerId) {
+    private fun addAnimalsToQueue(count: Int = 1, api: VkApi, chatId: Int = mainChatPeerId) {
         for (i in 0 until count) {
             val url = getAnimalUrl()
             val attachment = api.uploadPhotoByUrlAsAttachment(chatId, url) ?: continue

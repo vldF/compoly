@@ -13,7 +13,7 @@ class KeyboardTest {
                 .addButton(KeyboardButton("test3"))
                 .build()
 
-        val json = keyboard.getVkJson()
+        val json = keyboard.getJson()
 
         val rightJson = "{\"inline\":true,\"buttons\":[[{\"color\":\"primary\",\"action\":{\"type\":\"text\"" +
                 ",\"label\":\"test1\",\"payload\":{\"callback\":\"test1\"}}},{\"color\":\"primary\",\"action\"" +
