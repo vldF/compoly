@@ -2,7 +2,7 @@ package chatbot.chatModules
 
 import api.IntegerNumber
 import api.TextMessageParser
-import api.VkPlatform
+import api.VkApi
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
@@ -95,7 +95,7 @@ object Schedule {
         api.send(toSend, chatId)
     }
 
-    fun onDay(api: VkPlatform, dayNow: Int) {
+    fun onDay(api: VkApi, dayNow: Int) {
         val scheduleToday = dbQuery {
             ScheduleTable.select {
                 (ScheduleTable.days eq dayNow)
@@ -131,7 +131,7 @@ object Schedule {
         return dayNow
     }
 
-    private fun parse(text: String, chatId: Int, api: VkPlatform): Pair<Int, String>? {
+    private fun parse(text: String, chatId: Int, api: VkApi): Pair<Int, String>? {
         val textLines = text.lines()
         if (textLines.size < 3) {
             api.send("Некорректное число аргументов. Синтаксис команды:\n /добавитьРасписание\nДД.ММ\nТекст", chatId)

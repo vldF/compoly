@@ -22,7 +22,7 @@ import java.io.ByteArrayInputStream
 import java.net.URL
 
 
-object VkPlatform {
+object VkApi {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
     private val history = ApiHistory(4)
@@ -103,7 +103,7 @@ object VkPlatform {
                     "random_id" to System.currentTimeMillis().toString()
             )
             if (keyboard != null) {
-                params["keyboard"] = keyboard.getVkJson()
+                params["keyboard"] = keyboard.getJson()
             }
             post("messages.send", params)
         } else {

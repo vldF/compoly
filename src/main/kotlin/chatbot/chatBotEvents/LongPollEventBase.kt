@@ -1,8 +1,8 @@
 package chatbot.chatBotEvents
 
-import api.VkPlatform
+import api.VkApi
 
 abstract class LongPollEventBase {
-    abstract val api: VkPlatform
+    abstract val api: VkApi
 }
 

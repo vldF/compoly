@@ -1,5 +1,5 @@
 package base
-import api.VkPlatform
+import api.VkApi
 import api.keyboards.Keyboard
 import api.objects.VkUser
 import com.nhaarman.mockitokotlin2.*
@@ -28,7 +28,7 @@ interface VkApiMock {
     
 }
 
-fun getMock(api: VkApiMock): VkPlatform {
+fun getMock(api: VkApiMock): VkApi {
     val answer = Answer {
         api.executeMockMethod(it) ?: Answers.RETURNS_DEFAULTS.answer(it)
     }

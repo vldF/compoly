@@ -1,6 +1,6 @@
 package modules.events.daysUntil
 
-import api.VkPlatform
+import api.VkApi
 import chatIds
 import getTime
 import modules.events.Event
@@ -24,9 +24,9 @@ class DaysUntil : Event {
         for (day in days) {
             val daysUntil = daysUntil(Date(getTime()), day.date)
             if (daysUntil > 0) {
-                chatIds.forEach { VkPlatform.send(day.message + daysUntil, it) }
+                chatIds.forEach { VkApi.send(day.message + daysUntil, it) }
             } else if (daysUntil == 0L) {
-                chatIds.forEach { VkPlatform.send(day.finalMessage, it) }
+                chatIds.forEach { VkApi.send(day.finalMessage, it) }
             }
         }
     }

@@ -1,6 +1,6 @@
 package base
 
-import api.VkPlatform
+import api.VkApi
 import chatbot.EventProcessor
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
@@ -122,7 +122,7 @@ fun assertTextEquals(excepted: String, actual: String, errorMessage: String = ""
 private val String.formatted
     get() = replace("\n\r", "\n").replace("\\n", "\n").replace(" ", "")
 
-private fun loadMessages(path: String, api: VkPlatform): List<LongPollNewMessageEvent> {
+private fun loadMessages(path: String, api: VkApi): List<LongPollNewMessageEvent> {
     val content = File("$path/messages.txt").readText()
      return Gson()
          .fromJson(content, Array<Message>::class.java).map {

@@ -1,5 +1,5 @@
 package modules.events.weather
-import api.VkPlatform
+import api.VkApi
 import chatIds
 import com.google.gson.Gson
 import weatherKey
@@ -33,7 +33,7 @@ class Weather : Event {
                         🌡Температура: ${info.main.temp} °C
                         🖐Ощущается как: ${apparentTemperature(info.main.temp, info.main.temp, info.main.humidity.toDouble())} °C
                     """.trimIndent()
-                chatIds.forEach { VkPlatform.send(text, it) }
+                chatIds.forEach { VkApi.send(text, it) }
             } catch (e: Exception) {
                 log.warning("Weather casting exception")
             }

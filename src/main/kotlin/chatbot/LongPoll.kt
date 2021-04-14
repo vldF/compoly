@@ -1,6 +1,6 @@
 package chatbot
 
-import api.VkPlatform
+import api.VkApi
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import botId
@@ -18,14 +18,14 @@ import java.net.http.HttpResponse
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
-class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thread() {
+class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thread() {
     private lateinit var server: String
     private lateinit var key: String
     private lateinit var ts: String
 
 
     private fun initLongPoll() {
-        val response = VkPlatform.post(
+        val response = VkApi.post(
                 "groups.getLongPollServer",
                 mutableMapOf(
                         "group_id" to botId
@@ -97,7 +97,7 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                     val text = callback?.callback ?: update.`object`.text
 
                     val messageEvent = LongPollNewMessageEvent(
-                        VkPlatform,
+                        VkApi,
                         update.`object`.peer_id,
                         text,
                         update.`object`.from_id,
@@ -124,11 +124,11 @@ class VkLongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): T
                                 val seconds = fullSec % 60
                                 val message = "Еще наказан ${String.format("%02d:%02d:%02d", hours, minutes, seconds)}"
 
-                                VkPlatform.send(message, peerId)
+                                VkApi.send(message, peerId)
                                 sleep(400)
-                                VkPlatform.kickUserFromChat(peerId, targetId)
+                                VkApi.kickUserFromChat(peerId, targetId)
                             } else Gulag.gulagKickTime.remove(targetId to peerId)
-                        } else VkPlatform.send("Приветствуем ${VkPlatform.getUserNameById(targetId)}", peerId)
+                        } else VkApi.send("Приветствуем ${VkApi.getUserNameById(targetId)}", peerId)
                     }
                 }
             }

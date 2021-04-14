@@ -1,6 +1,6 @@
 package modules.events.icsEvents
 
-import api.VkPlatform
+import api.VkApi
 import chatIds
 import getTime
 import modules.events.Event
@@ -48,6 +48,6 @@ class IcsEvents : Event {
         else
             msg.append(nextEvents.joinToString(separator = "\n"))
 
-        chatIds.forEach { VkPlatform.send(msg.toString(), it) }
+        chatIds.forEach { VkApi.send(msg.toString(), it) }
     }
 }
