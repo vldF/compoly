@@ -130,7 +130,7 @@ abstract class Votable {
 
     /**Voting process
      *
-     * Ovveride this fun and use [super.voting(event)]
+     * Override this fun and use [super.voting(event)]
      * @sample Gulag.voting
      */
     open fun voting(event: LongPollNewMessageEvent) {
@@ -167,10 +167,7 @@ abstract class Votable {
         }
     }
 
-    /**Private voting process
-     *
-     * Ovveride this fun and use [super.voting(event)]
-     * @sample Gulag.adminVoting*/
+    /**Private voting process*/
     private fun voting(event: LongPollNewMessageEvent, admin: Boolean) {
         val api = event.api
         val chatId = event.chatId
