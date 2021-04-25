@@ -14,63 +14,42 @@ object Gulag : Votable() {
     val gulagKickTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
-    override fun voting(event: LongPollNewMessageEvent) {
-        val api = event.api
-        val parsed = TextMessageParser().parse(event.text)
-        val target = parsed.get<Mention>(1)
-        if (target != null) {
+    fun votingGulag(event: LongPollNewMessageEvent) {
+        voting(event) { api, _, _, target ->
             val screenName = target.targetScreenName
             if (target.targetId to event.chatId in gulagKickTime.keys) {
                 api.send("Партия уже наказала $screenName", event.chatId)
-                return
+                return@voting
             }
-            votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
+            super.votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
                     "Отправь /гулаг ${target.rawText}"
-            successVoteMessage = "за отправление $screenName в лагерь"
-            keyboardMessage = "/гулаг ${target.rawText}"
-            onEndVotingMessage =
+            super.successVoteMessage = "за отправление $screenName в лагерь"
+            super.keyboardMessage = "/гулаг ${target.rawText}"
+            super.onEndVotingMessage =
                 "Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад"
         }
-        super.voting(event)
     }
 
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN)
-    override fun cancelVotingResult(event: LongPollNewMessageEvent) {
-        super.cancelVotingResult(event)
-        val api = event.api
-        val chatId = event.chatId
+    fun cancelVotingResultGulag(event: LongPollNewMessageEvent) {
+        cancelVotingResult(event, "Самопроизвольное возвращение из ссылки запрещено!") { api, chatId, _, target ->
+            if (gulagKickTime.remove(target.targetId to chatId) == null) {
+                api.send("Данного человека нет в архивах ГУЛАГ", chatId)
+                return@cancelVotingResult
+            }
 
-        val parsed = TextMessageParser().parse(event.text)
-        val target = parsed.get<Mention>(1)
-        val targetId = target?.targetId
-
-        if (gulagKickTime.remove(targetId to chatId) == null) {
-            api.send("Данного человека нет в архивах ГУЛАГ", chatId)
-            return
+            api.send("${target.targetScreenName} может вернуться досрочно", chatId)
         }
-
-        api.send("${target!!.targetScreenName} может вернуться досрочно", chatId)
     }
 
     @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN, showOnHelp = false)
-    override fun adminVoting(event: LongPollNewMessageEvent) {
-        super.adminVoting(event)
-        val api = event.api
-        val chatId = event.chatId
-
-        val parsed = TextMessageParser().parse(event.text)
-        val target = parsed.get<Mention>(1)
-        val targetId = target?.targetId
-
-        api.send(
-            "Подумай над своим поведением, ${target!!.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад",
-            chatId
-        )
-        sleep(500)
-        api.kickUserFromChat(chatId, targetId!!)
-        val currentTime = System.currentTimeMillis()
-        gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
-        voting.remove(targetId to chatId)
+    fun adminVotingGulag(event: LongPollNewMessageEvent) {
+        adminVoting(event) { api, chatId, _, target ->
+            api.send(
+                "Подумай над своим поведением, ${target.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад",
+                chatId
+            )
+        }
     }
 
     override fun onEndVoting(targetId: Int, chatId: Int, api: VkPlatform) {

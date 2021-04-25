@@ -1,8 +1,6 @@
 package chatbot.chatModules
 
-import api.Mention
-import api.TextMessageParser
-import api.VkPlatform
+import api.*
 import api.keyboards.KeyboardBuilder
 import api.keyboards.KeyboardButton
 import api.keyboards.KeyboardColor
@@ -10,6 +8,7 @@ import botId
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
 import log
+import java.lang.StringBuilder
 
 /**Something that able to vote for*/
 abstract class Votable {
@@ -23,7 +22,7 @@ abstract class Votable {
     protected open var percentageOfOnline = 0.3
 
     /**The minimum number of people to win the vote*/
-    protected open var minCount = 10
+    protected open var minCount = 2
 
     /**Time until the end of voting in minutes*/
     protected open var timeOfClosing = 60 * 5
@@ -133,20 +132,30 @@ abstract class Votable {
      * Override this fun and use [super.voting(event)]
      * @sample Gulag.voting
      */
-    open fun voting(event: LongPollNewMessageEvent) {
-        voting(event, false)
+    fun voting(
+        event: LongPollNewMessageEvent,
+        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit
+    ) {
+        voting(event, null, someActions)
     }
 
     /**Admin voting process*/
-    open fun adminVoting(event: LongPollNewMessageEvent) {
-        voting(event, true)
+    fun adminVoting(
+        event: LongPollNewMessageEvent,
+        adminActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit
+    ) {
+        voting(event, adminActions, null)
     }
 
     /**If you want to cancel the voting results*/
-    open fun cancelVotingResult(event: LongPollNewMessageEvent) {
+    fun cancelVotingResult(
+        event: LongPollNewMessageEvent,
+        targetEqualsSender: String,
+        cancelAction: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?
+    ) {
         val api = event.api
         val chatId = event.chatId
-        val sender = event.userId
+        val senderId = event.userId
 
         val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
@@ -157,18 +166,24 @@ abstract class Votable {
         }
 
         if (targetId == null) {
-            api.send(targetNullMessage, chatId)
+            api.send(targetNoneGetBackMessage, chatId)
             return
         }
 
-        if (targetId == sender) {
-            api.send(targetEqualsSenderMessage, chatId)
+        if (targetId == senderId) {
+            api.send(targetEqualsSender, chatId)
             return
         }
+
+        if (cancelAction != null) cancelAction(api, chatId, senderId, target)
     }
 
     /**Private voting process*/
-    private fun voting(event: LongPollNewMessageEvent, admin: Boolean) {
+    private fun voting(
+        event: LongPollNewMessageEvent,
+        adminActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?,
+        someActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?
+    ) {
         val api = event.api
         val chatId = event.chatId
         val senderId = event.userId
@@ -181,7 +196,12 @@ abstract class Votable {
             return
         }
 
-        if (targetId == null) {
+        if (targetId == botId) {
+            api.send(targetEqualsBotMessage, chatId)
+            return
+        }
+
+        if (targetId == null || api.getChatMembers(chatId, emptyList())?.find { it.id == targetId } == null) {
             api.send(targetNullMessage, chatId)
             return
         }
@@ -191,17 +211,19 @@ abstract class Votable {
             return
         }
 
-        if (targetId == botId) {
-            api.send(targetEqualsBotMessage, chatId)
-            return
-        }
-
         if (votedIds[targetId to chatId]?.contains(senderId) == true) {
             val senderScreenName = api.getUserNameById(senderId)
             api.send("$senderScreenName$alreadyVotedMessage", chatId)
             return
         }
-        if (admin) return
+
+        if (someActions != null) someActions(api, chatId, senderId, target)
+
+        if (adminActions != null) {
+            adminActions(api, chatId, senderId, target)
+            endVoting(targetId, chatId, api)
+            return
+        }
         val currentTime = event.time
 
         val isNewVoting = voting[targetId to chatId] == null
