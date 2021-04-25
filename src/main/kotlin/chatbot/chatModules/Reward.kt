@@ -14,34 +14,28 @@ object Reward : Votable() {
     private var rewardNameStr = ""
 
     @OnCommand(["наградить", "reward"], "голосование за награждение товарища")
-    override fun voting(event: LongPollNewMessageEvent) {
-        val api = event.api
-        val chatId = event.chatId
-
-        val parsed = TextMessageParser().parse(event.text)
-        val target = parsed.get<Mention>(1)
-        if (target != null) {
+    fun votingReward(event: LongPollNewMessageEvent) {
+        voting(event) { api, chatId, _, target ->
             val targetId = target.targetId
             val isNewVoting =
                 voting[targetId to chatId] == null || voting[targetId to chatId]!!.timeOfClosing < event.time
-            val rewardNameInMessage = parsed.getRewardName()
+            val rewardNameInMessage = TextMessageParser().parse(event.text).getRewardName()
             rewardNameStr = if (rewardNameInMessage != "") rewardNameInMessage else rewardNameStr
             if (rewardNameStr == "" && isNewVoting) {
                 api.send("Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого", chatId)
-                return
+                return@voting
             }
             val screenName = target.targetScreenName
 
-            votingForMessage = "Голосование за вручение $screenName награды $rewardNameStr\n" +
+            super.votingForMessage = "Голосование за вручение $screenName награды $rewardNameStr\n" +
                     "Отправь /наградить ${target.rawText}"
 
-            successVoteMessage = "за награждение $screenName"
+            super.successVoteMessage = "за награждение $screenName"
 
-            keyboardMessage = "/наградить ${target.rawText}"
+            super.keyboardMessage = "/наградить ${target.rawText}"
 
-            onEndVotingMessage = "$screenName получает награду $rewardNameStr"
+            super.onEndVotingMessage = "$screenName получает награду $rewardNameStr"
         }
-        super.voting(event)
     }
 
     override fun onEndVoting(targetId: Int, chatId: Int, api: VkPlatform) {
