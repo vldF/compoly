@@ -15,11 +15,11 @@ object Gulag : Votable() {
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
     fun votingGulag(event: LongPollNewMessageEvent) {
-        voting(event) { api, _, _, target ->
+        voting(event) { api, chatId, _, target ->
             val screenName = target.targetScreenName
-            if (target.targetId to event.chatId in gulagKickTime.keys) {
-                api.send("Партия уже наказала $screenName", event.chatId)
-                return@voting
+            if (target.targetId to chatId in gulagKickTime.keys) {
+                api.send("Партия уже наказала $screenName", chatId)
+                return@voting null
             }
             super.votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
                     "Отправь /гулаг ${target.rawText}"
@@ -27,6 +27,7 @@ object Gulag : Votable() {
             super.keyboardMessage = "/гулаг ${target.rawText}"
             super.onEndVotingMessage =
                 "Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад"
+            true
         }
     }
 
@@ -44,11 +45,8 @@ object Gulag : Votable() {
 
     @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN, showOnHelp = false)
     fun adminVotingGulag(event: LongPollNewMessageEvent) {
-        adminVoting(event) { api, chatId, _, target ->
-            api.send(
-                "Подумай над своим поведением, ${target.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад",
-                chatId
-            )
+        adminVoting(event) { _, _, _, target ->
+            super.onEndVotingMessage = "Подумай над своим поведением, ${target.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад"
         }
     }
 

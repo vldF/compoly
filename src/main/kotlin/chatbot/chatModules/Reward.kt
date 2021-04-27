@@ -23,7 +23,7 @@ object Reward : Votable() {
             rewardNameStr = if (rewardNameInMessage != "") rewardNameInMessage else rewardNameStr
             if (rewardNameStr == "" && isNewVoting) {
                 api.send("Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого", chatId)
-                return@voting
+                return@voting null
             }
             val screenName = target.targetScreenName
 
@@ -35,6 +35,7 @@ object Reward : Votable() {
             super.keyboardMessage = "/наградить ${target.rawText}"
 
             super.onEndVotingMessage = "$screenName получает награду $rewardNameStr"
+            true
         }
     }
 

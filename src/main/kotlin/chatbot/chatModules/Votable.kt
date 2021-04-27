@@ -9,6 +9,7 @@ import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
 import log
 import java.lang.StringBuilder
+import java.util.concurrent.ConcurrentHashMap
 
 /**Something that able to vote for*/
 abstract class Votable {
@@ -22,10 +23,12 @@ abstract class Votable {
     protected open var percentageOfOnline = 0.3
 
     /**The minimum number of people to win the vote*/
-    protected open var minCount = 2
+    protected open var minCount = 10
 
     /**Time until the end of voting in minutes*/
     protected open var timeOfClosing = 60 * 5
+
+    private val targets = ConcurrentHashMap<Int, MutableSet<Int>>()
 
     /**Return the number of people who are online*/
     private fun getOnlineMemberCount(chatId: Int, api: VkPlatform): Int {
@@ -134,7 +137,7 @@ abstract class Votable {
      */
     fun voting(
         event: LongPollNewMessageEvent,
-        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit
+        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Boolean?
     ) {
         voting(event, null, someActions)
     }
@@ -182,7 +185,7 @@ abstract class Votable {
     private fun voting(
         event: LongPollNewMessageEvent,
         adminActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?,
-        someActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?
+        someActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Boolean?)?
     ) {
         val api = event.api
         val chatId = event.chatId
@@ -201,13 +204,16 @@ abstract class Votable {
             return
         }
 
-        if (targetId == null || api.getChatMembers(chatId, emptyList())?.find { it.id == targetId } == null) {
-            api.send(targetNullMessage, chatId)
+        if (targetId == senderId) {
+            api.send(targetEqualsSenderMessage, chatId)
             return
         }
 
-        if (targetId == senderId) {
-            api.send(targetEqualsSenderMessage, chatId)
+        if ((targetId == null || api.getChatMembers(chatId, emptyList())?.find { it.id == targetId } == null) && !targets.getOrPut(chatId, { mutableSetOf() }).contains(targetId)) {
+            if (targetId != null && votedIds[targetId to chatId]?.contains(senderId) == true) {
+                val senderScreenName = api.getUserNameById(senderId)
+                api.send("$senderScreenName$alreadyVotedMessage", chatId)
+            } else api.send(targetNullMessage, chatId)
             return
         }
 
@@ -217,11 +223,11 @@ abstract class Votable {
             return
         }
 
-        if (someActions != null) someActions(api, chatId, senderId, target)
+        if (someActions != null) someActions(api, chatId, senderId, target) ?: return
 
         if (adminActions != null) {
             adminActions(api, chatId, senderId, target)
-            endVoting(targetId, chatId, api)
+            endVoting(targetId!!, chatId, api)
             return
         }
         val currentTime = event.time
@@ -235,6 +241,7 @@ abstract class Votable {
         } else {
             val votingIsComplete = addVote(senderId, target, chatId, api)
             if (votingIsComplete) {
+                targets.getOrPut(chatId, { mutableSetOf() }).add(targetId!!)
                 endVoting(targetId, chatId, api)
             }
         }
