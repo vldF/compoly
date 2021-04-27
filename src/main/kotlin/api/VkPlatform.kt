@@ -75,7 +75,7 @@ object VkPlatform {
         if (fromCache != null) return fromCache
 
         val chatMembers = getChatMembersProfiles(chatId, listOf())
-        val userInTheChat = chatMembers?.firstOrNull { it.member_id == userId }
+        val userInTheChat = chatMembers?.firstOrNull { it.id == userId }
         userAdminMap[chatId to userId] = userInTheChat?.is_admin == true
 
         return userInTheChat?.is_admin == true

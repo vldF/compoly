@@ -16,8 +16,5 @@ data class VkUser(
         val bdate: String?,
         val online: Int?,
         val is_admin: Boolean,
-        val member_id: Int
-        ) : BaseUser() {
-        override val id
-        get() = member_id
-        }
+        override val id: Int
+        ) : BaseUser()
