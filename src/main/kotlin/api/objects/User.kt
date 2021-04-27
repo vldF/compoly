@@ -18,5 +18,6 @@ data class VkUser(
         val is_admin: Boolean,
         val member_id: Int
         ) : BaseUser() {
-        override val id = member_id
+        override val id
+        get() = member_id
         }

@@ -65,9 +65,9 @@ private val keeper: ApiResponseKeeper
             String()::class -> value as T
             Boolean::class -> value.toBoolean() as T
             List::class -> {
-                if (T::class.typeParameters == VkUser::class) {
+                try {
                     Gson().fromJson(value, Array<VkUser>::class.java).toList() as T
-                } else {
+                } catch (e: Exception) {
                     throw IllegalStateException("wrong type parameter")
                 }
             }
