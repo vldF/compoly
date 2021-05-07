@@ -21,13 +21,13 @@ object Gulag : Votable() {
                 api.send("Партия уже наказала $screenName", chatId)
                 return@voting null
             }
-            super.votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
+            val votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
                     "Отправь /гулаг ${target.rawText}"
-            super.successVoteMessage = "за отправление $screenName в лагерь"
-            super.keyboardMessage = "/гулаг ${target.rawText}"
-            super.onEndVotingMessage =
+            val successVoteMessage = "за отправление $screenName в лагерь"
+            val keyboardMessage = "/гулаг ${target.rawText}"
+            val onEndVotingMessage =
                 "Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад"
-            true
+            Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
         }
     }
 
@@ -46,7 +46,9 @@ object Gulag : Votable() {
     @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN, showOnHelp = false)
     fun adminVotingGulag(event: LongPollNewMessageEvent) {
         adminVoting(event) { _, _, _, target ->
-            super.onEndVotingMessage = "Подумай над своим поведением, ${target.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад"
+            val onEndVotingMessage =
+                "Подумай над своим поведением, ${target.targetScreenName}, а потом напиши админам, чтобы тебя позвали назад"
+            Messages(onEndVotingMessage = onEndVotingMessage)
         }
     }
 

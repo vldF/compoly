@@ -8,7 +8,6 @@ import botId
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
 import log
-import java.lang.StringBuilder
 import java.util.concurrent.ConcurrentHashMap
 
 /**Something that able to vote for*/
@@ -35,7 +34,7 @@ abstract class Votable {
         return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 
-    /**Start a new voting for [votingForMessage]
+    /**Start a new voting for [Messages.votingForMessage]
      *
      * [senderId] - initiator
      *
@@ -46,23 +45,30 @@ abstract class Votable {
      * [api] - vk api
      *
      * [currentTime] - voting start time*/
-    private fun startNewVoting(senderId: Int, target: Mention, chatId: Int, api: VkPlatform, currentTime: Long) {
+    private fun startNewVoting(
+        senderId: Int,
+        target: Mention,
+        chatId: Int,
+        api: VkPlatform,
+        currentTime: Long,
+        messages: Messages
+    ) {
         val targetId = target.targetId!!
         val onlineCount = getOnlineMemberCount(chatId, api)
         val count = (onlineCount * percentageOfOnline).toInt()
         val newVoting =
             Voting(timeOfClosing = currentTime + timeOfClosing, rightNumToVote = Integer.max(count, minCount))
 
-        log.info("Start new voting: $votingForMessage")
+        log.info("Start new voting: ${messages.votingForMessage}")
 
         newVoting.addVote(senderId, chatId)
         voting[targetId to chatId] = newVoting
         votedIds[targetId to chatId] = mutableSetOf(senderId)
 
         val keyboard = KeyboardBuilder()
-            .addButton(KeyboardButton(keyboardMessage, "за", KeyboardColor.NEGATIVE))
+            .addButton(KeyboardButton(messages.keyboardMessage, "за", KeyboardColor.NEGATIVE))
             .build()
-        val split = votingForMessage.split("\n")
+        val split = messages.votingForMessage.split("\n")
         api.send(
             "${split[0]} - 1/${newVoting.rightNumToVote}\n${split.drop(1).joinToString("")}",
             chatId,
@@ -71,7 +77,7 @@ abstract class Votable {
     }
 
     /**Add [senderId] vote*/
-    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkPlatform): Boolean {
+    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkPlatform, messages: Messages): Boolean {
         val targetId = target.targetId!!
         val votingIsComplete = voting[targetId to chatId]!!.addVote(senderId, chatId)
         val senderScreenName = api.getUserNameById(senderId)
@@ -79,7 +85,7 @@ abstract class Votable {
         val necessaryCount = voting[targetId to chatId]!!.rightNumToVote
         votedIds[targetId to chatId]!!.add(senderId)
 
-        val message = "$senderScreenName проголосовал $successVoteMessage - [$votedCount/$necessaryCount]"
+        val message = "$senderScreenName проголосовал ${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
 
         log.info("New vote - $message")
 
@@ -89,10 +95,10 @@ abstract class Votable {
     }
 
     /**Called when enough people have voted*/
-    private fun endVoting(targetId: Int, chatId: Int, api: VkPlatform) {
+    private fun endVoting(targetId: Int, chatId: Int, api: VkPlatform, messages: Messages) {
         onEndVoting(targetId, chatId, api)
-        log.info("Voting ends: $onEndVotingMessage")
-        api.send(onEndVotingMessage, chatId)
+        log.info("Voting ends: ${messages.onEndVotingMessage}")
+        api.send(messages.onEndVotingMessage, chatId)
         votedIds.remove(targetId to chatId)
         voting[targetId to chatId]
     }
@@ -118,36 +124,27 @@ abstract class Votable {
     /**Sender already voted to current voting*/
     protected abstract var alreadyVotedMessage: String
 
-    /**What we vote for*/
-    protected lateinit var votingForMessage: String
-
-    /**Successfully voted*/
-    protected lateinit var successVoteMessage: String
-
-    /**Keyboard message*/
-    protected lateinit var keyboardMessage: String
-
-    /**Post-voting message*/
-    protected lateinit var onEndVotingMessage: String
-
     /**Voting process
      *
-     * Override this fun and use [super.voting(event)]
+     * @param someActions dynamic creation of sent messages depending on the event (see [Messages])
      * @sample Gulag.voting
      */
     fun voting(
         event: LongPollNewMessageEvent,
-        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Boolean?
+        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages?
     ) {
         voting(event, null, someActions)
     }
 
-    /**Admin voting process*/
+    /**Admin voting process
+     *
+     * @param adminActions dynamic creation of sent admin-messages depending on the event (see [Messages])
+     * */
     fun adminVoting(
         event: LongPollNewMessageEvent,
-        adminActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit
+        adminActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages
     ) {
-        voting(event, adminActions, null)
+        voting(event, adminActions, { _, _, _, _ -> Messages() })
     }
 
     /**If you want to cancel the voting results*/
@@ -184,8 +181,8 @@ abstract class Votable {
     /**Private voting process*/
     private fun voting(
         event: LongPollNewMessageEvent,
-        adminActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?,
-        someActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Boolean?)?
+        adminActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages)?,
+        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages?
     ) {
         val api = event.api
         val chatId = event.chatId
@@ -209,7 +206,10 @@ abstract class Votable {
             return
         }
 
-        if ((targetId == null || api.getChatMembers(chatId, emptyList())?.find { it.id == targetId } == null) && !targets.getOrPut(chatId, { mutableSetOf() }).contains(targetId)) {
+        if ((targetId == null || api.getChatMembers(chatId, emptyList())
+                ?.find { it.id == targetId } == null) && !targets.getOrPut(chatId, { mutableSetOf() })
+                .contains(targetId)
+        ) {
             if (targetId != null && votedIds[targetId to chatId]?.contains(senderId) == true) {
                 val senderScreenName = api.getUserNameById(senderId)
                 api.send("$senderScreenName$alreadyVotedMessage", chatId)
@@ -223,11 +223,11 @@ abstract class Votable {
             return
         }
 
-        if (someActions != null) someActions(api, chatId, senderId, target) ?: return
+        var messages = someActions(api, chatId, senderId, target) ?: return
 
         if (adminActions != null) {
-            adminActions(api, chatId, senderId, target)
-            endVoting(targetId!!, chatId, api)
+            messages = adminActions(api, chatId, senderId, target)
+            endVoting(targetId!!, chatId, api, messages)
             return
         }
         val currentTime = event.time
@@ -237,14 +237,28 @@ abstract class Votable {
                 || voting[targetId to chatId]!!.completed
 
         if (isNewVoting) {
-            startNewVoting(senderId, target, chatId, api, currentTime)
+            startNewVoting(senderId, target, chatId, api, currentTime, messages)
         } else {
-            val votingIsComplete = addVote(senderId, target, chatId, api)
+            val votingIsComplete = addVote(senderId, target, chatId, api, messages)
             if (votingIsComplete) {
                 targets.getOrPut(chatId, { mutableSetOf() }).add(targetId!!)
-                endVoting(targetId, chatId, api)
+                endVoting(targetId, chatId, api, messages)
             }
         }
     }
+
+    data class Messages(
+        /**What we vote for*/
+        val votingForMessage: String = "",
+
+        /**Successfully voted*/
+        val successVoteMessage: String = "",
+
+        /**Keyboard message*/
+        val keyboardMessage: String = "",
+
+
+        val onEndVotingMessage: String = ""
+    )
 
 }

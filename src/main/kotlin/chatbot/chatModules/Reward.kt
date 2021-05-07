@@ -27,15 +27,15 @@ object Reward : Votable() {
             }
             val screenName = target.targetScreenName
 
-            super.votingForMessage = "Голосование за вручение $screenName награды $rewardNameStr\n" +
+            val votingForMessage = "Голосование за вручение $screenName награды $rewardNameStr\n" +
                     "Отправь /наградить ${target.rawText}"
 
-            super.successVoteMessage = "за награждение $screenName"
+            val successVoteMessage = "за награждение $screenName"
 
-            super.keyboardMessage = "/наградить ${target.rawText}"
+            val keyboardMessage = "/наградить ${target.rawText}"
 
-            super.onEndVotingMessage = "$screenName получает награду $rewardNameStr"
-            true
+            val onEndVotingMessage = "$screenName получает награду $rewardNameStr"
+            Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
         }
     }
 
