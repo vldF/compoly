@@ -30,7 +30,7 @@ abstract class Votable {
     private val targets = ConcurrentHashMap<Int, MutableSet<Int>>()
 
     /**Return the number of people who are online*/
-    private fun getOnlineMemberCount(chatId: Int, api: VkPlatform): Int {
+    private fun getOnlineMemberCount(chatId: Int, api: VkApi): Int {
         return api.getChatMembers(chatId, listOf("online"))?.count { it.online == 1 } ?: 0
     }
 
@@ -49,7 +49,7 @@ abstract class Votable {
         senderId: Int,
         target: Mention,
         chatId: Int,
-        api: VkPlatform,
+        api: VkApi,
         currentTime: Long,
         messages: Messages
     ) {
@@ -77,7 +77,7 @@ abstract class Votable {
     }
 
     /**Add [senderId] vote*/
-    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkPlatform, messages: Messages): Boolean {
+    private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkApi, messages: Messages): Boolean {
         val targetId = target.targetId!!
         val votingIsComplete = voting[targetId to chatId]!!.addVote(senderId, chatId)
         val senderScreenName = api.getUserNameById(senderId)
@@ -95,7 +95,7 @@ abstract class Votable {
     }
 
     /**Called when enough people have voted*/
-    private fun endVoting(targetId: Int, chatId: Int, api: VkPlatform, messages: Messages) {
+    private fun endVoting(targetId: Int, chatId: Int, api: VkApi, messages: Messages) {
         onEndVoting(targetId, chatId, api)
         log.info("Voting ends: ${messages.onEndVotingMessage}")
         api.send(messages.onEndVotingMessage, chatId)
@@ -104,7 +104,7 @@ abstract class Votable {
     }
 
     /**Special action at the end of a vote*/
-    protected abstract fun onEndVoting(targetId: Int, chatId: Int, api: VkPlatform)
+    protected abstract fun onEndVoting(targetId: Int, chatId: Int, api: VkApi)
 
     /**No target*/
     protected abstract var targetNoneMessage: String
@@ -131,7 +131,7 @@ abstract class Votable {
      */
     fun voting(
         event: LongPollNewMessageEvent,
-        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages?
+        someActions: (api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages?
     ) {
         voting(event, null, someActions)
     }
@@ -142,7 +142,7 @@ abstract class Votable {
      * */
     fun adminVoting(
         event: LongPollNewMessageEvent,
-        adminActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages
+        adminActions: (api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages
     ) {
         voting(event, adminActions, { _, _, _, _ -> Messages() })
     }
@@ -151,7 +151,7 @@ abstract class Votable {
     fun cancelVotingResult(
         event: LongPollNewMessageEvent,
         targetEqualsSender: String,
-        cancelAction: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Unit)?
+        cancelAction: ((api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Unit)?
     ) {
         val api = event.api
         val chatId = event.chatId
@@ -181,8 +181,8 @@ abstract class Votable {
     /**Private voting process*/
     private fun voting(
         event: LongPollNewMessageEvent,
-        adminActions: ((api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages)?,
-        someActions: (api: VkPlatform, chatId: Int, senderId: Int, target: Mention) -> Messages?
+        adminActions: ((api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages)?,
+        someActions: (api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages?
     ) {
         val api = event.api
         val chatId = event.chatId

@@ -52,7 +52,7 @@ object Gulag : Votable() {
         }
     }
 
-    override fun onEndVoting(targetId: Int, chatId: Int, api: VkPlatform) {
+    override fun onEndVoting(targetId: Int, chatId: Int, api: VkApi) {
         sleep(500)
         api.kickUserFromChat(chatId, targetId)
         val currentTime = System.currentTimeMillis()

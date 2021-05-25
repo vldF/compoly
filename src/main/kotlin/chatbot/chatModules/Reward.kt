@@ -39,7 +39,7 @@ object Reward : Votable() {
         }
     }
 
-    override fun onEndVoting(targetId: Int, chatId: Int, api: VkPlatform) {
+    override fun onEndVoting(targetId: Int, chatId: Int, api: VkApi) {
         dbQuery {
             UserReward.insert {
                 it[this.chatId] = chatId
