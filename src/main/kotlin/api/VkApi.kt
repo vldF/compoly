@@ -201,7 +201,6 @@ object VkApi {
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun uploadPhoto(peer_id: Int?, data: ByteArray): String? {
-        history.use("photos.getMessagesUploadServer")
         val serverData = post("photos.getMessagesUploadServer", mutableMapOf())
 
         val jsonServer = serverData?.asJsonObject ?: return null
@@ -232,7 +231,6 @@ object VkApi {
         val photo = jsonUpload["photo"].asString
         val hash = jsonUpload["hash"].asString
 
-        history.use("photos.saveMessagesPhoto")
         val saveData = post(
             "photos.saveMessagesPhoto",
             mutableMapOf(
@@ -256,7 +254,6 @@ object VkApi {
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun uploadDoc(peer_id: Int?, data: ByteArray, fileName: String): String? {
-        history.use("docs.getMessagesUploadServer")
         val serverData =
             if (peer_id != null) post(
                 "docs.getMessagesUploadServer",
@@ -289,7 +286,6 @@ object VkApi {
 
         val jsonUpload = JsonParser().parse(responseUpload).asJsonObject
         val file = jsonUpload["file"].asString
-        history.use("docs.save")
         val saveData = post(
             "docs.save",
             mutableMapOf(
@@ -308,6 +304,16 @@ object VkApi {
         val ownerId = jsonAnswer["owner_id"]
         val docId = jsonAnswer["id"]
         return "doc${ownerId}_${docId}"
+    }
+
+    fun deleteMessage(messageId: Int, chatId: Int) {
+        val resp = post("messages.delete", mutableMapOf(
+            "conversation_message_ids" to messageId,
+            "delete_for_all" to 1,
+            "peer_id" to chatId
+        ))
+
+        println(resp)
     }
 
 

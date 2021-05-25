@@ -15,5 +15,6 @@ open class LongPollNewMessageEvent(
     open val userId: Int,
     open val forwardMessageFromId: Int? = null,
     open val time: Long = System.currentTimeMillis() / 1000,
-    open val attachments: List<Attachment>? = null
+    open val attachments: List<Attachment>? = null,
+    open val messageId: Int
 ) : LongPollEventBase()

@@ -1,3 +1,4 @@
+import api.GarbageMessagesCollector
 import database.hikari
 import chatbot.ChatBot
 import modules.events.EventStream
@@ -7,9 +8,8 @@ import org.jetbrains.exposed.sql.Database
 fun main() {
     EventStream.start()
     LoopStream.start()
-
-    //initializing db
     Database.connect(hikari())
+    GarbageMessagesCollector().start()
 
     ChatBot.start()
 }

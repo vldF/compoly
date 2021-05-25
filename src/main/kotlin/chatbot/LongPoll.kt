@@ -103,7 +103,8 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thr
                         update.`object`.from_id,
                         replyFromId,
                         update.`object`.date.toLong(),
-                        update.`object`.attachments
+                        update.`object`.attachments,
+                        update.`object`.conversation_message_id
                     )
 
                     queue.add(messageEvent)

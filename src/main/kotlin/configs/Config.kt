@@ -11,7 +11,7 @@ abstract class Config <T> {
     init {
         val configFile = File(configFilePath)
         if (!configFile.exists()) {
-            val defaultConfig = javaClass.getResource("/$configFilePath").readText()
+            val defaultConfig = javaClass.getResource("/$configFilePath")!!.readText()
             if (!configFile.createNewFile()) {
                 throw IllegalStateException("Can not create config.properties")
             }
