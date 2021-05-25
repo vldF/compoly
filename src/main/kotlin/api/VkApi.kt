@@ -82,13 +82,13 @@ object VkApi {
     }
 
     @GenerateMock(["chatId", "url"], "\"photo_by_url_as_attachment\"")
-    fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String): String? {
+    fun uploadPhotoByUrlAsAttachment(chatId: Int, url: String): String? {
         val imageConnection = URL(url).openConnection()
         val imageStream = imageConnection.getInputStream()
         return uploadPhoto(chatId, imageStream.readBytes())
     }
 
-    private fun uploadDocByUrlAsAttachment(chatId: Int?, url: String, fileName: String): String? {
+    private fun uploadDocByUrlAsAttachment(chatId: Int, url: String, fileName: String): String? {
         val docConnection = URL(url).openConnection()
         val docStream = docConnection.getInputStream()
         return uploadDoc(chatId, docStream.readBytes(), fileName)
@@ -202,11 +202,7 @@ object VkApi {
     @OptIn(ExperimentalStdlibApi::class)
     private fun uploadPhoto(peer_id: Int?, data: ByteArray): String? {
         history.use("photos.getMessagesUploadServer")
-        val serverData =
-                if (peer_id != null) post(
-                    "photos.getMessagesUploadServer",
-                    mutableMapOf("peer_id" to peer_id)
-                ) else post("photos.getMessagesUploadServer", mutableMapOf())
+        val serverData = post("photos.getMessagesUploadServer", mutableMapOf())
 
         val jsonServer = serverData?.asJsonObject ?: return null
         val vkResponse = jsonServer["response"]?.asJsonObject ?: throw IllegalStateException(serverData.asString)

@@ -16,10 +16,10 @@ object Reward {
     private val votedIds = mutableMapOf<Pair<Int, Int>, MutableSet<Int>>()
 
     private const val coefficientForReward = 0.3 // Процент от онлайна, нужный для награждения
-    private const val minCount = 10 // Минимальное кол-во людей для награждения
+    private const val minCount = 15 // Минимальное кол-во людей для награждения todo: change the number
     private var rewardNameStr = ""
 
-    @OnCommand(["наградить", "reward"], "голосование на отправление в трудовой лагерь")
+    @OnCommand(["наградить", "reward"], "выдать награду")
     fun reward(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId

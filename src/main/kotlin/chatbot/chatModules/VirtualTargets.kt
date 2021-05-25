@@ -6,6 +6,7 @@ import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import database.UserScore
 import database.VirtualMentions
 import database.dbQuery
 import org.jetbrains.exposed.sql.and
@@ -63,6 +64,41 @@ object VirtualTargets {
 
         deleteTarget(name, chatId)
         api.send("Цель удалена успешно", chatId)
+    }
+
+    @OnCommand(["виртуальные", "виртуальныедосье", "virtuallist"], "показать все виртуальные цели")
+    fun virtualTargetsList(event: LongPollNewMessageEvent) {
+        val api = event.api
+        val chatId = event.chatId
+
+        val namesAndLevels = dbQuery {
+            val targets = VirtualMentions.select {
+                VirtualMentions.chatId eq chatId
+            }.associateBy { it[VirtualMentions.id] }
+            val targetIds = targets.keys
+
+            val scores = UserScore.select {
+                UserScore.userId inList targetIds
+            }.associate { it[UserScore.userId] to it[UserScore.reputation] }.toMutableMap()
+
+            for (id in targetIds) {
+                if (id !in scores.keys) {
+                    scores[id] = -1
+                }
+            }
+
+            scores.map { (id, score) ->
+                (targets[id]?.get(VirtualMentions.name)!!) to RatingSystem.Level.getLevel(score).levelName
+            }
+        }
+
+        if (namesAndLevels.isEmpty()) {
+            api.send("Виртуальные досье не найдены", chatId)
+            return
+        }
+
+        val answer = namesAndLevels.joinToString(separator = "\n", prefix = "Виртуальные досье:\n") { "${it.first}: ${it.second}" }
+        api.send(answer, chatId)
     }
 
     fun getVirtualNameById(id: Int): String? {

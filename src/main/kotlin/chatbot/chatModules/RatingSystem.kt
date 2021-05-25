@@ -169,19 +169,31 @@ object RatingSystem {
         val chatId = event.chatId
         val userId = event.userId
 
+        val parsed = TextMessageParser().parse(event.text)
+        var targetUserId = 0
+        val mention = parsed.get<Mention>(1)
+        targetUserId = if (mention != null) {
+            if (api.isUserAdmin(chatId, userId)) {
+                mention.targetId ?: userId
+            } else {
+                api.send("Только члены Партии могут совать нос не в своё дело", chatId)
+                return
+            }
+        } else {
+            userId
+        }
         val rep = dbQuery {
             UserScore.select{
-                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+                (UserScore.chatId eq chatId) and (UserScore.userId eq targetUserId)
             }.firstOrNull()?.get(UserScore.reputation) ?: 0
         }
 
         val levelName = Level.getLevel(rep).levelName
-        val screenName = api.getUserNameById(userId)
+        val screenName = api.getUserNameById(targetUserId)
 
-        // todo: add ability to show specifier user's info
         dbQuery {
             val rowList = UserReward.select {
-                (UserReward.chatId eq chatId) and (UserReward.userId eq userId)
+                (UserReward.chatId eq chatId) and (UserReward.userId eq targetUserId)
             }.toList()
             if (rowList.isNotEmpty()) {
                 val rewardsList = rowList.map { it[UserReward.rewardName] }

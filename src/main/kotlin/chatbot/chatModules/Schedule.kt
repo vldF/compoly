@@ -23,7 +23,7 @@ object Schedule {
     private val dataRegex = Regex("^(\\d\\d*).(\\d\\d*)\$")
     val monthDays = mutableListOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-    @OnCommand(["добавитьсобытие", "добавитьрасписание"], "добавляет ивент в расписание", CommandPermission.ADMIN)
+    @OnCommand(["добавитьсобытие", "добавитьрасписание"], "добавляет ивент в расписание")
     fun add(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId
