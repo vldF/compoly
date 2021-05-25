@@ -144,7 +144,7 @@ abstract class Votable {
         event: LongPollNewMessageEvent,
         adminActions: (api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages
     ) {
-        voting(event, adminActions, { _, _, _, _ -> Messages() })
+        voting(event, adminActions) { _, _, _, _ -> Messages() }
     }
 
     /**If you want to cancel the voting results*/
