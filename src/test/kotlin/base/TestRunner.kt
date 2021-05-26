@@ -124,10 +124,11 @@ private val String.formatted
 
 private fun loadMessages(path: String, api: VkApi): List<LongPollNewMessageEvent> {
     val content = File("$path/messages.txt").readText()
+    var messageIndex = 0
      return Gson()
          .fromJson(content, Array<Message>::class.java).map {
              val date = it.date ?: System.currentTimeMillis()
-             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId, date)
+             LongPollNewMessageEvent(api, it.chatId, it.text, it.userId, it.forwardMessageFromId, date, messageId = ++messageIndex)
          }
          .toList()
 }

@@ -13,10 +13,11 @@ class TextMessageParser {
         private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_1-9]+)")
         private val spaceSeparatorRegex = Regex("[\\s\n]")
         private val mentionRegex = Regex("\\[((?:id|club)[0-9]+)\\|([^\\]]+)\\]")
+        private val whitespaces = setOf(' ', '\n', '\r')
         private const val COMMAND_START = '/'
-        private const val WHITESPACE = ' '
         private const val MENTION_START = '['
         private const val MENTION_END = ']'
+        private const val VIRTUAL_MENTION_START = '@'
     }
 
     fun parse(text: String, chatId: Int? = null): ParseObject {
@@ -33,7 +34,11 @@ class TextMessageParser {
                     buffer.append(inputChar)
                 }
 
-                inputChar == WHITESPACE && state != ParserState.MENTION -> {
+                inputChar in whitespaces && state != ParserState.MENTION -> {
+                    if (buffer.isBlank()) {
+                        buffer.clear()
+                        continue
+                    }
                     val objectToAdd = parseToken(buffer, state, chatId)
                     parseObject.add(objectToAdd)
                     buffer.clear()
@@ -54,7 +59,7 @@ class TextMessageParser {
 
                 inputChar == MENTION_END && state == ParserState.MENTION -> {
                     buffer.append(inputChar)
-                    var mention: AbstractParseData? = parseMention(buffer.toString(), chatId)
+                    var mention: AbstractParseData? = parseMention(buffer.toString())
                     if (mention == null) {
                         println("error on parsing mention $buffer")
                         mention = Text(buffer.toString())
@@ -62,6 +67,11 @@ class TextMessageParser {
                     state = ParserState.TEXT
                     parseObject.add(mention)
                     buffer.clear()
+                }
+
+                inputChar == VIRTUAL_MENTION_START && state == ParserState.TEXT -> {
+                    buffer.append(inputChar)
+                    state = ParserState.VIRTUAL_MENTION
                 }
 
                 inputChar.isNumber && (buffer.isEmpty() || state == ParserState.INTEGER) -> {
@@ -94,29 +104,29 @@ class TextMessageParser {
         val rawText = buffer.toString()
         return when(state) {
             ParserState.TEXT -> Text(rawText)
-            ParserState.COMMAND -> Command(rawText, rawText)
-            ParserState.MENTION -> parseMention(rawText, chatId) ?: Text(rawText)
+            ParserState.COMMAND -> Command(rawText.removePrefix(COMMAND_START.toString()), rawText)
+            ParserState.MENTION -> parseMention(rawText) ?: Text(rawText)
             ParserState.INTEGER -> IntegerNumber(rawText.toLong(), rawText)
+            ParserState.VIRTUAL_MENTION -> parseVirtualMention(rawText, chatId) ?: Text(rawText)
         }
     }
 
-    private fun parseMention(text: String, chatId: Int?): Mention? {
+    private fun parseMention(text: String): Mention? {
         val regex = userMentionRegex.find(text)
 
-        if (regex != null) {
-            // this is mention of real user
-            val id = regex.groupValues.getOrNull(1)?.toIntOrNull() ?: return null
-            val screenName = regex.groupValues.getOrNull(2) ?: return null
-            return Mention(id, screenName, false, text)
-        } else {
-            // this is virtual mention. Or isn't
-            val virtualRegex = virtualMentionRegex.find(text)
-            val name = virtualRegex?.groupValues?.get(1) ?: return null
-            val targetId = if (chatId != null) {
-                getVirtualUserId(chatId, name)
-            } else null
-            return Mention(targetId, name, true, text)
-        }
+        val id = regex?.groupValues?.getOrNull(1)?.toIntOrNull() ?: return null
+        val screenName = regex.groupValues.getOrNull(2) ?: return null
+        return Mention(id, screenName, false, text)
+
+    }
+
+    private fun parseVirtualMention(text: String, chatId: Int?): Mention? {
+        val virtualRegex = virtualMentionRegex.find(text)
+        val name = virtualRegex?.groupValues?.get(1) ?: return null
+        val targetId = if (chatId != null) {
+            getVirtualUserId(chatId, name)
+        } else null
+        return Mention(targetId, name, true, text)
     }
 
     private fun getVirtualUserId(chatId: Int, name: String): Int? {
@@ -157,7 +167,7 @@ class ParseObject {
 }
 
 private enum class ParserState {
-    TEXT, COMMAND, MENTION, INTEGER
+    TEXT, COMMAND, MENTION, VIRTUAL_MENTION, INTEGER
 }
 
 

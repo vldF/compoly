@@ -58,21 +58,13 @@ object Reward : Votable() {
     override var alreadyVotedMessage = ", Вы уже проголосовали за награждение этого товарища"
 
     private fun ParseObject.getRewardName(): String {
-        val textAfterMentionSb = StringBuilder()
-
-        var isRewardName = false
         for (i in 2 until this.size) {
-            val word: String = this.get<Text>(i)?.rawText ?: ""
-            if (word.first() == '[') {
-                isRewardName = true
+            val tokenText = this.get<Text>(i)?.rawText ?: continue
+            if (tokenText.startsWith("[") && tokenText.endsWith("]")) {
+                return tokenText.substring(1 until tokenText.length - 1) // removing []
             }
-            if (isRewardName) {
-                val correctedWord = word.filter { it != '[' && it != ']' }
-                textAfterMentionSb.append("$correctedWord ")
-            }
-            if (word.last() == ']') break
         }
 
-        return textAfterMentionSb.trimEnd().toString()
+        return ""
     }
 }
