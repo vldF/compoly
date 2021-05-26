@@ -13,47 +13,94 @@ class TextMessageParser {
         private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_1-9]+)")
         private val spaceSeparatorRegex = Regex("[\\s\n]")
         private val mentionRegex = Regex("\\[((?:id|club)[0-9]+)\\|([^\\]]+)\\]")
+        private const val COMMAND_START = '/'
+        private const val WHITESPACE = ' '
+        private const val MENTION_START = '['
+        private const val MENTION_END = ']'
     }
 
     fun parse(text: String, chatId: Int? = null): ParseObject {
-        val tokens = text.split(spaceSeparatorRegex)
+        val buffer = StringBuilder()
         val parseObject = ParseObject()
 
-        loop@for ((i, token) in tokens.withIndex()) {
+        var isStart = true
+        var state = ParserState.TEXT
+
+        for (inputChar in text) {
             when {
-                i == 0 && token.startsWith("/") -> {
-                    val commandText = commandRegex.find(token)?.groupValues?.get(1) ?: continue@loop
-                    val command = Command(commandText, token)
-                    parseObject.add(command)
+                inputChar == COMMAND_START && isStart -> {
+                    state = ParserState.COMMAND
+                    buffer.append(inputChar)
                 }
 
-                token.startsWith("@")
-                        || token.startsWith("[id")
-                        || token.startsWith("[club")
-                        || token.startsWith("[public")
-                        || token.startsWith("[group") -> {
-                    val processedMention = processMention(token, chatId)
-                    if (processedMention == null) {
-                        parseObject.add(Text(token))
-                    } else {
-                        parseObject.add(processedMention)
+                inputChar == WHITESPACE && state != ParserState.MENTION -> {
+                    val objectToAdd = parseToken(buffer, state, chatId)
+                    parseObject.add(objectToAdd)
+                    buffer.clear()
+
+                    state = ParserState.TEXT
+                }
+
+                inputChar == MENTION_START && state == ParserState.TEXT -> {
+                    if (buffer.isNotBlank()) {
+                        val objectToAdd = parseToken(buffer, state, chatId)
+                        parseObject.add(objectToAdd)
+                        buffer.clear()
                     }
+
+                    state = ParserState.MENTION
+                    buffer.append(inputChar)
                 }
 
-                token.toLongOrNull() != null -> {
-                    parseObject.add(IntegerNumber(token.toLong(), token))
+                inputChar == MENTION_END && state == ParserState.MENTION -> {
+                    buffer.append(inputChar)
+                    var mention: AbstractParseData? = parseMention(buffer.toString(), chatId)
+                    if (mention == null) {
+                        println("error on parsing mention $buffer")
+                        mention = Text(buffer.toString())
+                    }
+                    state = ParserState.TEXT
+                    parseObject.add(mention)
+                    buffer.clear()
+                }
+
+                inputChar.isNumber && (buffer.isEmpty() || state == ParserState.INTEGER) -> {
+                    state = ParserState.INTEGER
+                    buffer.append(inputChar)
+                }
+
+                state == ParserState.INTEGER && !inputChar.isNumber -> {
+                    state = ParserState.TEXT
+                    buffer.append(inputChar)
                 }
 
                 else -> {
-                    parseObject.add(Text(token))
+                    buffer.append(inputChar)
                 }
             }
 
+            isStart = false
         }
+
+        if (buffer.isNotBlank()) {
+            val token = parseToken(buffer, state, chatId)
+            parseObject.add(token)
+        }
+
         return parseObject
     }
 
-    private fun processMention(text: String, chatId: Int?): Mention? {
+    private fun parseToken(buffer: StringBuilder, state: ParserState, chatId: Int?): AbstractParseData {
+        val rawText = buffer.toString()
+        return when(state) {
+            ParserState.TEXT -> Text(rawText)
+            ParserState.COMMAND -> Command(rawText, rawText)
+            ParserState.MENTION -> parseMention(rawText, chatId) ?: Text(rawText)
+            ParserState.INTEGER -> IntegerNumber(rawText.toLong(), rawText)
+        }
+    }
+
+    private fun parseMention(text: String, chatId: Int?): Mention? {
         val regex = userMentionRegex.find(text)
 
         if (regex != null) {
@@ -79,6 +126,9 @@ class TextMessageParser {
             }.firstOrNull()
         }?.getOrNull(VirtualMentions.id)
     }
+
+    private val Char.isNumber: Boolean
+        get() = this in '0'..'9' || this == '-'
 }
 
 class ParseObject {
@@ -104,6 +154,10 @@ class ParseObject {
 
     val size: Int
         get() = data.size
+}
+
+private enum class ParserState {
+    TEXT, COMMAND, MENTION, INTEGER
 }
 
 

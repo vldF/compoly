@@ -40,7 +40,38 @@ class TextMessageParserTest {
         val parsed = parser.parse(text)
         val mention = parsed.get<Mention>(1)
 
-        Assertions.assertEquals(mention!!.targetScreenName, "super cool user")
+        Assertions.assertEquals("super cool user", mention?.targetScreenName)
+    }
 
+    @Test
+    fun numericTest() {
+        val parser = TextMessageParser()
+        val text = "Test это число 10 , а это -5"
+        val parsed = parser.parse(text)
+        val number1 = parsed.get<IntegerNumber>(3)
+        val number2 = parsed.get<IntegerNumber>(7)
+
+        Assertions.assertEquals(10, number1?.number)
+        Assertions.assertEquals(-5, number2?.number)
+    }
+
+    @Test
+    fun numericTest2() {
+        val parser = TextMessageParser()
+        val text = "Test это число 10, а это-5"
+        val parsed = parser.parse(text)
+
+        Assertions.assertEquals(6, parsed.size)
+    }
+
+    @Test
+    fun hardMentionTest() {
+        val parser = TextMessageParser()
+        val text = "Текст[id123|Вот так вот]"
+        val parsed = parser.parse(text)
+        val mention = parsed.get<Mention>(1)
+
+        Assertions.assertEquals("Вот так вот", mention?.targetScreenName)
+        Assertions.assertEquals(123, mention?.targetId)
     }
 }
