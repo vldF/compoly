@@ -17,4 +17,9 @@ data class VkUser(
         val online: Int?,
         val is_admin: Boolean,
         override val id: Int
-        ) : BaseUser()
+) : BaseUser()
+
+data class ChatMemberItemsInfo(
+        val member_id: Int,
+        val is_admin: Boolean,
+)

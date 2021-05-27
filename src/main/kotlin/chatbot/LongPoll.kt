@@ -128,8 +128,14 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thr
                                 VkApi.send(message, peerId)
                                 sleep(400)
                                 VkApi.kickUserFromChat(peerId, targetId)
-                            } else Gulag.gulagKickTime.remove(targetId to peerId)
-                        } else VkApi.send("Приветствуем ${VkApi.getUserNameById(targetId)}", peerId)
+                            } else {
+                                Gulag.gulagKickTime.remove(targetId to peerId)
+                            }
+                        } else {
+                            if (targetId > 0) {
+                                VkApi.send("Приветствуем ${VkApi.getUserNameById(targetId)}", peerId)
+                            }
+                        }
                     }
                 }
             }

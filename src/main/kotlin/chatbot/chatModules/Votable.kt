@@ -27,7 +27,7 @@ abstract class Votable {
     /**The minimum number of people to win the vote*/
     protected open var minCount = 10
 
-    /**Time until the end of voting in minutes*/
+    /**Time until the end of voting in seconds*/
     protected open var timeOfClosing = 60 * 5
 
     private val targets = ConcurrentHashMap<Int, MutableSet<Int>>()
@@ -99,9 +99,9 @@ abstract class Votable {
 
     /**Called when enough people have voted*/
     private fun endVoting(targetId: Int, chatId: Int, api: VkApi, messages: Messages) {
-        onEndVoting(targetId, chatId, api)
         log.info("Voting ends: ${messages.onEndVotingMessage}")
         api.send(messages.onEndVotingMessage, chatId)
+        onEndVoting(targetId, chatId, api)
         votedIds.remove(targetId to chatId)
         voting[targetId to chatId]
     }

@@ -1,6 +1,7 @@
 package api
 
 import api.keyboards.Keyboard
+import api.objects.ChatMemberItemsInfo
 import api.objects.VkUser
 import botId
 import chatbot.chatModules.VirtualTargets
@@ -74,8 +75,8 @@ object VkApi {
         val fromCache = userAdminMap[chatId to userId]
         if (fromCache != null) return fromCache
 
-        val chatMembers = getChatMembersProfiles(chatId, listOf())
-        val userInTheChat = chatMembers?.firstOrNull { it.id == userId }
+        val chatMembers = getChatMembersItems(chatId, listOf())
+        val userInTheChat = chatMembers?.firstOrNull { it.member_id == userId }
         userAdminMap[chatId to userId] = userInTheChat?.is_admin == true
 
         return userInTheChat?.is_admin == true
@@ -204,7 +205,8 @@ object VkApi {
         return profiles.map { gson.fromJson(it, VkUser::class.java) }
     }
 
-    private fun getChatMembersProfiles(peer_id: Int, fields: List<String>): List<VkUser>? {
+    /* It isn't profiles!!! */
+    private fun getChatMembersItems(peer_id: Int, fields: List<String>): List<ChatMemberItemsInfo>? {
         val resp = post(
                 "messages.getConversationMembers",
                 mutableMapOf(
@@ -216,7 +218,7 @@ object VkApi {
         val vkResponse = resp["response"]?.asJsonObject ?: return null
         val profiles = vkResponse["items"].asJsonArray
 
-        return profiles.map { gson.fromJson(it, VkUser::class.java) }
+        return profiles.map { gson.fromJson(it, ChatMemberItemsInfo::class.java) }
     }
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -346,7 +348,7 @@ object VkApi {
 
         val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
-        reqParams.add(BasicNameValuePair("v", "5.103"))
+        reqParams.add(BasicNameValuePair("v", "5.155"))
         for ((p, v) in params) {
             reqParams.add(BasicNameValuePair(p, v.toString()))
         }
