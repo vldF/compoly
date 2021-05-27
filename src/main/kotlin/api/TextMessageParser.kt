@@ -10,9 +10,6 @@ class TextMessageParser {
     companion object {
         private val userMentionRegex = Regex("[a-zA-Z]+(\\d+)\\|(.*)]")
         private val virtualMentionRegex = Regex("@([а-яА-Яa-zA-ZёЁ]+)")
-        private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_1-9]+)")
-        private val spaceSeparatorRegex = Regex("[\\s\n]")
-        private val mentionRegex = Regex("\\[((?:id|club)[0-9]+)\\|([^\\]]+)\\]")
         private val whitespaces = setOf(' ', '\n', '\r')
         private const val COMMAND_START = '/'
         private const val MENTION_START = '['
