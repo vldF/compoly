@@ -18,11 +18,11 @@ interface VkApiMock {
     
     fun isUserAdmin(chatId: Int?, userId: Int?): Boolean?
     
-    fun uploadPhotoByUrlAsAttachment(chatId: Integer?, url: String?): String?
+    fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String?): String?
     
-    fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?): Unit
+    fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?): Unit
     
-    fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Unit
+    fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Integer?
     
     fun getChatMembers(peer_id: Int?, fields: List<String>?): List<VkUser>?
     
@@ -36,7 +36,7 @@ fun getMock(api: VkApiMock): VkApi {
 }
 
 private fun VkApiMock.executeMockMethod(invocation: InvocationOnMock): Any? {
-    val method = this.javaClass.methods.find { it.name == invocation.method.name }
+    val method = this.javaClass.methods.find { it.name == invocation.method.name } 
     return if (method != null) {
         method.invoke(this, *invocation.arguments)
     } else {

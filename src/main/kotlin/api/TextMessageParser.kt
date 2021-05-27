@@ -58,7 +58,6 @@ class TextMessageParser {
                     buffer.append(inputChar)
                     var mention: AbstractParseData? = parseMention(buffer.toString())
                     if (mention == null) {
-                        println("error on parsing mention $buffer")
                         mention = Text(buffer.toString())
                     }
                     state = ParserState.TEXT

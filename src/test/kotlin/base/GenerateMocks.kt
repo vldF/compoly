@@ -11,7 +11,7 @@ import java.nio.file.Paths
 fun main() {
     val apiMethods = ClassGraph().enableAllInfo().whitelistPackages("api")
             .scan().use { scanResult ->
-                val apiObject = scanResult.allClasses.firstOrNull { it.name == "api.VkPlatform" }
+                val apiObject = scanResult.allClasses.firstOrNull { it.name == "api.VkApi" }
                         ?: error("Api object not found")
 
                 apiObject.methodAndConstructorInfo.filter { info ->
@@ -26,7 +26,7 @@ fun main() {
 
 private fun generateVkApiMockInterface(apiMethods: MethodInfoList) {
     val imports = listOf(
-        "api.VkPlatform",
+        "api.VkApi",
         "api.keyboards.Keyboard",
         "api.objects.VkUser",
         "com.nhaarman.mockitokotlin2.*",
@@ -36,7 +36,7 @@ private fun generateVkApiMockInterface(apiMethods: MethodInfoList) {
     )
 
     val utilitiesFunctionsCode = """
-        fun getMock(api: VkApiMock): VkPlatform {
+        fun getMock(api: VkApiMock): VkApi {
             val answer = Answer {
                 api.executeMockMethod(it) ?: Answers.RETURNS_DEFAULTS.answer(it)
             }
@@ -115,9 +115,9 @@ private fun generateVkApiMockImplementation(apiMethods: MethodInfoList) {
                 String()::class -> value as T
                 Boolean::class -> value.toBoolean() as T
                 List::class -> {
-                    if (T::class.typeParameters == VkUser::class) {
+                    tru {
                         Gson().fromJson(value, Array<VkUser>::class.java).toList() as T
-                    } else {
+                    } catch(e: Exception) {
                         throw IllegalStateException("wrong type parameter")
                     }
                 }
@@ -206,6 +206,7 @@ private val String.kotlinNullableName: String
             "int" -> "Int?"
             "boolean" -> "Boolean?"
             "void" -> "Unit"
+            "long" -> "Long?"
             else -> "$this?"
         }
     }

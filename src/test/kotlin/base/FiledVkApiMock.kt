@@ -31,17 +31,18 @@ private val keeper: ApiResponseKeeper
         return readValueFromFile(pathToFile, "isUserAdmin", false)
     }
     
-    override fun uploadPhotoByUrlAsAttachment(chatId: Integer?, url: String?): String? {
+    override fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String?): String? {
         writeResponse("uploadPhotoByUrlAsAttachment", "chatId" to chatId, "url" to url)
         return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "photo_by_url_as_attachment")
     }
     
-    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?): Unit {
-        writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard)
+    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?): Unit {
+        writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard, "removeDelay" to removeDelay)
     }
     
-    override fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Unit {
+    override fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Integer? {
         writeResponse("sendWithAttachments", "text" to text, "chatId" to chatId, "attachments" to attachments)
+        return readValueFromFile(pathToFile, "sendWithAttachments", null)
     }
     
     override fun getChatMembers(peer_id: Int?, fields: List<String>?): List<VkUser>? {

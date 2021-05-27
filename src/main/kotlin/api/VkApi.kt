@@ -94,7 +94,7 @@ object VkApi {
         return uploadDoc(chatId, docStream.readBytes(), fileName)
     }
 
-    @GenerateMock(["text", "chatId", "pixUrls", "keyboard"])
+    @GenerateMock(["text", "chatId", "pixUrls", "keyboard", "removeDelay"], "null")
     fun send(
         text: String,
         chatId: Int,
@@ -131,7 +131,7 @@ object VkApi {
         }
     }
 
-    @GenerateMock(["text", "chatId", "attachments"])
+    @GenerateMock(["text", "chatId", "attachments"], "null")
     fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>): Int? {
         val res = post("messages.send", mutableMapOf(
             "message" to text,
@@ -346,7 +346,7 @@ object VkApi {
 
         val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
-        reqParams.add(BasicNameValuePair("v", "5.131"))
+        reqParams.add(BasicNameValuePair("v", "5.103"))
         for ((p, v) in params) {
             reqParams.add(BasicNameValuePair(p, v.toString()))
         }
