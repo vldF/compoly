@@ -1,12 +1,15 @@
 package chatbot.chatModules
 
 import api.*
+import api.GarbageMessage.Companion.toGarbageMessageWithDelay
+import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
 import api.keyboards.KeyboardBuilder
 import api.keyboards.KeyboardButton
 import api.keyboards.KeyboardColor
 import botId
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
+import krobot.api.call
 import log
 import java.util.concurrent.ConcurrentHashMap
 
@@ -16,7 +19,7 @@ abstract class Votable {
     protected val voting = mutableMapOf<Pair<Int, Int>, Voting>()
 
     /**Map of...*/
-    protected val votedIds = mutableMapOf<Pair<Int, Int>, MutableSet<Int>>()
+    private val votedIds = mutableMapOf<Pair<Int, Int>, MutableSet<Int>>()
 
     /**The percentage of online required to win the vote*/
     protected open var percentageOfOnline = 0.3
@@ -161,21 +164,22 @@ abstract class Votable {
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         if (target == null) {
-            api.send(targetNoneGetBackMessage, chatId)
+            api.send(targetNoneGetBackMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (targetId == null) {
-            api.send(targetNoneGetBackMessage, chatId)
+            api.send(targetNoneGetBackMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (targetId == senderId) {
-            api.send(targetEqualsSender, chatId)
+            api.send(targetEqualsSender, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (cancelAction != null) cancelAction(api, chatId, senderId, target)
+        GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
     }
 
     /**Private voting process*/
@@ -192,34 +196,36 @@ abstract class Votable {
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
         if (target == null) {
-            api.send(targetNoneMessage, chatId)
+            api.send(targetNoneMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (targetId == botId) {
-            api.send(targetEqualsBotMessage, chatId)
+            api.send(targetEqualsBotMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (targetId == senderId) {
-            api.send(targetEqualsSenderMessage, chatId)
+            api.send(targetEqualsSenderMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
+        GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
+
         if ((targetId == null || api.getChatMembers(chatId, emptyList())
-                ?.find { it.id == targetId } == null) && !targets.getOrPut(chatId, { mutableSetOf() })
+                ?.find { it.id == targetId } == null) && !targets.getOrPut(chatId) { mutableSetOf() }
                 .contains(targetId)
         ) {
             if (targetId != null && votedIds[targetId to chatId]?.contains(senderId) == true) {
                 val senderScreenName = api.getUserNameById(senderId)
-                api.send("$senderScreenName$alreadyVotedMessage", chatId)
+                api.send("$senderScreenName$alreadyVotedMessage", chatId, removeDelay = DEFAULT_DELAY)
             } else api.send(targetNullMessage, chatId)
             return
         }
 
         if (votedIds[targetId to chatId]?.contains(senderId) == true) {
             val senderScreenName = api.getUserNameById(senderId)
-            api.send("$senderScreenName$alreadyVotedMessage", chatId)
+            api.send("$senderScreenName$alreadyVotedMessage", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 

@@ -95,8 +95,14 @@ object VkApi {
     }
 
     @GenerateMock(["text", "chatId", "pixUrls", "keyboard"])
-    fun send(text: String, chatId: Int, pixUrls: List<String> = listOf(), keyboard: Keyboard? = null) {
-        if (pixUrls.isEmpty()) {
+    fun send(
+        text: String,
+        chatId: Int,
+        pixUrls: List<String> = listOf(),
+        keyboard: Keyboard? = null,
+        removeDelay: Long = -1
+    ){
+        val messageId = if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
                     "message" to text,
                     "peer_id" to chatId,
@@ -105,22 +111,36 @@ object VkApi {
             if (keyboard != null) {
                 params["keyboard"] = keyboard.getJson()
             }
-            post("messages.send", params)
+            post("messages.send", params)?.get("response")?.asInt
+
         } else {
             val attachments = mutableListOf<String>()
-            for (url in pixUrls) attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
+            for (url in pixUrls) {
+                attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
+            }
+
             sendWithAttachments(text, chatId, attachments)
+        }
+
+        if (removeDelay != -1L && messageId != null) {
+            GarbageMessagesCollector.deleteMessageWithDelay(
+                messageId = messageId,
+                chatId = chatId,
+                delay = removeDelay
+            )
         }
     }
 
     @GenerateMock(["text", "chatId", "attachments"])
-    fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>) {
-        post("messages.send", mutableMapOf(
+    fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>): Int? {
+        val res = post("messages.send", mutableMapOf(
             "message" to text,
             "peer_id" to chatId,
             "random_id" to System.currentTimeMillis().toString(),
             "attachment" to attachments.joinToString(separator = ",")
         ))
+
+        return res?.get("response")?.asInt
     }
 
     fun getStringsOfAttachments(attachments: List<Attachment>, chatId: Int): List<String> {
@@ -326,7 +346,7 @@ object VkApi {
 
         val reqParams = mutableListOf<BasicNameValuePair>()
         reqParams.add(BasicNameValuePair("access_token", vkApiToken))
-        reqParams.add(BasicNameValuePair("v", "5.103"))
+        reqParams.add(BasicNameValuePair("v", "5.131"))
         for ((p, v) in params) {
             reqParams.add(BasicNameValuePair(p, v.toString()))
         }
