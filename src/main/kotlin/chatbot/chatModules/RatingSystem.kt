@@ -1,6 +1,7 @@
 package chatbot.chatModules
 
 import api.*
+import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
 import botId
 import database.UserScore
 import database.dbQuery
@@ -115,17 +116,17 @@ object RatingSystem {
         try {
             val deltaRep = parsed.get<IntegerNumber>(2)?.number!!.toInt()
             if (target == null) {
-                api.send("Не указан товарищ", chatId)
+                api.send("Не указан товарищ", chatId, removeDelay = DEFAULT_DELAY)
                 return
             }
 
             if (targetId == null) {
                 if (target.isVirtual) {
-                    api.send("Партии неизвестна личность ${target.rawText}", chatId)
+                    api.send("Партии неизвестна личность ${target.rawText}", chatId, removeDelay = DEFAULT_DELAY)
                     return
                 }
                 log.info("arguments: $target, $deltaRep")
-                api.send("Неверные аргументы, товарищ", chatId)
+                api.send("Неверные аргументы, товарищ", chatId, removeDelay = DEFAULT_DELAY)
                 return
             }
             val screenName = target.targetScreenName
@@ -137,7 +138,7 @@ object RatingSystem {
                 api.send("Теперь у $screenName на ${-deltaRep} реп меньше!", chatId)
 
         } catch (e: NumberFormatException) {
-            api.send("Некорректное число, товарищ", chatId)
+            api.send("Некорректное число, товарищ", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
     }
@@ -176,7 +177,7 @@ object RatingSystem {
             if (api.isUserAdmin(chatId, userId)) {
                 mention.targetId ?: userId
             } else {
-                api.send("Только члены Партии могут совать нос не в своё дело", chatId)
+                api.send("Только члены Партии могут совать нос не в своё дело", chatId, removeDelay = DEFAULT_DELAY)
                 return
             }
         } else {
@@ -198,9 +199,17 @@ object RatingSystem {
             if (rowList.isNotEmpty()) {
                 val rewardsList = rowList.map { it[UserReward.rewardName] }
                 val rewardsStr = rewardsList.joinToString(separator = ", ")
-                api.send("По архивам Партии, у $screenName уровень $levelName и награды: $rewardsStr", chatId)
+                api.send(
+                    "По архивам Партии, у $screenName уровень $levelName и награды: $rewardsStr",
+                    chatId,
+                    removeDelay = DEFAULT_DELAY
+                )
             } else {
-                api.send("По архивам Партии, у $screenName уровень $levelName", chatId)
+                api.send(
+                    "По архивам Партии, у $screenName уровень $levelName",
+                    chatId,
+                    removeDelay = DEFAULT_DELAY
+                )
             }
         }
     }
@@ -221,23 +230,23 @@ object RatingSystem {
             if (forwardedFrom != null) {
                 targetId = forwardedFrom
             } else {
-                api.send("Укажите одобряемого", chatId)
+                api.send("Укажите одобряемого", chatId, removeDelay = DEFAULT_DELAY)
                 return
             }
         }
 
         if (targetId == botId || targetId == -botId) {
-            api.send("Мы и так знаем, что Вы, Товарищ, одобряете Нас!", chatId)
+            api.send("Мы и так знаем, что Вы, Товарищ, одобряете Нас!", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (target?.isVirtual == false && !userHasScore(chatId, targetId)) {
-            api.send("Этого человека нет в архивах", chatId)
+            api.send("Этого человека нет в архивах", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (targetId == senderId) {
-            api.send("Партия рекомендует не удалять рёбра", chatId)
+            api.send("Партия рекомендует не удалять рёбра", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
@@ -250,7 +259,8 @@ object RatingSystem {
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
                 "Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа.\nСледующее одобрение будет доступно через: $coolDown",
-                chatId
+                chatId,
+                removeDelay = DEFAULT_DELAY
             )
             return
         }
@@ -260,7 +270,7 @@ object RatingSystem {
         addReputation(count, targetId, chatId, api)
         updateHistory(chatId, senderId, targetId, RepCommandType.RESPECT)
 
-        api.send("Одобрение выражено", chatId)
+        api.send("Одобрение выражено", chatId, removeDelay = DEFAULT_DELAY)
     }
 
     private fun calculateRep(
@@ -327,23 +337,23 @@ object RatingSystem {
             if (forwardedFrom != null) {
                 targetId = forwardedFrom
             } else {
-                api.send("Укажите осуждаемого", chatId)
+                api.send("Укажите осуждаемого", chatId, removeDelay = DEFAULT_DELAY)
                 return
             }
         }
 
         if (targetId == botId || targetId == -botId) {
-            api.send("Отправляю чёрных воронков", chatId)
+            api.send("Отправляю чёрных воронков", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (target?.isVirtual == false && !userHasScore(chatId, targetId)) {
-            api.send("Этого человека нет в архивах", chatId)
+            api.send("Этого человека нет в архивах", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
         if (targetId == senderId) {
-            api.send("Партия рекомендует не удалять рёбра", chatId)
+            api.send("Партия рекомендует не удалять рёбра", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
@@ -356,7 +366,8 @@ object RatingSystem {
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
                 "Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа.\nСледующее осуждение будет доступно через: $coolDown",
-                chatId
+                chatId,
+                removeDelay = DEFAULT_DELAY
             )
             return
         }
@@ -366,7 +377,7 @@ object RatingSystem {
         addReputation(count, targetId, chatId, api)
         updateHistory(chatId, senderId, targetId, RepCommandType.DISRESPECT)
 
-        api.send("Осуждение выражено", chatId)
+        api.send("Осуждение выражено", chatId, removeDelay = DEFAULT_DELAY)
     }
 
     // for tests only
@@ -377,7 +388,7 @@ object RatingSystem {
         val target = parsed.get<Mention>(1)
         val shadowChatId = event.chatId
         if (target == null) {
-            api.send("Не указан интересущий член партии", shadowChatId)
+            api.send("Не указан интересующий член партии", shadowChatId, removeDelay = DEFAULT_DELAY)
             return
         }
         val targetId = target.targetId ?: throw IllegalArgumentException("Target hasn't ID")

@@ -5,6 +5,8 @@ import java.util.concurrent.LinkedBlockingQueue
 
 class GarbageMessagesCollector : Thread() {
     companion object {
+        const val DEFAULT_DELAY: Long = 500
+
         private val queue: LinkedBlockingQueue<GarbageMessage> = LinkedBlockingQueue()
 
         fun deleteMessageOnTime(messageId: Int, chatId: Int, timeWhenDelete: Long) {
@@ -29,6 +31,10 @@ class GarbageMessagesCollector : Thread() {
             while (true) {
                 val element = queue.take()
 
+                if (element.messageId == 0) {
+                    continue // remove after VK will send message id
+                }
+
                 if (element.deleteTime - System.currentTimeMillis() >= 0) {
                     queue.add(element)
                     sleep(30)
@@ -50,10 +56,10 @@ data class GarbageMessage(
     val deleteTime: Long
 ) {
     companion object {
-        fun toGarbageMessageWithDeleteTime(event: LongPollNewMessageEvent, deleteTime: Long): GarbageMessage {
+        fun LongPollNewMessageEvent.toGarbageMessageWithDeleteTime(deleteTime: Long): GarbageMessage {
             return GarbageMessage(
-                event.messageId,
-                event.chatId,
+                messageId,
+                chatId,
                 deleteTime
             )
         }
@@ -61,10 +67,10 @@ data class GarbageMessage(
         /**
          * @param delay: delay before message wil be deleted, ms
          */
-        fun toGarbageMessageWithDelay(event: LongPollNewMessageEvent, delay: Long): GarbageMessage {
+        fun LongPollNewMessageEvent.toGarbageMessageWithDelay(delay: Long): GarbageMessage {
             return GarbageMessage(
-                event.messageId,
-                event.chatId,
+                messageId,
+                chatId,
                 System.currentTimeMillis() + delay
             )
         }
