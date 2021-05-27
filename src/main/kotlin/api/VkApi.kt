@@ -106,13 +106,18 @@ object VkApi {
         val messageId = if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
                     "message" to text,
-                    "peer_id" to chatId,
+                    "peer_ids" to chatId,
                     "random_id" to System.currentTimeMillis().toString()
             )
             if (keyboard != null) {
                 params["keyboard"] = keyboard.getJson()
             }
-            post("messages.send", params)?.get("response")?.asInt
+            post("messages.send", params)
+                ?.get("response")
+                ?.asJsonArray?.get(0)
+                ?.asJsonObject
+                ?.get("conversation_message_id")
+                ?.asInt
 
         } else {
             val attachments = mutableListOf<String>()
@@ -136,12 +141,17 @@ object VkApi {
     fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>): Int? {
         val res = post("messages.send", mutableMapOf(
             "message" to text,
-            "peer_id" to chatId,
+            "peer_ids" to chatId,
             "random_id" to System.currentTimeMillis().toString(),
             "attachment" to attachments.joinToString(separator = ",")
         ))
 
-        return res?.get("response")?.asInt
+        return res
+            ?.get("response")
+            ?.asJsonArray?.get(0)
+            ?.asJsonObject
+            ?.get("conversation_message_id")
+            ?.asInt
     }
 
     fun getStringsOfAttachments(attachments: List<Attachment>, chatId: Int): List<String> {

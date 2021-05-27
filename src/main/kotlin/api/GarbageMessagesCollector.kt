@@ -5,7 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 class GarbageMessagesCollector : Thread() {
     companion object {
-        const val DEFAULT_DELAY: Long = 500
+        const val DEFAULT_DELAY: Long = 1000
 
         private val queue: LinkedBlockingQueue<GarbageMessage> = LinkedBlockingQueue()
 
@@ -35,8 +35,8 @@ class GarbageMessagesCollector : Thread() {
                     continue // remove after VK will send message id
                 }
 
-                if (element.deleteTime - System.currentTimeMillis() >= 0) {
-                    queue.add(element)
+                if (element.deleteTime - System.currentTimeMillis() > 0) {
+                    queue.add(element) // return element to queue
                     sleep(30)
                     continue
                 }
