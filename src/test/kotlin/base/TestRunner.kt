@@ -5,6 +5,7 @@ import chatbot.EventProcessor
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.junit.jupiter.api.Assertions
 import java.io.File
 import java.io.FileNotFoundException
@@ -14,6 +15,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 private val ignoringFiles = setOf(
     "messages.txt"
 )
+
+private val gson = GsonBuilder().setPrettyPrinting().create()
 
 private const val ignoreLine = "//ignore"
 
@@ -55,9 +58,16 @@ fun checkResults(path: String, keeper: ApiResponseKeeper) {
         val fileData = file.readText()
         if (fileData.isIgnore) continue
 
-        val storedData = keeper.read(fileApiName)
+        val actualText = keeper.read(fileApiName)
             ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
-        assertTextEquals(fileData, storedData, "file: ${file.name}")
+        val actual = gson.fromJson(actualText, Any::class.java)
+        val expected = gson.fromJson(fileData, Any::class.java)
+        Assertions.assertEquals(
+            gson.toJson(expected),
+            gson.toJson(actual)
+        )
+        //assertTextEquals(fileData, storedData, "file: ${file.name}")
+
     }
 
     val unexistsDataFiles = usedApis - files.map { it.apiName }
