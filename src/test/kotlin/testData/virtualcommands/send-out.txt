@@ -1,15 +1,14 @@
 [
-{
-"text":"Добавленакоманда:testcommand",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"Виртуальныекоманды:
-testcommand",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-}
+  {
+    "text": "Добавлена команда: testcommand",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Виртуальные команды:\ntestcommand",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  }
 ]

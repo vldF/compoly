@@ -1,178 +1,176 @@
 [
-{
-"text":"Голосованиезавручение@marxнаградыоченьважнаянаграда-1/10
-Отправь/наградить[id2|@marx]",
-"chatId":1,
-"pixUrls":[],
-"keyboard":{
-"buttons":[
-{
-"callbackMessage":"/наградить[id2|@marx]",
-"showingName":"за",
-"color":"NEGATIVE"
-}
-]
-},
-"removeDelay":-1
-},
-{
-"text":"Товарищ!ВынеБрежнев",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[2/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[3/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[4/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[5/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[6/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[7/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[8/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[9/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[10/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"@marxполучаетнаградуоченьважнаянаграда",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"ПоархивамПартии,уTestUserуровеньоктябрёнокинаграды:оченьважнаянаграда",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"Голосованиезавручение@marxнаградыещеболееважнаянаграда-1/10
-Отправь/наградить[id2|@marx]",
-"chatId":1,
-"pixUrls":[],
-"keyboard":{
-"buttons":[
-{
-"callbackMessage":"/наградить[id2|@marx]",
-"showingName":"за",
-"color":"NEGATIVE"
-}
-]
-},
-"removeDelay":-1
-},
-{
-"text":"Товарищ!ВынеБрежнев",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[2/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[3/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[4/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[5/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[6/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[7/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[8/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[9/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзанаграждение@marx-[10/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"@marxполучаетнаградуещеболееважнаянаграда",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"ПоархивамПартии,уTestUserуровеньоктябрёнокинаграды:оченьважнаянаграда,ещеболееважнаянаграда",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-}
+  {
+    "text": "Голосование за вручение @marx награды очень важная награда - 1/10\nОтправь /наградить [id2|@marx]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "keyboard": {
+      "buttons": [
+        {
+          "callbackMessage": "/наградить [id2|@marx]",
+          "showingName": "за",
+          "color": "NEGATIVE"
+        }
+      ]
+    },
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Товарищ! Вы не Брежнев",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [2/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [3/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [4/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [5/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [6/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [7/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [8/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [9/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [10/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "@marx получает награду очень важная награда",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "По архивам Партии, у Test User уровень октябрёнок и награды: очень важная награда",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Голосование за вручение @marx награды еще более важная награда - 1/10\nОтправь /наградить [id2|@marx]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "keyboard": {
+      "buttons": [
+        {
+          "callbackMessage": "/наградить [id2|@marx]",
+          "showingName": "за",
+          "color": "NEGATIVE"
+        }
+      ]
+    },
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Товарищ! Вы не Брежнев",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [2/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [3/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [4/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [5/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [6/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [7/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [8/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [9/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за награждение @marx - [10/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "@marx получает награду еще более важная награда",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "По архивам Партии, у Test User уровень октябрёнок и награды: очень важная награда, еще более важная награда",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  }
 ]

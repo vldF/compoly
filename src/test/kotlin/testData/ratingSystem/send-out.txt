@@ -1,51 +1,50 @@
 [
-{
-"text":"Одобрениевыражено",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"Партиянерекомендуетодобрениедругихлицчаще,чемразв4часа.
-Следующееодобрениебудетдоступночерез:3:59:59",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"ПартияпоздравляетKarlMarxсповышениемдопионер",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"Одобрениевыражено",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"ПоархивамПартии,уKarlMarxуровеньпионер",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"ПартиясочувствуетKarlMarx.Онпонижендооктябрёнок",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"Осуждениевыражено",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"ПоархивамПартии,уKarlMarxуровеньоктябрёнок",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-}
+  {
+    "text": "Одобрение выражено",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа.\nСледующее одобрение будет доступно через: 3:59:59",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Партия поздравляет Karl Marx с повышением до пионер",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Одобрение выражено",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "По архивам Партии, у Karl Marx уровень пионер",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Партия сочувствует Karl Marx. Он понижен до октябрёнок",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Осуждение выражено",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "По архивам Партии, у Karl Marx уровень октябрёнок",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  }
 ]

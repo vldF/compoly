@@ -1,16 +1,15 @@
 package base
 
 import api.VkApi
+import base.utils.getFileComparisonThrowable
 import chatbot.EventProcessor
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import org.junit.jupiter.api.Assertions
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.concurrent.ConcurrentLinkedQueue
-
 
 private val ignoringFiles = setOf(
     "messages.txt"
@@ -36,6 +35,7 @@ fun runTest(path: String) {
     for (message in messages) {
         eventProcessor.process(message)
     }
+
     checkResults(path, keeper)
     checkTables(path)
 }
@@ -60,14 +60,12 @@ fun checkResults(path: String, keeper: ApiResponseKeeper) {
 
         val actualText = keeper.read(fileApiName)
             ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
-        val actual = gson.fromJson(actualText, Any::class.java)
-        val expected = gson.fromJson(fileData, Any::class.java)
-        Assertions.assertEquals(
-            gson.toJson(expected),
-            gson.toJson(actual)
-        )
-        //assertTextEquals(fileData, storedData, "file: ${file.name}")
-
+        val actual = gson.toJson(gson.fromJson(actualText, Any::class.java))
+        val expected = gson.toJson(gson.fromJson(fileData, Any::class.java))
+        if (actual != expected) {
+            val errorMessage = "Content is not equal: ${file.name}"
+            throw getFileComparisonThrowable(errorMessage, fileData, actual, file.absolutePath) ?: AssertionError(errorMessage)
+        }
     }
 
     val unexistsDataFiles = usedApis - files.map { it.apiName }
@@ -102,6 +100,7 @@ fun checkTables(path: String) {
 
         assertTextEquals(
             content,
+            exceptedDumpFile.absolutePath,
             actualContent,
             "table unequals $tableName"
         )
@@ -121,12 +120,10 @@ fun checkTables(path: String) {
     }
 }
 
-fun assertTextEquals(excepted: String, actual: String, errorMessage: String = "") {
-    Assertions.assertEquals(
-        excepted.formatted,
-        actual.formatted,
-        errorMessage
-    )
+fun assertTextEquals(expected: String, expectedPath: String, actual: String, errorMessage: String = "") {
+    if (expected.formatted != actual.formatted) {
+        throw getFileComparisonThrowable(errorMessage, expected, actual, expectedPath) ?: AssertionError(errorMessage)
+    }
 }
 
 private val String.formatted

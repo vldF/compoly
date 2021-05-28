@@ -1,114 +1,113 @@
 [
-{
-"text":"Голосованиенаотправление@marxвлагерьначалось-1/10
-Отправь/гулаг[id2|@marx]",
-"chatId":1,
-"pixUrls":[],
-"keyboard":{
-"buttons":[
-{
-"callbackMessage":"/гулаг[id2|@marx]",
-"showingName":"за",
-"color":"NEGATIVE"
-}
-]
-},
-"removeDelay":-1
-},
-{
-"text":"Товарищ!ВыещенужнысвоейРодине",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[2/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[3/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[4/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[5/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[6/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[7/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[8/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[9/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"TestUserпроголосовалзаотправление@marxвлагерь-[10/10]",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"Подумайнадсвоимповедением,@marx,апотомнапишиадминам,чтобытебяпозвалиназад",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"Партияуженаказала@marx",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"Неуказанссыльный",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":1000
-},
-{
-"text":"Подумайнадсвоимповедением,@lenin,апотомнапишиадминам,чтобытебяпозвалиназад",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"@leninможетвернутьсядосрочно",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-},
-{
-"text":"@marxможетвернутьсядосрочно",
-"chatId":1,
-"pixUrls":[],
-"removeDelay":-1
-}
+  {
+    "text": "Голосование на отправление @marx в лагерь началось - 1/10\nОтправь /гулаг [id2|@marx]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "keyboard": {
+      "buttons": [
+        {
+          "callbackMessage": "/гулаг [id2|@marx]",
+          "showingName": "за",
+          "color": "NEGATIVE"
+        }
+      ]
+    },
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Товарищ! Вы еще нужны своей Родине",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [2/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [3/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [4/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [5/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [6/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [7/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [8/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [9/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [10/10]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Подумай над своим поведением, @marx, а потом напиши админам, чтобы тебя позвали назад",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Партия уже наказала @marx",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Не указан ссыльный",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": 1000.0
+  },
+  {
+    "text": "Подумай над своим поведением, @lenin, а потом напиши админам, чтобы тебя позвали назад",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "@lenin может вернуться досрочно",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "@marx может вернуться досрочно",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  }
 ]
