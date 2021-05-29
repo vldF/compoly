@@ -21,38 +21,38 @@ class TestsGenerated {
     
     @Test
     @Order(2)
-    fun help() {
-        runTest("src/test/kotlin/testData/help")
-    }
-    
-    @Test
-    @Order(3)
-    fun ratingSystem() {
-        runTest("src/test/kotlin/testData/ratingSystem")
-    }
-    
-    @Test
-    @Order(4)
-    fun reward() {
-        runTest("src/test/kotlin/testData/reward")
-    }
-    
-    @Test
-    @Order(5)
-    fun virtualTargets() {
-        runTest("src/test/kotlin/testData/virtualTargets")
-    }
-
-    @Test
-    @Order(6)
     fun gulag() {
         runTest("src/test/kotlin/testData/gulag")
     }
     
     @Test
-    @Order(7)
+    @Order(3)
+    fun help() {
+        runTest("src/test/kotlin/testData/help")
+    }
+    
+    @Test
+    @Order(4)
+    fun ratingSystem() {
+        runTest("src/test/kotlin/testData/ratingSystem")
+    }
+    
+    @Test
+    @Order(5)
+    fun reward() {
+        runTest("src/test/kotlin/testData/reward")
+    }
+    
+    @Test
+    @Order(6)
     fun virtualcommands() {
         runTest("src/test/kotlin/testData/virtualcommands")
+    }
+    
+    @Test
+    @Order(7)
+    fun virtualTargets() {
+        runTest("src/test/kotlin/testData/virtualTargets")
     }
     
 }

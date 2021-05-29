@@ -15,12 +15,14 @@ import database.EMPTY_HISTORY_TEXT
 import database.UserReward
 import org.jetbrains.exposed.sql.*
 import java.lang.IllegalArgumentException
+import kotlin.reflect.jvm.reflect
 
 @Suppress("DuplicatedCode")
 @ModuleObject
 object RatingSystem {
     private val respects = mutableMapOf<Pair<Int, Int>, Long>()
     private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
+    private val usedCommands = mutableMapOf<Pair<Int, String>, Int>()
 
     enum class Level(val levelName: String) {
         LEVEL0("ЗАСЕКРЕЧЕНО"),
@@ -399,5 +401,35 @@ object RatingSystem {
             }.firstOrNull()?.get(UserScore.history_respects).toString()
         }
         api.send(respectHistoryTxt, shadowChatId)
+    }
+
+    fun canUseCommand(
+        chatId: Int,
+        userId: Int,
+        basicUseAmount: Int,
+        amountMult: Int,
+        commandName: String
+    ): Boolean {
+        val rep = dbQuery {
+            UserScore.select{
+                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+            }.firstOrNull()?.get(UserScore.reputation) ?: 0
+        }
+        val level = Level.getLevel(rep)
+
+        if (commandName.isNullOrEmpty()) return false
+        val key = Pair(userId, commandName)
+        val maxAmount = basicUseAmount + amountMult * level.ordinal
+        val realAmount = usedCommands.getOrPut(key) { 0 }
+        if (realAmount >= maxAmount) {
+            return false
+        }
+
+        usedCommands[key] = realAmount + 1
+        return true
+    }
+
+    fun updateCommandsRestrictions() {
+        usedCommands.clear();
     }
 }

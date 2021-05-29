@@ -22,7 +22,7 @@ object Help {
                     separator = "\n",
                     prefix = permission.helpHeaderString + ":\n",
                     postfix = "\n\n"
-                ) { "/${it.commands.first()} [${it.cost}] — ${it.description}" })
+                ) { "/${it.commands.first()} - ${it.description}" })
         }
         api.send(result.toString(), event.chatId)
     }
