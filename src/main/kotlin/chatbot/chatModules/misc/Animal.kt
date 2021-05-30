@@ -8,6 +8,7 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
 
 /**Class for loading pictures of live animals (cats, dogs, etc.) from the link [animalApiLink]*/
@@ -22,7 +23,7 @@ abstract class Animal {
     private val vkPixQueueSize = 4 // todo: change it to 4 in prod; 1 was set for faster loading
 
     /**Animals images cache*/
-    private val vkAnimalQueue = LinkedBlockingQueue<String>(vkPixQueueSize)
+    private val vkAnimalQueue = LinkedList<String>()
 
     /**Use this fun with annotation OnCommand (see [chatbot/Annotations.kt])*/
     fun animal(event: LongPollNewMessageEvent) {
