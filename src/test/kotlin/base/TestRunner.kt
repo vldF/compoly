@@ -7,6 +7,7 @@ import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import org.junit.jupiter.api.Assertions
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -62,9 +63,12 @@ fun checkResults(path: String, keeper: ApiResponseKeeper) {
             ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
         val actual = gson.toJson(gson.fromJson(actualText, Any::class.java))
         val expected = gson.toJson(gson.fromJson(fileData, Any::class.java))
+
         if (actual != expected) {
             val errorMessage = "Content is not equal: ${file.name}"
-            throw getFileComparisonThrowable(errorMessage, fileData, actual, file.absolutePath) ?: AssertionError(errorMessage)
+            val interactiveThrowable = getFileComparisonThrowable(errorMessage, fileData, actual, file.absolutePath)
+                ?: Assertions.assertEquals(expected, actual, errorMessage)
+            throw interactiveThrowable as Throwable
         }
     }
 
@@ -122,7 +126,9 @@ fun checkTables(path: String) {
 
 fun assertTextEquals(expected: String, expectedPath: String, actual: String, errorMessage: String = "") {
     if (expected.formatted != actual.formatted) {
-        throw getFileComparisonThrowable(errorMessage, expected, actual, expectedPath) ?: AssertionError(errorMessage)
+        val interactiveThrowable = getFileComparisonThrowable(errorMessage, expected.formatted, actual.formatted, expectedPath)
+            ?: Assertions.assertEquals(expected.formatted, actual.formatted, errorMessage)
+        throw interactiveThrowable as Throwable
     }
 }
 
