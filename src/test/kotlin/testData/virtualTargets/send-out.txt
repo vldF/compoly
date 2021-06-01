@@ -9,12 +9,12 @@
     "text": "Одобрение выражено",
     "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 1000.0
+    "removeDelay": 10000.0
   },
   {
     "text": "Осуждение выражено",
     "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 1000.0
+    "removeDelay": 10000.0
   }
 ]
