@@ -16,6 +16,7 @@ object EventStream {
 
     init {
         log.info("Initialising EventStream...")
+
         var loaded: List<Event> = emptyList()
         ClassGraph().enableAllInfo().whitelistPackages("modules.events")
             .scan().use { scanResult ->
@@ -28,16 +29,10 @@ object EventStream {
                     .map { it.getConstructor().newInstance() } as List<Event>
             }
         events = loaded.filter { it.schedule.isNotEmpty() }
+
         log.info("Events: ${events.map { it.javaClass.toString() + ":" + it.schedule.toString() } }")
         log.info("EventStream is initialised")
     }
-
-    private fun calculateDelayTime(eventTime: Long, currentTime: Long) =
-            if (eventTime > currentTime) {
-                eventTime - currentTime
-            } else {
-                millisecondInDay - (currentTime - eventTime)
-            }
 
     fun start() {
         thread {
@@ -89,4 +84,11 @@ object EventStream {
             }
         }
     }
+
+    private fun calculateDelayTime(eventTime: Long, currentTime: Long) =
+        if (eventTime > currentTime) {
+            eventTime - currentTime
+        } else {
+            millisecondInDay - (currentTime - eventTime)
+        }
 }

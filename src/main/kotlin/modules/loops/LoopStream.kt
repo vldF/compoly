@@ -14,18 +14,20 @@ object LoopStream {
 
     init {
         log.info("Initialising LoopStream...")
-        var loaded: List<Loop> = emptyList()
-        ClassGraph().enableAllInfo().whitelistPackages("modules.loops")
+
+        ClassGraph()
+            .enableAllInfo()
+            .whitelistPackages("modules.loops")
             .scan().use { scanResult ->
                 val filtered = scanResult.getClassesImplementing("modules.loops.Loop")
                     .filter { classInfo ->
                         classInfo.hasAnnotation("modules.Active")
                     }
-                loaded = filtered
+                loops = filtered
                     .map { it.loadClass() }
                     .map { it.getConstructor().newInstance() } as List<Loop>
             }
-        loops = loaded
+
         log.info("Loops: ${loops.map { it.javaClass } }")
         log.info("LoopStream is initialised")
     }
