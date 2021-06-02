@@ -12,11 +12,6 @@ private val keeper: ApiResponseKeeper
 ) : VkApiMock {
     private val gson = Gson()
     private val valuesReadCount = mutableMapOf<String, Int>()
-    override fun getUserIdByName(username: String?): Long? {
-        writeResponse("getUserIdByName", "username" to username)
-        return readValueFromFile(pathToFile, "getUserIdByName", 1)
-    }
-    
     override fun getUserNameById(id: Int?): String? {
         writeResponse("getUserNameById", "id" to id)
         return readValueFromFile(pathToFile, "getUserNameById", "Test User")
@@ -31,8 +26,8 @@ private val keeper: ApiResponseKeeper
         return readValueFromFile(pathToFile, "isUserAdmin", false)
     }
     
-    override fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String?): String? {
-        writeResponse("uploadPhotoByUrlAsAttachment", "chatId" to chatId, "url" to url)
+    override fun uploadPhotoByUrlAsAttachment(url: String?): String? {
+        writeResponse("uploadPhotoByUrlAsAttachment", "url" to url)
         return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "photo_by_url_as_attachment")
     }
     
@@ -68,7 +63,7 @@ private val keeper: ApiResponseKeeper
             List::class -> {
                 try {
                     Gson().fromJson(value, Array<VkUser>::class.java).toList() as T
-                } catch (e: Exception) {
+                } catch(e: Exception) {
                     throw IllegalStateException("wrong type parameter")
                 }
             }

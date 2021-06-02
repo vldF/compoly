@@ -56,7 +56,7 @@ abstract class Animal {
     private fun addAnimalsToQueue(count: Int = 1, api: VkApi, chatId: Int = mainChatPeerId) {
         for (i in 0 until count) {
             val url = getAnimalUrl()
-            val attachment = api.uploadPhotoByUrlAsAttachment(chatId, url) ?: continue
+            val attachment = api.uploadPhotoByUrlAsAttachment(url) ?: continue
             vkAnimalQueue.add(attachment)
         }
     }
