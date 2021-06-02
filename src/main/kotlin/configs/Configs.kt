@@ -3,6 +3,7 @@ import configs.IntConfig
 import configs.StringConfig
 
 val vkApiToken by StringConfig()
+val theCatApiKey by StringConfig()
 val weatherKey by StringConfig()
 val botId by IntConfig()
 val mainChatPeerId by IntConfig()

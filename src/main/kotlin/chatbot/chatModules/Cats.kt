@@ -6,10 +6,10 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Animal
+import theCatApiKey
 
 @ModuleObject
 object Cats : Animal() {
-    private const val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b" // todo: move it to config?
     private const val BASIC_USE_AMOUNT = 1
     private const val AMOUNT_MULTIPLIER = 1
 
