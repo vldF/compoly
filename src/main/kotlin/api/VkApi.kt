@@ -3,13 +3,14 @@ package api
 import api.keyboards.Keyboard
 import api.objects.ChatMemberItemsInfo
 import api.objects.VkUser
-import configs.botId
-import chatbot.chatModules.VirtualTargets
 import chatbot.Attachment
 import chatbot.GenerateMock
+import chatbot.chatModules.VirtualTargets
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import configs.useTestMode
+import configs.vkApiToken
 import log
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
@@ -17,8 +18,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
-import configs.useTestMode
-import configs.vkApiToken
 import java.io.ByteArrayInputStream
 import java.net.URL
 
@@ -29,19 +28,6 @@ object VkApi {
     private val history = ApiHistory(4)
     // true if user is admin
     private val userAdminMap = mutableMapOf<Pair<Int, Int>, Boolean>()
-
-    val meId: Int = botId // todo: get this value via API
-
-    @GenerateMock(["username"], "1")
-    fun getUserIdByName(username: String): Long? {
-        val resp = post(
-                "users.get", mutableMapOf(
-                "user_ids" to username
-            )
-        )
-        val json = resp?.asJsonObject
-        return json?.get("response")?.asJsonArray?.get(0)?.asJsonObject?.get("id")?.asLong
-    }
 
     @GenerateMock(["id"], "\"Test User\"")
     fun getUserNameById(id: Int): String? {
@@ -82,11 +68,11 @@ object VkApi {
         return userInTheChat?.is_admin == true
     }
 
-    @GenerateMock(["chatId", "url"], "\"photo_by_url_as_attachment\"")
-    fun uploadPhotoByUrlAsAttachment(chatId: Int, url: String): String? {
+    @GenerateMock(["url"], "\"photo_by_url_as_attachment\"")
+    fun uploadPhotoByUrlAsAttachment(url: String): String? {
         val imageConnection = URL(url).openConnection()
         val imageStream = imageConnection.getInputStream()
-        return uploadPhoto(chatId, imageStream.readBytes())
+        return uploadPhoto(imageStream.readBytes())
     }
 
     private fun uploadDocByUrlAsAttachment(chatId: Int, url: String, fileName: String): String? {
@@ -122,7 +108,7 @@ object VkApi {
         } else {
             val attachments = mutableListOf<String>()
             for (url in pixUrls) {
-                attachments.add(uploadPhotoByUrlAsAttachment(chatId, url) ?: "")
+                attachments.add(uploadPhotoByUrlAsAttachment(url) ?: "")
             }
 
             sendWithAttachments(text, chatId, attachments)
@@ -161,7 +147,7 @@ object VkApi {
             val stringOfAttachment = when (attachment.type) {
                 "photo" -> {
                     val url = attachment.photo?.sizes?.last()?.url ?: continue@loop
-                    uploadPhotoByUrlAsAttachment(chatId, url) ?: continue@loop
+                    uploadPhotoByUrlAsAttachment(url) ?: continue@loop
                 }
                 "audio" -> {
                     val audio = attachment.audio
@@ -231,8 +217,7 @@ object VkApi {
         return profiles.map { gson.fromJson(it, ChatMemberItemsInfo::class.java) }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    private fun uploadPhoto(peer_id: Int?, data: ByteArray): String? {
+    private fun uploadPhoto(data: ByteArray): String? {
         val serverData = post("photos.getMessagesUploadServer", mutableMapOf())
 
         val jsonServer = serverData?.asJsonObject ?: return null
@@ -284,7 +269,6 @@ object VkApi {
         return "photo${ownerId}_${imageId}_$accessKey"
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     private fun uploadDoc(peer_id: Int?, data: ByteArray, fileName: String): String? {
         val serverData =
             if (peer_id != null) post(
@@ -348,9 +332,6 @@ object VkApi {
         println(resp)
     }
 
-
-    @Suppress("SameParameterValue")
-    @OptIn(ExperimentalStdlibApi::class)
     fun post(methodName: String, params: MutableMap<String, Any>): JsonObject? {
         log.info("vk api query: methodName=$methodName, params=$params")
         history.use(methodName)
