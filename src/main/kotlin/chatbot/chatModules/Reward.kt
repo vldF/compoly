@@ -1,13 +1,15 @@
 package chatbot.chatModules
 
-import api.*
+import api.ParseObject
+import api.Text
+import api.TextMessageParser
+import api.VkApi
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import database.UserReward
 import database.dbQuery
 import org.jetbrains.exposed.sql.insert
-import java.lang.StringBuilder
 
 @ModuleObject
 object Reward : Votable() {

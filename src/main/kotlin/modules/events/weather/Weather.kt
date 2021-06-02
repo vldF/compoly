@@ -22,7 +22,7 @@ class Weather : Event {
     override fun call() {
         val json = sendGet(address)
         if (json != null) {
-            val info = Gson().fromJson<Info>(json, Info::class.java)
+            val info = Gson().fromJson(json, Info::class.java)
             try {
                 log.info("Weather casting...")
                 val text =

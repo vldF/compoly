@@ -1,27 +1,31 @@
 package chatbot.chatModules
 
-import api.*
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
-import configs.botId
-import database.UserScore
-import database.dbQuery
-import log
+import api.IntegerNumber
+import api.Mention
+import api.TextMessageParser
+import api.VkApi
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import configs.botId
 import database.EMPTY_HISTORY_TEXT
 import database.UserReward
-import org.jetbrains.exposed.sql.*
-import java.lang.IllegalArgumentException
-import kotlin.reflect.jvm.reflect
+import database.UserScore
+import database.dbQuery
+import log
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 
 @Suppress("DuplicatedCode")
 @ModuleObject
 object RatingSystem {
-    const val hour = 1000 * 60 * 60
-    const val RESPECT_DELAY = 1
+    private const val HOUR = 1000 * 60 * 60
+    private const val RESPECT_DELAY = 1
 
     private val respects = mutableMapOf<Pair<Int, Int>, Long>()
     private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
@@ -260,7 +264,7 @@ object RatingSystem {
                 respects[senderId to chatId] != null &&
                 currentTime - respects[senderId to chatId]!! < 1000 * 60 * 60 * 4
         ) {
-            val timeLeft = (RESPECT_DELAY * hour + respects[senderId to chatId]!! - currentTime) / 1000
+            val timeLeft = (RESPECT_DELAY * HOUR + respects[senderId to chatId]!! - currentTime) / 1000
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
                 "Партия не рекомендует одобрение других лиц чаще, чем раз в $RESPECT_DELAY час.\nСледующее одобрение будет доступно через: $coolDown",
@@ -367,7 +371,7 @@ object RatingSystem {
                 disrespects[senderId to chatId] != null &&
                 currentTime - disrespects[senderId to chatId]!! < 1000 * 60 * 60 * 4
         ) {
-            val timeLeft = (RESPECT_DELAY * hour + disrespects[senderId to chatId]!! - currentTime) / 1000
+            val timeLeft = (RESPECT_DELAY * HOUR + disrespects[senderId to chatId]!! - currentTime) / 1000
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
                 "Партия не рекомендует осуждение других лиц чаще, чем раз в $RESPECT_DELAY час.\nСледующее осуждение будет доступно через: $coolDown",
@@ -420,7 +424,7 @@ object RatingSystem {
         }
         val level = Level.getLevel(rep)
 
-        if (commandName.isNullOrEmpty()) return false
+        if (commandName.isEmpty()) return false
         val key = Pair(userId, commandName)
         val maxAmount = basicUseAmount + amountMult * level.ordinal
         val realAmount = usedCommands.getOrPut(key) { 0 }
@@ -433,6 +437,6 @@ object RatingSystem {
     }
 
     fun updateCommandsRestrictions() {
-        usedCommands.clear();
+        usedCommands.clear()
     }
 }

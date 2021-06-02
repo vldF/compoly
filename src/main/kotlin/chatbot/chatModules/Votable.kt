@@ -1,15 +1,17 @@
 package chatbot.chatModules
 
-import api.*
 import api.GarbageMessage.Companion.toGarbageMessageWithDelay
+import api.GarbageMessagesCollector
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
+import api.Mention
+import api.TextMessageParser
+import api.VkApi
 import api.keyboards.KeyboardBuilder
 import api.keyboards.KeyboardButton
 import api.keyboards.KeyboardColor
-import configs.botId
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
-import krobot.api.call
+import configs.botId
 import log
 import java.util.concurrent.ConcurrentHashMap
 
@@ -247,7 +249,7 @@ abstract class Votable {
         } else {
             val votingIsComplete = addVote(senderId, target, chatId, api, messages)
             if (votingIsComplete) {
-                targets.getOrPut(chatId, { mutableSetOf() }).add(targetId!!)
+                targets.getOrPut(chatId) { mutableSetOf() }.add(targetId!!)
                 endVoting(targetId, chatId, api, messages)
             }
         }

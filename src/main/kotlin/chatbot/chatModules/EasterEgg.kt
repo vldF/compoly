@@ -18,8 +18,8 @@ object EasterEgg {
         val canBeUsed = RatingSystem.canUseCommand(
             chatId = event.chatId,
             userId = event.userId,
-            basicUseAmount = EasterEgg.BASIC_USE_AMOUNT,
-            amountMult = EasterEgg.AMOUNT_MULTIPLIER,
+            basicUseAmount = BASIC_USE_AMOUNT,
+            amountMult = AMOUNT_MULTIPLIER,
             commandName = curCommandName
         )
         if (canBeUsed) {
@@ -28,7 +28,7 @@ object EasterEgg {
             event.api.send(
                 "Товарищ, остановите спам (ограничения на спам обновляются раз в 4 часа)",
                 event.chatId,
-                removeDelay = GarbageMessagesCollector.DEFAULT_DELAY
+                removeDelay = DEFAULT_DELAY
             )
         }
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(0))
