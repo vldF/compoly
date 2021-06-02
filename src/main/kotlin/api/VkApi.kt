@@ -3,7 +3,7 @@ package api
 import api.keyboards.Keyboard
 import api.objects.ChatMemberItemsInfo
 import api.objects.VkUser
-import botId
+import configs.botId
 import chatbot.chatModules.VirtualTargets
 import chatbot.Attachment
 import chatbot.GenerateMock
@@ -17,8 +17,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
-import useTestMode
-import vkApiToken
+import configs.useTestMode
+import configs.vkApiToken
 import java.io.ByteArrayInputStream
 import java.net.URL
 

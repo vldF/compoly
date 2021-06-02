@@ -1,6 +1,4 @@
-import configs.BooleanConfig
-import configs.IntConfig
-import configs.StringConfig
+package configs
 
 val vkApiToken by StringConfig()
 val theCatApiKey by StringConfig()

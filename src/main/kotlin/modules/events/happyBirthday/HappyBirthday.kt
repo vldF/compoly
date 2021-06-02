@@ -2,8 +2,8 @@ package modules.events.happyBirthday
 
 
 import api.VkApi
-import chatIds
-import mainChatPeerId
+import configs.chatIds
+import configs.mainChatPeerId
 import modules.Active
 import modules.events.Event
 import modules.events.Time

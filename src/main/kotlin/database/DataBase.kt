@@ -2,12 +2,12 @@ package database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import dbIP
-import dbPassword
-import dbPort
-import dbTable
-import dbType
-import dbUserName
+import configs.dbIP
+import configs.dbPassword
+import configs.dbPort
+import configs.dbTable
+import configs.dbType
+import configs.dbUserName
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
