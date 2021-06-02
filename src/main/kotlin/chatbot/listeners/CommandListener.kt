@@ -9,7 +9,6 @@ data class CommandListener(
         val baseClass: Any,
         val call: Method,
         val permission: CommandPermission,
-        val cost: Int,
         val showOnHelp: Boolean
 ) {
     override fun equals(other: Any?): Boolean {
@@ -21,7 +20,6 @@ data class CommandListener(
         if (description != other.description) return false
         if (call != other.call) return false
         if (permission != other.permission) return false
-        if (cost != other.cost) return false
         if (showOnHelp != other.showOnHelp) return false
 
         return true
@@ -33,7 +31,6 @@ data class CommandListener(
         result = 31 * result + baseClass.hashCode()
         result = 31 * result + call.hashCode()
         result = 31 * result + permission.hashCode()
-        result = 31 * result + cost
         result = 31 * result + showOnHelp.hashCode()
         return result
     }

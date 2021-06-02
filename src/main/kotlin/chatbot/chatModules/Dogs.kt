@@ -1,5 +1,6 @@
 package chatbot.chatModules
 
+import api.GarbageMessagesCollector
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
@@ -8,10 +9,28 @@ import com.google.gson.JsonParser
 
 @ModuleObject
 object Dogs : Animal() {
+    private const val BASIC_USE_AMOUNT = 1
+    private const val AMOUNT_MULTIPLIER = 1
 
-    @OnCommand(["пёсик", "dog", "песик"], "ПЁСИКИ!", cost = 20)
+    @OnCommand(["пёсик", "dog", "песик"], "ПЁСИКИ!")
     fun dog(event: LongPollNewMessageEvent) {
-        animal(event)
+        val curCommandName = object : Any() {}.javaClass.enclosingMethod.name
+        val canBeUsed = RatingSystem.canUseCommand(
+            chatId = event.chatId,
+            userId = event.userId,
+            basicUseAmount = Dogs.BASIC_USE_AMOUNT,
+            amountMult = Dogs.AMOUNT_MULTIPLIER,
+            commandName = curCommandName
+        )
+        if (canBeUsed) {
+            animal(event)
+        } else {
+            event.api.send(
+                "Товарищ, ваши собачки закончились. Обновление запаса собак происходит раз в 4 часа",
+                event.chatId,
+                removeDelay = GarbageMessagesCollector.DEFAULT_DELAY
+            )
+        }
     }
 
     override val animalApiLink: String

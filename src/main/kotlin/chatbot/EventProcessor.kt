@@ -108,7 +108,6 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                                 clazzInstance,
                                 loadedMethod,
                                 annotation.permissions,
-                                annotation.cost,
                                 annotation.showOnHelp
                             )
                         }

@@ -5,7 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 class GarbageMessagesCollector : Thread() {
     companion object {
-        const val DEFAULT_DELAY: Long = 1000
+        const val DEFAULT_DELAY: Long = 10000
 
         private val queue: LinkedBlockingQueue<GarbageMessage> = LinkedBlockingQueue()
 
