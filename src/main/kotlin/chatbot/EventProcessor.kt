@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
 class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>) : Thread() {
     private val pollSize = 4
     private val poll = Executors.newFixedThreadPool(pollSize)
-    private val commandRegex = Regex("^\\/([a-zA-Zа-яА-ЯёЁ_]+)")
+    private val commandRegex = Regex("^/([a-zA-Zа-яА-ЯёЁ_]+)")
 
     companion object {
         lateinit var commandListeners: List<CommandListener>

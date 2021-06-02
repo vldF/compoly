@@ -15,15 +15,15 @@ object Yarn {
     private const val BASIC_USE_AMOUNT = 6
     private const val AMOUNT_MULTIPLIER = 2
 
-    var probability = 0
+    private var probability = 0
     @OnCommand(["нить", "yarn"], description = "Да найдите же ее кто-нибудь")
     fun yarn(event: LongPollNewMessageEvent) {
         val curCommandName = object : Any() {}.javaClass.enclosingMethod.name
         val canBeUsed = RatingSystem.canUseCommand(
             chatId = event.chatId,
             userId = event.userId,
-            basicUseAmount = Yarn.BASIC_USE_AMOUNT,
-            amountMult = Yarn.AMOUNT_MULTIPLIER,
+            basicUseAmount = BASIC_USE_AMOUNT,
+            amountMult = AMOUNT_MULTIPLIER,
             commandName = curCommandName
         )
         if (canBeUsed) {

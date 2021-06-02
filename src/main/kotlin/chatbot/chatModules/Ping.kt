@@ -3,7 +3,6 @@ package chatbot.chatModules
 import api.GarbageMessage.Companion.toGarbageMessageWithDelay
 import api.GarbageMessagesCollector
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
-import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent

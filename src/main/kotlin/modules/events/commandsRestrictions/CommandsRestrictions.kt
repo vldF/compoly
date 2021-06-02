@@ -1,14 +1,13 @@
 package modules.events.commandsRestrictions
 
-import api.VkApi
 import chatbot.chatModules.RatingSystem
 import modules.Active
 import modules.events.Event
 import modules.events.Time
 
 @Active
-class commandsRestrictions : Event {
-    override val name = "Обновление ограничений по коммандам"
+class CommandsRestrictions : Event {
+    override val name = "Обновление ограничений по командам"
     override val schedule: List<Time> = listOf(
         Time(0, 0),
         Time(4, 0),

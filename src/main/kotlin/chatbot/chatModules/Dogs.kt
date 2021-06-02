@@ -18,8 +18,8 @@ object Dogs : Animal() {
         val canBeUsed = RatingSystem.canUseCommand(
             chatId = event.chatId,
             userId = event.userId,
-            basicUseAmount = Dogs.BASIC_USE_AMOUNT,
-            amountMult = Dogs.AMOUNT_MULTIPLIER,
+            basicUseAmount = BASIC_USE_AMOUNT,
+            amountMult = AMOUNT_MULTIPLIER,
             commandName = curCommandName
         )
         if (canBeUsed) {

@@ -15,10 +15,6 @@ annotation class OnCommand(
 
 @Target(AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
-annotation class AfterCommandUpdateList
-
-@Target(AnnotationTarget.FUNCTION)
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class OnMessage
 
 @Target(AnnotationTarget.FUNCTION)
