@@ -1,8 +1,8 @@
 package modules.events.weather
 import api.VkApi
-import chatIds
+import configs.chatIds
 import com.google.gson.Gson
-import weatherKey
+import configs.weatherKey
 import log
 import modules.events.Event
 import modules.events.Time

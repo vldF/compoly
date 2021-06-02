@@ -2,7 +2,7 @@ package chatbot.chatModules
 
 import api.*
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
-import botId
+import configs.botId
 import database.UserScore
 import database.dbQuery
 import log

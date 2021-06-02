@@ -3,13 +3,13 @@ package chatbot
 import api.VkApi
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import botId
+import configs.botId
 import log
-import mainChatPeerId
+import configs.mainChatPeerId
 import chatbot.chatModules.Gulag
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import useTestChatId
+import configs.useTestChatId
 import java.io.IOException
 import java.net.URI
 import java.net.http.HttpClient

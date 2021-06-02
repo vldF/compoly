@@ -2,14 +2,14 @@ package chatbot.chatModules.misc
 
 import api.VkApi
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import mainChatPeerId
+import configs.mainChatPeerId
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 import java.util.*
-import java.util.concurrent.LinkedBlockingQueue
+
 
 /**Class for loading pictures of live animals (cats, dogs, etc.) from the link [animalApiLink]*/
 abstract class Animal {

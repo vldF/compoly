@@ -6,7 +6,7 @@ import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
 import api.keyboards.KeyboardBuilder
 import api.keyboards.KeyboardButton
 import api.keyboards.KeyboardColor
-import botId
+import configs.botId
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
 import krobot.api.call

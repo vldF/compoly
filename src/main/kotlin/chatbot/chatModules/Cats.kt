@@ -6,7 +6,7 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Animal
-import theCatApiKey
+import configs.theCatApiKey
 
 @ModuleObject
 object Cats : Animal() {

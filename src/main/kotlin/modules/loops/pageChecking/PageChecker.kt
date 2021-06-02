@@ -1,7 +1,7 @@
 package modules.loops.pageChecking
 
 import api.VkApi
-import chatIds
+import configs.chatIds
 import log
 import java.io.File
 import java.io.FileNotFoundException
