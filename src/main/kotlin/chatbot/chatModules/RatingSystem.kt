@@ -180,9 +180,9 @@ object RatingSystem {
         val userId = event.userId
 
         val parsed = TextMessageParser().parse(event.text)
-        var targetUserId = 0
         val mention = parsed.get<Mention>(1)
-        targetUserId = if (mention != null) {
+
+        val targetUserId: Int = if (mention != null) {
             if (api.isUserAdmin(chatId, userId)) {
                 mention.targetId ?: userId
             } else {
@@ -267,7 +267,8 @@ object RatingSystem {
             val timeLeft = (RESPECT_DELAY * HOUR + respects[senderId to chatId]!! - currentTime) / 1000
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
-                "Партия не рекомендует одобрение других лиц чаще, чем раз в $RESPECT_DELAY час.\nСледующее одобрение будет доступно через: $coolDown",
+                "Партия не рекомендует одобрение других лиц чаще, чем раз в $RESPECT_DELAY час.\nСледующее " +
+                        "одобрение будет доступно через: $coolDown",
                 chatId,
                 removeDelay = DEFAULT_DELAY
             )
@@ -390,7 +391,7 @@ object RatingSystem {
     }
 
     // for tests only
-    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN, showOnHelp = false)
+    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN, showInHelp = false)
     fun showRespectHistory(event: LongPollNewMessageEvent) {
         val api = event.api
         val parsed = TextMessageParser().parse(event.text, event.chatId)
@@ -414,7 +415,7 @@ object RatingSystem {
         chatId: Int,
         userId: Int,
         basicUseAmount: Int,
-        amountMult: Int,
+        levelBonus: Int,
         commandName: String
     ): Boolean {
         val rep = dbQuery {
@@ -426,7 +427,7 @@ object RatingSystem {
 
         if (commandName.isEmpty()) return false
         val key = Pair(userId, commandName)
-        val maxAmount = basicUseAmount + amountMult * level.ordinal
+        val maxAmount = basicUseAmount + levelBonus * level.ordinal
         val realAmount = usedCommands.getOrPut(key) { 0 }
         if (realAmount >= maxAmount) {
             return false
