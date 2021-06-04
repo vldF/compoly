@@ -1,12 +1,16 @@
 package chatbot
 
+import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.Cats
+import chatbot.chatModules.RatingSystem
 import chatbot.listeners.CommandListener
 import chatbot.listeners.MessageListener
 import chatbot.listeners.PollAnswerListener
 import chatbot.listeners.PollListener
 import io.github.classgraph.ClassGraph
+import krobot.api.invoke
 import log
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
@@ -56,23 +60,44 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
 
                 for (module in commandListeners) {
                     if (module.commands.contains(command)) {
+                        val canBeUsed = canCommandBeUsedNow(module, event)
                         if (
-                            module.permission == CommandPermission.USER
-                            || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
+                           isPermissionEnough(module, event) && canBeUsed
                         ) {
                             try {
-                                module.call.invoke(module.baseClass, event)
+                                module.method.invoke(module.classInstance, event)
                                 return
                             } catch (e: Exception) {
-                                e.printStackTrace()
-                                log.severe("Error on processing commandListeners")
+                                log.severe("Error on processing commandListeners:")
                                 log.info("command: $text")
+                                e.printStackTrace()
                             }
+                        }
+
+                        if (!canBeUsed) {
+                            event.api.send(module.notEnoughMessage, event.chatId, removeDelay = DEFAULT_DELAY)
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun isPermissionEnough(module: CommandListener, event: LongPollNewMessageEvent) =
+        module.permission == CommandPermission.USER || module.permission <= Permissions.getUserPermissionsByNewMessageEvent(event)
+
+    private fun canCommandBeUsedNow(module: CommandListener, event: LongPollNewMessageEvent): Boolean {
+        if (!module.controlUsage) return true
+        val levelBonus = module.levelBonus
+        val basicUseAmount = module.baseUsageAmount
+
+        return RatingSystem.canUseCommand(
+            chatId = event.chatId,
+            userId = event.userId,
+            basicUseAmount = basicUseAmount,
+            levelBonus = levelBonus,
+            commandName = module.classInstance::class.qualifiedName.toString() + "." + (module.method::getName)()
+        )
     }
 
     override fun run() {
@@ -101,14 +126,19 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                             method.hasAnnotation(OnCommand::class.java.name)
                         }.map { method ->
                             val loadedMethod = method.loadClassAndGetMethod()
-                            val annotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                            val mainAnnotation = loadedMethod.getAnnotation(OnCommand::class.java)
+                            val usageInfoAnnotation = loadedMethod.getAnnotation(UsageInfo::class.java)
                             CommandListener(
-                                annotation.commands,
-                                annotation.description,
-                                clazzInstance,
-                                loadedMethod,
-                                annotation.permissions,
-                                annotation.showOnHelp
+                                commands = mainAnnotation.commands,
+                                description = mainAnnotation.description,
+                                classInstance = clazzInstance,
+                                method = loadedMethod,
+                                permission = mainAnnotation.permissions,
+                                showInHelp = mainAnnotation.showInHelp,
+                                controlUsage = usageInfoAnnotation != null,
+                                baseUsageAmount = usageInfoAnnotation?.baseUsageAmount ?: 0,
+                                levelBonus = usageInfoAnnotation?.levelBonus ?: 0,
+                                notEnoughMessage = usageInfoAnnotation?.notEnoughMessage ?: ""
                             )
                         }
                     }

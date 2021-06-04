@@ -1,8 +1,8 @@
 package chatbot.chatModules
 
-import api.GarbageMessagesCollector
 import chatbot.ModuleObject
 import chatbot.OnCommand
+import chatbot.UsageInfo
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -12,29 +12,13 @@ import kotlin.random.Random
 @ExperimentalStdlibApi
 @ModuleObject
 object Yarn {
-    private const val BASIC_USE_AMOUNT = 6
-    private const val AMOUNT_MULTIPLIER = 2
-
+    private const val notEnoughMessage = "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса котов происходит раз в 4 часа"
     private var probability = 0
+
+    @UsageInfo(baseUsageAmount = 6, levelBonus = 2, notEnoughMessage)
     @OnCommand(["нить", "yarn"], description = "Да найдите же ее кто-нибудь")
     fun yarn(event: LongPollNewMessageEvent) {
-        val curCommandName = object : Any() {}.javaClass.enclosingMethod.name
-        val canBeUsed = RatingSystem.canUseCommand(
-            chatId = event.chatId,
-            userId = event.userId,
-            basicUseAmount = BASIC_USE_AMOUNT,
-            amountMult = AMOUNT_MULTIPLIER,
-            commandName = curCommandName
-        )
-        if (canBeUsed) {
-            loseYarn(event)
-        } else {
-            event.api.send(
-                "Товарищ, у вас закончились нитки. Обновление запаса ниток происходит раз в 4 часа",
-                event.chatId,
-                removeDelay = GarbageMessagesCollector.DEFAULT_DELAY
-            )
-        }
+        loseYarn(event)
     }
 
     private fun loseYarn(event: LongPollNewMessageEvent) {
