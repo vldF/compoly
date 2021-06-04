@@ -60,7 +60,7 @@ fun checkResults(path: String, keeper: ApiResponseKeeper) {
         if (fileData.isIgnore) continue
 
         val actualText = keeper.read(fileApiName)
-            ?: throw IllegalStateException("test data file ${file.name} exists, but it's API have not been used")
+            ?: throw IllegalStateException("test data file ${file.name} exists, but it's API has not been used")
         val actual = gson.toJson(gson.fromJson(actualText, Any::class.java))
         val expected = gson.toJson(gson.fromJson(fileData, Any::class.java))
 
