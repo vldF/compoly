@@ -75,10 +75,46 @@
     "removeDelay": -1.0
   },
   {
-    "text": "Test User, Вы уже проголосовали за этого предателя Родины",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [11/15]",
     "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 10000.0
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [12/15]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [13/15]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [14/15]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Test User проголосовал за отправление @marx в лагерь - [15/15]",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Подумай над своим поведением, @marx, а потом напиши админам, чтобы тебя позвали назад",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Партия уже наказала @marx",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
   },
   {
     "text": "Не указан ссыльный",
@@ -99,7 +135,7 @@
     "removeDelay": -1.0
   },
   {
-    "text": "Данного человека нет в архивах ГУЛАГ",
+    "text": "@marx может вернуться досрочно",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0

@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.insert
 
 @ModuleObject
 object Reward : Votable() {
-    private var rewardNameStr = ""
+    private var rewardsMap = mutableMapOf<String, String?>()
 
     @OnCommand(["наградить", "reward"], "голосование за награждение товарища")
     fun votingReward(event: LongPollNewMessageEvent) {
@@ -22,34 +22,41 @@ object Reward : Votable() {
             val isNewVoting =
                 voting[targetId to chatId] == null || voting[targetId to chatId]!!.timeOfClosing < event.time
             val rewardNameInMessage = TextMessageParser().parse(event.text).getRewardName()
-            rewardNameStr = if (rewardNameInMessage != "") rewardNameInMessage else rewardNameStr
-            if (rewardNameStr == "" && isNewVoting) {
+
+            val key = "$chatId.$targetId"
+
+            if (!rewardsMap.keys.contains(key) && rewardNameInMessage != "") {
+                rewardsMap[key] = rewardNameInMessage
+            }
+
+            if (rewardsMap[key] == null && isNewVoting) {
                 api.send("Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого", chatId)
                 return@voting null
             }
-            val screenName = target.targetScreenName
 
-            val votingForMessage = "Голосование за вручение $screenName награды $rewardNameStr\n" +
+            val screenName = target.targetScreenName
+            val votingForMessage = "Голосование за вручение $screenName награды ${rewardsMap[key]}\n" +
                     "Отправь /наградить ${target.rawText}"
 
             val successVoteMessage = "за награждение $screenName"
 
             val keyboardMessage = "/наградить ${target.rawText}"
 
-            val onEndVotingMessage = "$screenName получает награду $rewardNameStr"
+            val onEndVotingMessage = "$screenName получает награду ${rewardsMap[key]}"
             Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
         }
     }
 
     override fun onEndVoting(targetId: Int, chatId: Int, api: VkApi) {
+        val key = "$chatId.$targetId"
         dbQuery {
             UserReward.insert {
                 it[this.chatId] = chatId
                 it[userId] = targetId
-                it[rewardName] = rewardNameStr
+                it[rewardName] = rewardsMap[key]!!
             }
         }
-        rewardNameStr = ""
+        rewardsMap.remove(key)
     }
 
     override var targetNoneMessage: String = "Не указан награждаемый"
