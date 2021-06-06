@@ -12,7 +12,7 @@ import kotlin.random.Random
 @ExperimentalStdlibApi
 @ModuleObject
 object Yarn {
-    private const val notEnoughMessage = "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса котов происходит раз в 4 часа"
+    private const val notEnoughMessage = "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса нитей происходит раз в 4 часа"
     private var probability = 0
 
     @UsageInfo(baseUsageAmount = 6, levelBonus = 2, notEnoughMessage)
@@ -22,9 +22,9 @@ object Yarn {
     }
 
     private fun loseYarn(event: LongPollNewMessageEvent) {
-        event.api.send("Произвожу поиск...", event.chatId)
         probability++
         val delay = 3000L
+        event.api.send("Произвожу поиск...", event.chatId, removeDelay = delay)
         GlobalScope.launch {
             delay(delay)
             val found = Random.nextInt(0, 500)

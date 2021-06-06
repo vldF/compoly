@@ -20,7 +20,7 @@ import java.util.*
 object Schedule {
     // todo: add leap year support
     private val parser = TextMessageParser()
-    private val dataRegex = Regex("^(\\d\\d*).(\\d\\d*)\$")
+    private val dataRegex = Regex("^(\\d\\d*).(\\d\\d*)\\s*\$")
     private val monthDays = mutableListOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     @OnCommand(["добавитьсобытие", "добавитьрасписание"], "добавляет ивент в расписание")

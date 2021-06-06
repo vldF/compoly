@@ -27,7 +27,7 @@ abstract class Votable {
     protected open var percentageOfOnline = 0.3
 
     /**The minimum number of people to win the vote*/
-    protected open var minCount = 10
+    protected open var minCount = 15
 
     /**Time until the end of voting in seconds*/
     protected open var timeOfClosing = 60 * 5

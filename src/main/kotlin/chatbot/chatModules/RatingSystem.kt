@@ -1,10 +1,8 @@
 package chatbot.chatModules
 
+import api.*
+import api.GarbageMessage.Companion.toGarbageMessageWithDelay
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
-import api.IntegerNumber
-import api.Mention
-import api.TextMessageParser
-import api.VkApi
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
@@ -210,16 +208,16 @@ object RatingSystem {
                 val rewardsStr = rewardsList.joinToString(separator = ", ")
                 api.send(
                     "По архивам Партии, у $screenName уровень $levelName и награды: $rewardsStr",
-                    chatId,
-                    removeDelay = DEFAULT_DELAY
+                    chatId
                 )
             } else {
                 api.send(
                     "По архивам Партии, у $screenName уровень $levelName",
-                    chatId,
-                    removeDelay = DEFAULT_DELAY
+                    chatId
                 )
             }
+
+            GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
         }
     }
 
