@@ -27,7 +27,7 @@
     "text": "По архивам Партии, у Karl Marx уровень пионер",
     "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 10000.0
+    "removeDelay": -1.0
   },
   {
     "text": "Партия сочувствует Karl Marx. Он понижен до октябрёнок",
@@ -45,6 +45,6 @@
     "text": "По архивам Партии, у Karl Marx уровень октябрёнок",
     "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 10000.0
+    "removeDelay": -1.0
   }
 ]

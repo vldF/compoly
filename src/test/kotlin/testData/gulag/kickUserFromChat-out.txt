@@ -1,10 +1,6 @@
 [
   {
-    "chatId": 1,
-    "userId": 2
-  },
-  {
-    "chatId": 1,
-    "userId": 3
+    "chatId": 1.0,
+    "userId": 3.0
   }
 ]
