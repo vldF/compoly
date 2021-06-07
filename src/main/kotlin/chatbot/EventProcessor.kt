@@ -70,7 +70,7 @@ class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>
                             } catch (e: Exception) {
                                 log.severe("Error on processing commandListeners:")
                                 log.info("command: $text")
-                                e.printStackTrace()
+                                log.info(e.stackTraceToString())
                             }
                         }
 
