@@ -17,7 +17,7 @@ const val EMPTY_HISTORY_TEXT = ""
 object UserScore : Table() {
     val userId = integer("user_id")
     val chatId = integer("chat_id")
-    val reputation = integer("reputation")
+    val reputation = integer("score")
     val history_respects = text("history_respects")
     val history_disrespects = text("history_disrespects")
 }
