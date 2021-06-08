@@ -77,7 +77,7 @@ object VirtualTargets {
             }.associateBy { it[VirtualMentions.id] }
             val targetIds = targets.keys
 
-            val scores = UserScore.select {
+            val scores: MutableMap<Int, Int?> = UserScore.select {
                 UserScore.userId inList targetIds
             }.associate { it[UserScore.userId] to it[UserScore.reputation] }.toMutableMap()
 
@@ -88,7 +88,7 @@ object VirtualTargets {
             }
 
             scores.map { (id, score) ->
-                (targets[id]?.get(VirtualMentions.name)!!) to RatingSystem.Level.getLevel(score).levelName
+                (targets[id]?.get(VirtualMentions.name)!!) to RatingSystem.Level.getLevel(score ?: 0).levelName
             }
         }
 
