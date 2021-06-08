@@ -35,6 +35,6 @@ object Joke {
     }
 
     private fun parseResponse(response: String): String {
-        return response.substringAfter("<p>").substringBefore("</p>")
+        return response.substringAfter("<p>").substringBefore("</p>").replace("<br />", "")
     }
 }
