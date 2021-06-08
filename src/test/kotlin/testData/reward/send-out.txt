@@ -1,7 +1,7 @@
 [
   {
-    "text": "Голосование за вручение @marx награды очень важная награда - 1/15\nОтправь /наградить [id2|@marx]",
-    "chatId": 1,
+    "text": "Голосование за вручение @marx награды очень важная награда - 1/12\nОтправь /наградить [id2|@marx]",
+    "chatId": 1.0,
     "pixUrls": [],
     "keyboard": {
       "buttons": [
@@ -12,113 +12,113 @@
         }
       ]
     },
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
     "text": "Товарищ! Вы не Брежнев",
-    "chatId": 1,
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 10000
+    "removeDelay": 10000.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [2/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [2/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [3/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [3/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [4/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [4/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [5/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [5/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [6/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [6/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [7/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [7/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [8/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [8/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [9/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [9/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [10/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [10/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [11/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [11/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [12/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [12/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
-  },
-  {
-    "text": "Test User проголосовал за награждение @marx - [13/15]",
-    "chatId": 1,
-    "pixUrls": [],
-    "removeDelay": -1
-  },
-  {
-    "text": "Test User проголосовал за награждение @marx - [14/15]",
-    "chatId": 1,
-    "pixUrls": [],
-    "removeDelay": -1
-  },
-  {
-    "text": "Test User проголосовал за награждение @marx - [15/15]",
-    "chatId": 1,
-    "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
     "text": "@marx получает награду очень важная награда",
-    "chatId": 1,
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
   },
   {
     "text": "По архивам Партии, у Test User уровень октябрёнок и награды: очень важная награда",
-    "chatId": 1,
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Голосование за вручение @marx награды еще более важная награда - 1/15\nОтправь /наградить [id2|@marx]",
-    "chatId": 1,
+    "text": "Голосование за вручение @marx награды еще более важная награда - 1/12\nОтправь /наградить [id2|@marx]",
+    "chatId": 1.0,
     "pixUrls": [],
     "keyboard": {
       "buttons": [
@@ -129,72 +129,72 @@
         }
       ]
     },
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
     "text": "Товарищ! Вы не Брежнев",
-    "chatId": 1,
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": 10000
+    "removeDelay": 10000.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [2/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [2/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [3/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [3/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [4/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [4/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [5/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [5/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [6/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [6/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [7/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [7/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [8/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [8/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [9/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [9/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за награждение @marx - [10/15]",
-    "chatId": 1,
+    "text": "Test User проголосовал за награждение @marx - [10/12]",
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   },
   {
     "text": "По архивам Партии, у Test User уровень октябрёнок и награды: очень важная награда",
-    "chatId": 1,
+    "chatId": 1.0,
     "pixUrls": [],
-    "removeDelay": -1
+    "removeDelay": -1.0
   }
 ]

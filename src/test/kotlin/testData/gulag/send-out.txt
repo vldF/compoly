@@ -1,6 +1,6 @@
 [
   {
-    "text": "Голосование на отправление @marx в лагерь началось - 1/15\nОтправь /гулаг [id2|@marx]",
+    "text": "Голосование на отправление @marx в лагерь началось - 1/12\nОтправь /гулаг [id2|@marx]",
     "chatId": 1.0,
     "pixUrls": [],
     "keyboard": {
@@ -21,91 +21,91 @@
     "removeDelay": 10000.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [2/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [2/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [3/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [3/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [4/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [4/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [5/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [5/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [6/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [6/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [7/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [7/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [8/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [8/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [9/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [9/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [10/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [10/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [11/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [11/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [12/15]",
-    "chatId": 1.0,
-    "pixUrls": [],
-    "removeDelay": -1.0
-  },
-  {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [13/15]",
-    "chatId": 1.0,
-    "pixUrls": [],
-    "removeDelay": -1.0
-  },
-  {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [14/15]",
-    "chatId": 1.0,
-    "pixUrls": [],
-    "removeDelay": -1.0
-  },
-  {
-    "text": "Test User проголосовал за отправление @marx в лагерь - [15/15]",
+    "text": "Test User проголосовал за отправление @marx в лагерь - [12/12]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
     "text": "Подумай над своим поведением, @marx, а потом напиши админам, чтобы тебя позвали назад",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Партия уже наказала @marx",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Партия уже наказала @marx",
+    "chatId": 1.0,
+    "pixUrls": [],
+    "removeDelay": -1.0
+  },
+  {
+    "text": "Партия уже наказала @marx",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
