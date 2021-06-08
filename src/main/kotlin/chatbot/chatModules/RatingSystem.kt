@@ -368,7 +368,7 @@ object RatingSystem {
         val currentTime = System.currentTimeMillis()
         if (
                 disrespects[senderId to chatId] != null &&
-                currentTime - disrespects[senderId to chatId]!! < 1000 * 60 * 60 * 4
+                currentTime - disrespects[senderId to chatId]!! < RESPECT_DELAY * HOUR
         ) {
             val timeLeft = (RESPECT_DELAY * HOUR + disrespects[senderId to chatId]!! - currentTime) / 1000
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
