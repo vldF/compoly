@@ -12,10 +12,8 @@ script:
 
 env:
   global:
-    - secure: 'SFTP_USER=[user]'
-    - secure: 'SFTP_PASSWORD=[password]'
-    - secure: 'SFTP_KEY=[rsa-key]'
     - 'JAR_PATH=./build/libs/vkBot.jar'
+    - 'REMOTE_SCRIPT=./start.sh'
 
 deploy:
   provider: releases
