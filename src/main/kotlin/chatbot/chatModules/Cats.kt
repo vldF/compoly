@@ -1,16 +1,19 @@
 package chatbot.chatModules
 
-import com.google.gson.JsonParser
 import chatbot.ModuleObject
 import chatbot.OnCommand
+import chatbot.UsageInfo
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Animal
+import com.google.gson.JsonParser
+import configs.theCatApiKey
 
 @ModuleObject
 object Cats : Animal() {
-    private const val theCatApiKey = "dc64b39c-51b6-43aa-ba44-a231e8937d5b" // todo: move it to config?
+    private const val notEnoughMessage = "Товарищ, ваши котики закончились. Обновление запаса котов происходит раз в 4 часа"
 
-    @OnCommand(["котик", "cat"], "КОТИКИ!", cost = 20)
+    @UsageInfo(baseUsageAmount = 1, levelBonus = 1, notEnoughMessage)
+    @OnCommand(["котик", "cat"], "КОТИКИ!")
     fun cat(event: LongPollNewMessageEvent) {
         animal(event)
     }

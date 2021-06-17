@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="chatbot.ModuleObject" />
       <item index="1" class="java.lang.String" itemvalue="chatbot.OnCommand" />
+      <item index="2" class="java.lang.String" itemvalue="chatbot.OnMessage" />
     </list>
-  </component>
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_15" default="true" project-jdk-name="15" project-jdk-type="JavaSDK" />
 </project>

@@ -1,6 +1,6 @@
 [
-    {
-        "chatId":1,
-        "userId":1
-    }
+  {
+    "chatId": 1,
+    "userId": 1
+  }
 ]

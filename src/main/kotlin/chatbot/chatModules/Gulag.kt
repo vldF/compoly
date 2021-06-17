@@ -43,7 +43,7 @@ object Gulag : Votable() {
         }
     }
 
-    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN, showOnHelp = false)
+    @OnCommand(["admgulag"], "В гулаг без суда и следствия", CommandPermission.ADMIN, showInHelp = false)
     fun adminVotingGulag(event: LongPollNewMessageEvent) {
         adminVoting(event) { _, _, _, target ->
             val onEndVotingMessage =

@@ -1,7 +1,7 @@
 package modules.events.icsEvents
 
 import api.VkApi
-import chatIds
+import configs.chatIds
 import getTime
 import modules.events.Event
 import modules.events.Time

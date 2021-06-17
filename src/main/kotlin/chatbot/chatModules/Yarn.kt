@@ -2,6 +2,7 @@ package chatbot.chatModules
 
 import chatbot.ModuleObject
 import chatbot.OnCommand
+import chatbot.UsageInfo
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -11,12 +12,19 @@ import kotlin.random.Random
 @ExperimentalStdlibApi
 @ModuleObject
 object Yarn {
-    var probability = 0
-    @OnCommand(["нить", "yarn"], cost = 10, description = "Да найдите же ее кто-нибудь")
-    fun loseYarn(event: LongPollNewMessageEvent) {
-        event.api.send("Произвожу поиск...", event.chatId)
+    private const val notEnoughMessage = "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса нитей происходит раз в 4 часа"
+    private var probability = 0
+
+    @UsageInfo(baseUsageAmount = 6, levelBonus = 2, notEnoughMessage)
+    @OnCommand(["нить", "yarn"], description = "Да найдите же ее кто-нибудь")
+    fun yarn(event: LongPollNewMessageEvent) {
+        loseYarn(event)
+    }
+
+    private fun loseYarn(event: LongPollNewMessageEvent) {
         probability++
         val delay = 3000L
+        event.api.send("Произвожу поиск...", event.chatId, removeDelay = delay)
         GlobalScope.launch {
             delay(delay)
             val found = Random.nextInt(0, 500)

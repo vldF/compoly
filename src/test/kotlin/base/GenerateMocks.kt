@@ -115,7 +115,7 @@ private fun generateVkApiMockImplementation(apiMethods: MethodInfoList) {
                 String()::class -> value as T
                 Boolean::class -> value.toBoolean() as T
                 List::class -> {
-                    tru {
+                    try {
                         Gson().fromJson(value, Array<VkUser>::class.java).toList() as T
                     } catch(e: Exception) {
                         throw IllegalStateException("wrong type parameter")

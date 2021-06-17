@@ -1,56 +1,76 @@
 [
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[
-"online"
-]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-},
-{
-"peer_id":1,
-"fields":[]
-}
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": [
+      "online"
+    ]
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  },
+  {
+    "peer_id": 1.0,
+    "fields": []
+  }
 ]

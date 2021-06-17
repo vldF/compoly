@@ -1,20 +1,20 @@
 [
   {
     "text": "Цель успешно добавлена в архивы: trotsky",
-    "chatId": 1.0,
+    "chatId": 1,
     "pixUrls": [],
-    "removeDelay": -1.0
+    "removeDelay": -1
   },
   {
     "text": "Одобрение выражено",
-    "chatId": 1.0,
+    "chatId": 1,
     "pixUrls": [],
-    "removeDelay": 1000.0
+    "removeDelay": 10000
   },
   {
     "text": "Осуждение выражено",
-    "chatId": 1.0,
+    "chatId": 1,
     "pixUrls": [],
-    "removeDelay": 1000.0
+    "removeDelay": 10000
   }
 ]

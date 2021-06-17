@@ -10,15 +10,13 @@ import org.mockito.stubbing.Answer
 //DO NO MODIFY THIS CODE MANUALLY!!!
 
 interface VkApiMock {
-    fun getUserIdByName(username: String?): Long?
-    
     fun getUserNameById(id: Int?): String?
     
     fun kickUserFromChat(chatId: Int?, userId: Int?): Unit
     
     fun isUserAdmin(chatId: Int?, userId: Int?): Boolean?
     
-    fun uploadPhotoByUrlAsAttachment(chatId: Int?, url: String?): String?
+    fun uploadPhotoByUrlAsAttachment(url: String?): String?
     
     fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?): Unit
     

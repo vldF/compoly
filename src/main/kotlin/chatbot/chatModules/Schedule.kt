@@ -20,10 +20,10 @@ import java.util.*
 object Schedule {
     // todo: add leap year support
     private val parser = TextMessageParser()
-    private val dataRegex = Regex("^(\\d\\d*).(\\d\\d*)\$")
-    val monthDays = mutableListOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    private val dataRegex = Regex("^(\\d\\d*).(\\d\\d*)\\s*\$")
+    private val monthDays = mutableListOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-    @OnCommand(["добавитьсобытие", "добавитьрасписание"], "добавляет ивент в расписание")
+    @OnCommand(["добавитьсобытие", "добавитьрасписание"], "добавляет ивент в расписание", permissions = CommandPermission.ADMIN)
     fun add(event: LongPollNewMessageEvent) {
         val api = event.api
         val chatId = event.chatId

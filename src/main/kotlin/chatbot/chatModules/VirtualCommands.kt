@@ -2,10 +2,7 @@ package chatbot.chatModules
 
 import api.Command
 import api.TextMessageParser
-import chatbot.CommandPermission
-import chatbot.ModuleObject
-import chatbot.OnCommand
-import chatbot.OnMessage
+import chatbot.*
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.listeners.VirtualCommandBody
 import database.VirtualCommands
@@ -35,6 +32,12 @@ object VirtualCommands {
             return
         }
         val commandName = parsed.data[1].rawText.toLowerCase()
+
+        if (isCommonCommandExists(commandName)) {
+            api.send("Невозможно переопределить базовую команду", chatId)
+            return
+        }
+
         val lines = event.text.lines()
         val text = if (lines.size > 1) {
             lines.subList(1, lines.size).joinToString("\n")
@@ -105,6 +108,10 @@ object VirtualCommands {
         }
     }
 
+    private fun isCommonCommandExists(name: String): Boolean {
+        return EventProcessor.commandListeners.any { it.commands.contains(name) }
+    }
+
     @OnCommand(["списоквиртуальныхкоманд", "список", "virtuallist", "list"])
     fun virtualList(event: LongPollNewMessageEvent) {
         val commands = virtualCommands
@@ -147,9 +154,9 @@ object VirtualCommands {
 
     @OnMessage
     fun executeVirtualCommandIfExists(event: LongPollNewMessageEvent) {
-        val command = parser.parse(event.text).get<Command>(0)?.name ?: return
+        val command = parser.parse(event.text).get<Command>(0)?.name?.toLowerCase() ?: return
+        log.info("trying find virtual command...")
         for (virtualCommand in virtualCommands) {
-            log.info("trying find virtual command...")
             if (virtualCommand.triggers.contains(command)) {
                 sendVirtualCommandAnswer(event, virtualCommand)
             }

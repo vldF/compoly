@@ -67,6 +67,36 @@
     },
     {
         chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 12,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 13,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 14,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 15,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/наградить [id2|@marx]",
+        userId: 16,
+        date: 0
+    },
+    {
+        chatId: 1,
         text: "/lvl",
         userId: 2,
         date: 0

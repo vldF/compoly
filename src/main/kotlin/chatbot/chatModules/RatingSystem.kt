@@ -1,26 +1,33 @@
 package chatbot.chatModules
 
 import api.*
+import api.GarbageMessage.Companion.toGarbageMessageWithDelay
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
-import botId
-import database.UserScore
-import database.dbQuery
-import log
 import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.OnMessage
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import configs.botId
 import database.EMPTY_HISTORY_TEXT
 import database.UserReward
-import org.jetbrains.exposed.sql.*
-import java.lang.IllegalArgumentException
+import database.UserScore
+import database.dbQuery
+import log
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 
 @Suppress("DuplicatedCode")
 @ModuleObject
 object RatingSystem {
+    private const val HOUR = 1000 * 60 * 60
+    private const val RESPECT_DELAY = 1
+
     private val respects = mutableMapOf<Pair<Int, Int>, Long>()
     private val disrespects = mutableMapOf<Pair<Int, Int>, Long>()
+    private val usedCommands = mutableMapOf<Pair<Int, String>, Int>()
 
     enum class Level(val levelName: String) {
         LEVEL0("ЗАСЕКРЕЧЕНО"),
@@ -171,9 +178,9 @@ object RatingSystem {
         val userId = event.userId
 
         val parsed = TextMessageParser().parse(event.text)
-        var targetUserId = 0
         val mention = parsed.get<Mention>(1)
-        targetUserId = if (mention != null) {
+
+        val targetUserId: Int = if (mention != null) {
             if (api.isUserAdmin(chatId, userId)) {
                 mention.targetId ?: userId
             } else {
@@ -201,16 +208,16 @@ object RatingSystem {
                 val rewardsStr = rewardsList.joinToString(separator = ", ")
                 api.send(
                     "По архивам Партии, у $screenName уровень $levelName и награды: $rewardsStr",
-                    chatId,
-                    removeDelay = DEFAULT_DELAY
+                    chatId
                 )
             } else {
                 api.send(
                     "По архивам Партии, у $screenName уровень $levelName",
-                    chatId,
-                    removeDelay = DEFAULT_DELAY
+                    chatId
                 )
             }
+
+            GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
         }
     }
 
@@ -253,12 +260,13 @@ object RatingSystem {
         val currentTime = System.currentTimeMillis()
         if (
                 respects[senderId to chatId] != null &&
-                currentTime - respects[senderId to chatId]!! < 1000 * 60 * 60 * 4
+                currentTime - respects[senderId to chatId]!! < RESPECT_DELAY * HOUR
         ) {
-            val timeLeft = (1000 * 60 * 60 * 4 + respects[senderId to chatId]!! - currentTime) / 1000
+            val timeLeft = (RESPECT_DELAY * HOUR + respects[senderId to chatId]!! - currentTime) / 1000
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
-                "Партия не рекомендует одобрение других лиц чаще, чем раз в 4 часа.\nСледующее одобрение будет доступно через: $coolDown",
+                "Партия не рекомендует одобрение других лиц чаще, чем раз в $RESPECT_DELAY час.\nСледующее " +
+                        "одобрение будет доступно через: $coolDown",
                 chatId,
                 removeDelay = DEFAULT_DELAY
             )
@@ -360,12 +368,12 @@ object RatingSystem {
         val currentTime = System.currentTimeMillis()
         if (
                 disrespects[senderId to chatId] != null &&
-                currentTime - disrespects[senderId to chatId]!! < 1000 * 60 * 60 * 4
+                currentTime - disrespects[senderId to chatId]!! < RESPECT_DELAY * HOUR
         ) {
-            val timeLeft = (1000 * 60 * 60 * 4 + disrespects[senderId to chatId]!! - currentTime) / 1000
+            val timeLeft = (RESPECT_DELAY * HOUR + disrespects[senderId to chatId]!! - currentTime) / 1000
             val coolDown = String.format("%d:%02d:%02d", timeLeft / 3600, timeLeft % 3600 / 60, timeLeft % 3600 % 60)
             api.send(
-                "Партия не рекомендует осуждение других лиц чаще, чем раз в 4 часа.\nСледующее осуждение будет доступно через: $coolDown",
+                "Партия не рекомендует осуждение других лиц чаще, чем раз в $RESPECT_DELAY час.\nСледующее осуждение будет доступно через: $coolDown",
                 chatId,
                 removeDelay = DEFAULT_DELAY
             )
@@ -381,7 +389,7 @@ object RatingSystem {
     }
 
     // for tests only
-    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN, showOnHelp = false)
+    @OnCommand(["showRespectHistory"], "вскрываем историю одобрений", CommandPermission.ADMIN, showInHelp = false)
     fun showRespectHistory(event: LongPollNewMessageEvent) {
         val api = event.api
         val parsed = TextMessageParser().parse(event.text, event.chatId)
@@ -399,5 +407,35 @@ object RatingSystem {
             }.firstOrNull()?.get(UserScore.history_respects).toString()
         }
         api.send(respectHistoryTxt, shadowChatId)
+    }
+
+    fun canUseCommand(
+        chatId: Int,
+        userId: Int,
+        basicUseAmount: Int,
+        levelBonus: Int,
+        commandName: String
+    ): Boolean {
+        val rep = dbQuery {
+            UserScore.select{
+                (UserScore.chatId eq chatId) and (UserScore.userId eq userId)
+            }.firstOrNull()?.get(UserScore.reputation) ?: 0
+        }
+        val level = Level.getLevel(rep)
+
+        if (commandName.isEmpty()) return false
+        val key = Pair(userId, commandName)
+        val maxAmount = basicUseAmount + levelBonus * level.ordinal
+        val realAmount = usedCommands.getOrPut(key) { 0 }
+        if (realAmount >= maxAmount) {
+            return false
+        }
+
+        usedCommands[key] = realAmount + 1
+        return true
+    }
+
+    fun updateCommandsRestrictions() {
+        usedCommands.clear()
     }
 }

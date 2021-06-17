@@ -118,7 +118,7 @@ class TextMessageParser {
 
     private fun parseVirtualMention(text: String, chatId: Int?): Mention? {
         val virtualRegex = virtualMentionRegex.find(text)
-        val name = virtualRegex?.groupValues?.get(1) ?: return null
+        val name = virtualRegex?.groupValues?.get(1)?.toLowerCase() ?: return null
         val targetId = if (chatId != null) {
             getVirtualUserId(chatId, name)
         } else null

@@ -4,13 +4,16 @@ import chatbot.CommandPermission
 import java.lang.reflect.Method
 
 data class CommandListener(
-        val commands: Array<String>,
-        val description: String,
-        val baseClass: Any,
-        val call: Method,
-        val permission: CommandPermission,
-        val cost: Int,
-        val showOnHelp: Boolean
+    val commands: Array<String>,
+    val description: String,
+    val classInstance: Any,
+    val method: Method,
+    val permission: CommandPermission,
+    val showInHelp: Boolean,
+    val controlUsage: Boolean,
+    val levelBonus: Int,
+    val baseUsageAmount: Int,
+    val notEnoughMessage: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -19,10 +22,9 @@ data class CommandListener(
 
         if (!commands.contentEquals(other.commands)) return false
         if (description != other.description) return false
-        if (call != other.call) return false
+        if (method != other.method) return false
         if (permission != other.permission) return false
-        if (cost != other.cost) return false
-        if (showOnHelp != other.showOnHelp) return false
+        if (showInHelp != other.showInHelp) return false
 
         return true
     }
@@ -30,11 +32,10 @@ data class CommandListener(
     override fun hashCode(): Int {
         var result = commands.contentHashCode()
         result = 31 * result + description.hashCode()
-        result = 31 * result + baseClass.hashCode()
-        result = 31 * result + call.hashCode()
+        result = 31 * result + classInstance.hashCode()
+        result = 31 * result + method.hashCode()
         result = 31 * result + permission.hashCode()
-        result = 31 * result + cost
-        result = 31 * result + showOnHelp.hashCode()
+        result = 31 * result + showInHelp.hashCode()
         return result
     }
 }

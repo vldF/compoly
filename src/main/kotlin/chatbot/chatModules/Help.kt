@@ -10,7 +10,7 @@ object Help {
         val api = event.api
         val result = StringBuilder()
         val usersPermissions = Permissions.getUserPermissionsByNewMessageEvent(event)
-        val commands = EventProcessor.commandListeners.filter { it.showOnHelp }
+        val commands = EventProcessor.commandListeners.filter { it.showInHelp }
 
         val permissions = CommandPermission.values().filter {
             it.ordinal <= usersPermissions.ordinal
@@ -22,7 +22,7 @@ object Help {
                     separator = "\n",
                     prefix = permission.helpHeaderString + ":\n",
                     postfix = "\n\n"
-                ) { "/${it.commands.first()} [${it.cost}] — ${it.description}" })
+                ) { "/${it.commands.first()} — ${it.description}" })
         }
         api.send(result.toString(), event.chatId)
     }

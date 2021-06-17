@@ -68,6 +68,36 @@
     {
         chatId: 1,
         text: "/гулаг [id2|@marx]",
+        userId: 12,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/гулаг [id2|@marx]",
+        userId: 13,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/гулаг [id2|@marx]",
+        userId: 14,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/гулаг [id2|@marx]",
+        userId: 15,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/гулаг [id2|@marx]",
+        userId: 16,
+        date: 0
+    },
+    {
+        chatId: 1,
+        text: "/гулаг [id2|@marx]",
         userId: 1,
         date: 0
     },
