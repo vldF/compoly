@@ -8,8 +8,19 @@ jdk: oraclejdk15
 script:
   - chmod 777 ./gradlew
   - ./gradlew build --info
+  - chmod 777 ./deploy.sh
+
+env:
+  global:
+    - secure: 'SFTP_USER=[user]'
+    - secure: 'SFTP_PASSWORD=[password]'
+    - secure: 'SFTP_KEY=[rsa-key]'
+    - 'JAR_PATH=./build/libs/vkBot.jar'
+
 deploy:
   provider: releases
   api_key: ${GH_TOKEN}
-  file: "./build/libs/vkBot.jar"
-  skip_cleanup: true
+  file: ${JAR_PATH}
+  kip_cleanup: true
+after_success:
+  - test $TRAVIS_BRANCH = "deploy-test" && ./deploy.sh
