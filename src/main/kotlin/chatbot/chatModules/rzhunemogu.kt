@@ -4,6 +4,7 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.UsageInfo
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import com.google.gson.Gson
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -101,6 +102,7 @@ enum class RzhunemoguContentType(val num: Int) {
 }
 
 private val client = HttpClient.newHttpClient()
+val gson = Gson()
 
 private fun getResponseFromRzhunemogu(type: Int): String {
     val request = HttpRequest.newBuilder()
@@ -119,7 +121,7 @@ private fun calculateVulgarProbability(): Boolean {
 }
 
 private fun createAndSendContent(contentType: RzhunemoguContentType, event: LongPollNewMessageEvent) {
-    fun String.parse(): String = removePrefix("{\"content\":\"").removeSuffix("\"}")
+    fun String.parse(): String? = gson.fromJson(this, JokeResponse::class.java)?.content
 
     val isVulgar = calculateVulgarProbability()
     var typeNum = contentType.num
@@ -127,11 +129,16 @@ private fun createAndSendContent(contentType: RzhunemoguContentType, event: Long
         typeNum += 10
 
     val response = buildString {
+        val content = getResponseFromRzhunemogu(typeNum).parse() ?: "Ошибка при получении :("
         if (isVulgar)
             append(congratulationsOnVulgarity)
 
-        append(getResponseFromRzhunemogu(typeNum).parse())
+        append(content)
     }
 
     event.api.send(response, event.chatId)
 }
+
+data class JokeResponse(
+    val content: String
+)
