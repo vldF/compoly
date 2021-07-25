@@ -21,7 +21,5 @@ deploy:
   skip_cleanup: true
 
 after_success:
-  - sudo echo "${SSH_KEY}" > ~/.ssh/authorized_keys
-  - sudo chmod 400 ~/.ssh/authorized_keys
-  - sudo ssh-keyscan ${SERVER_IP} >> ~/.ssh/authorized_keys
+  - ssh-add ./travis_key
   - sudo scp ./build/libs/vkBot.jar ubuntu@${SERVER_IP}:/home/ubuntu/test.jar
