@@ -20,4 +20,4 @@ after_success:
   - curl --ftp-create-dirs
          -T ./build/libs/vkBot.jar
          --key /tmp/ssh
-         sftp://ubuntu@${SERVER_IP}/test.jar
+         sftp://ubuntu@"${SERVER_IP}"/test.jar
