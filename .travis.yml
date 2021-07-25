@@ -16,7 +16,7 @@ before_install:
 
 deploy:
   provider: script
-  script: deploy.sh
+  script: sh ./deploy.sh
   cleanup: false
   on:
     branch: master
