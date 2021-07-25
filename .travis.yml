@@ -15,8 +15,8 @@ before_install:
     -in travis_key.enc -out ~/travis_key -d
 
 deploy:
-  - provider: script
-    script: deploy.sh
-    skip_cleanup: true
-    on:
-      branch: master
+  provider: script
+  script: deploy.sh
+  skip_cleanup: true
+  on:
+    branch: master
