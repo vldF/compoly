@@ -1,19 +1,33 @@
 language: java
 install: true
+
 os: linux
 dist: trusty
 jdk: oraclejdk15
+
 script:
-- chmod 777 ./gradlew
-- "./gradlew build --info"
-deploy:
-  provider: releases
-  api_key: "${GH_TOKEN}"
-  file: "./build/libs/vkBot.jar"
-  skip_cleanup: true
-after_success:
-- echo "${SSH_KEY}" > /tmp/ssh
-- curl --ftp-create-dirs -T ./build/libs/vkBot.jar --key /tmp/ssh sfth://ubuntu@${SERVER_IP}/test.jar
+  - chmod 777 ./gradlew
+  - ./gradlew build --info
+
 before_install:
-- openssl aes-256-cbc -K $encrypted_b4f3819162af_key -iv $encrypted_b4f3819162af_iv
-  -in travis_key.enc -out ~\/travis_key -d
+  - sudo apt-get install openssh-client
+  - openssl aes-256-cbc -K $encrypted_b4f3819162af_key -iv $encrypted_b4f3819162af_iv
+    -in travis_key.enc -out ~/travis_key -d
+
+deploy:
+  - provider: releases
+    api_key: ${GH_TOKEN}
+    file: "./build/libs/vkBot.jar"
+    skip_cleanup: true
+  - provider: script
+    script: deploy.sh
+    on:
+      branch: master
+
+after_success:
+  - eval "$(ssh-agent -s)"
+  - chmod 600 ~/travis_key
+  - echo -e "Host 130.61.203.95\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - ssh-add ~/travis_key
+  - sudo scp -o StrictHostKeyChecking=no -i ~/travis_key ./build/libs/vkBot.jar ubuntu@${SERVER_IP}:/home/ubuntu/vkBot/lib/vkBot.jar
+  - sudo ssh -o StrictHostKeyChecking=no -i ~/travis_key ubuntu@${SERVER_IP} sh /home/ubuntu/restartbot.sh

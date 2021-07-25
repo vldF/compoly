@@ -4,6 +4,7 @@ import api.VkApi
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import configs.mainChatPeerId
 import krobot.api.`try`
+import log
 import java.io.IOException
 import java.net.URI
 import java.net.http.HttpClient
@@ -53,7 +54,9 @@ abstract class Animal {
                 HttpResponse.BodyHandlers.ofString()
             )
             parseAnimalResponse(response.body())
-        } catch (E: IOException) {
+        } catch (e: IOException) {
+            log.severe("error on getting picture")
+            log.severe(e.stackTraceToString())
             noImage
         }
     }
