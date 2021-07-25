@@ -25,4 +25,4 @@ after_success:
   - chmod 600 ~/travis_key
   - echo -e "Host 130.61.203.95\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ~/travis_key
-  - sudo scp -i ~/travis_key ./build/libs/vkBot.jar ubuntu@${SERVER_IP}:/home/ubuntu/test.jar
+  - sudo scp -o StrictHostKeyChecking=no -i ~/travis_key ./build/libs/vkBot.jar ubuntu@${SERVER_IP}:/home/ubuntu/test.jar
