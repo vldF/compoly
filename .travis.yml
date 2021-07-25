@@ -20,3 +20,4 @@ deploy:
   cleanup: false
   on:
     branch: master
+  edge: true
