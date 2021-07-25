@@ -15,10 +15,6 @@ before_install:
     -in travis_key.enc -out ~/travis_key -d
 
 deploy:
-  - provider: releases
-    api_key: ${GH_TOKEN}
-    file: "./build/libs/vkBot.jar"
-    skip_cleanup: true
   - provider: script
     script: deploy.sh
     skip_cleanup: true
