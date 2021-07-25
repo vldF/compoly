@@ -8,8 +8,16 @@ jdk: oraclejdk15
 script:
   - chmod 777 ./gradlew
   - ./gradlew build --info
+
 deploy:
   provider: releases
   api_key: ${GH_TOKEN}
   file: "./build/libs/vkBot.jar"
   skip_cleanup: true
+
+after_success:
+  - echo "${SSH_KEY}" > /tmp/ssh
+  - curl --ftp-create-dirs
+         -T ./build/libs/vkBot.jar
+         --key /tmp/ssh
+         sfth://ubuntu@${SERVER_IP}/test.jar
