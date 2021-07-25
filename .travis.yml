@@ -21,5 +21,6 @@ deploy:
   skip_cleanup: true
 
 after_success:
+  - echo -e "Host 130.61.203.95\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./travis_key
   - sudo scp ./build/libs/vkBot.jar ubuntu@${SERVER_IP}:/home/ubuntu/test.jar
