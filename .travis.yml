@@ -20,5 +20,6 @@ deploy:
 
 after_success:
   - echo "${SSH_KEY}" > /tmp/ssh
+  - chmod 400 /tmp/ssh
   - ssh-keyscan ${SERVER_IP} >> ~/.ssh/known_hosts
   - scp -i /tmp/ssh ./build/libs/vkBot.jar ubuntu@${SERVER_IP}:/home/ubuntu/test.jar
