@@ -4,13 +4,11 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.UsageInfo
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import com.google.gson.Gson
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
-import kotlin.random.Random
 
 @ModuleObject
 object Joke {
@@ -89,20 +87,17 @@ object Status {
     }
 }
 
-private const val congratulationsOnVulgarity = "Наши поздравления, товарищ! Вам выпала пошлая версия\uD83D\uDE0F:\n\n"
-
 enum class RzhunemoguContentType(val num: Int) {
-    JOKE(1),
-    STORY(2),
-    VERSE(3),
-    APHORISM(4),
-    QUOTE(5),
-    TOAST(6),
-    STATUS(8)
+    JOKE(11),
+    STORY(12),
+    VERSE(13),
+    APHORISM(14),
+    QUOTE(15),
+    TOAST(16),
+    STATUS(18)
 }
 
 private val client = HttpClient.newHttpClient()
-val gson = Gson()
 
 private fun getResponseFromRzhunemogu(type: Int): String {
     val request = HttpRequest.newBuilder()
@@ -116,29 +111,11 @@ private fun getResponseFromRzhunemogu(type: Int): String {
     ).body()
 }
 
-private fun calculateVulgarProbability(): Boolean {
-    return Random.nextInt(6) == 0
-}
-
 private fun createAndSendContent(contentType: RzhunemoguContentType, event: LongPollNewMessageEvent) {
-    fun String.parse(): String? = gson.fromJson(this, JokeResponse::class.java)?.content
+    // CRUTCH: in the incoming json quotes are not escaped, so normal methods don't work
+    fun String.parsed(): String = removePrefix("{\"content\":\"").removeSuffix("\"}")
 
-    val isVulgar = calculateVulgarProbability()
-    var typeNum = contentType.num
-    if (isVulgar)
-        typeNum += 10
+    val content = getResponseFromRzhunemogu(contentType.num).parsed()
 
-    val response = buildString {
-        val content = getResponseFromRzhunemogu(typeNum).parse() ?: "Ошибка при получении :("
-        if (isVulgar)
-            append(congratulationsOnVulgarity)
-
-        append(content)
-    }
-
-    event.api.send(response, event.chatId)
+    event.api.send(content, event.chatId)
 }
-
-data class JokeResponse(
-    val content: String
-)
