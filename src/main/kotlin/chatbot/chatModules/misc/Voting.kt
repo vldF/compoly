@@ -2,7 +2,7 @@ package chatbot.chatModules.misc
 
 
 class Voting(
-    val timeOfClosing: Long,
+    var timeOfClosing: Long,
     val rightNumToVote: Int
 ) {
     private val voteSet = mutableSetOf<Pair<Int, Int>>()
@@ -13,6 +13,10 @@ class Voting(
     }
 
     fun getVotes() = voteSet.size
+
+    fun increaseTimeOfClosing(time: Long) {
+        timeOfClosing += time
+    }
 
     val completed: Boolean
         get() = voteSet.size >= rightNumToVote

@@ -85,6 +85,7 @@ abstract class Votable {
     private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkApi, messages: Messages): Boolean {
         val targetId = target.targetId!!
         val votingIsComplete = voting[targetId to chatId]!!.addVote(senderId, chatId)
+        voting[targetId to chatId]!!.increaseTimeOfClosing(60)
         val senderScreenName = api.getUserNameById(senderId)
         val votedCount = voting[targetId to chatId]!!.getVotes()
         val necessaryCount = voting[targetId to chatId]!!.rightNumToVote
