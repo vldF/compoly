@@ -84,11 +84,13 @@ abstract class Votable {
     /**Add [senderId] vote*/
     private fun addVote(senderId: Int, target: Mention, chatId: Int, api: VkApi, messages: Messages): Boolean {
         val targetId = target.targetId!!
-        val votingIsComplete = voting[targetId to chatId]!!.addVote(senderId, chatId)
-        voting[targetId to chatId]!!.increaseTimeOfClosing(60)
+        val currentVoting = voting[targetId to chatId]!!
+
+        val votingIsComplete = currentVoting.addVote(senderId, chatId)
+        currentVoting.increaseTimeOfClosing(60)
         val senderScreenName = api.getUserNameById(senderId)
-        val votedCount = voting[targetId to chatId]!!.getVotes()
-        val necessaryCount = voting[targetId to chatId]!!.rightNumToVote
+        val votedCount = currentVoting.getVotes()
+        val necessaryCount = currentVoting.rightNumToVote
         votedIds[targetId to chatId]!!.add(senderId)
 
         val message = "$senderScreenName проголосовал ${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
@@ -240,10 +242,11 @@ abstract class Votable {
             return
         }
         val currentTime = event.time
+        val currentVoting = voting[targetId to chatId]
 
-        val isNewVoting = voting[targetId to chatId] == null
-                || voting[targetId to chatId]!!.timeOfClosing < currentTime
-                || voting[targetId to chatId]!!.completed
+        val isNewVoting = currentVoting == null
+                || currentVoting.timeOfClosing < currentTime
+                || currentVoting.completed
 
         if (isNewVoting) {
             startNewVoting(senderId, target, chatId, api, currentTime, messages)
