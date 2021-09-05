@@ -12,9 +12,9 @@ import java.time.Duration
 
 @ModuleObject
 object Joke {
-    private const val notEnoughMessage = "Товарищ, шутки кончились. Придумывание новых анекдотов происходит раз в 4 часа"
+    private const val notEnoughMessage = "Товарищ, шутки кончились. Придумывание новых анекдотов происходит раз в 12 часов"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 1, levelBonus = 1, notEnoughMessage)
     @OnCommand(["шутка", "анекдот", "анек", "joke", "anecdote"], "Смешной анекдот")
     fun story(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.JOKE, event)
@@ -25,7 +25,7 @@ object Joke {
 object Story {
     private const val notEnoughMessage = "Товарищ, рассказы кончились. Придумывание новых историй происходит раз в 4 часа"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 0, levelBonus = 1, notEnoughMessage)
     @OnCommand(["рассказ", "история", "story"], "Забавная история")
     fun joke(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.STORY, event)
@@ -36,7 +36,7 @@ object Story {
 object Verse {
     private const val notEnoughMessage = "Товарищ, стишки кончились. Придумывание новых стишков происходит раз в 4 часа"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 0, levelBonus = 1, notEnoughMessage)
     @OnCommand(["стишок", "стих", "verse"], "Необычный стишок")
     fun verse(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.VERSE, event)
@@ -47,7 +47,7 @@ object Verse {
 object Aphorism {
     private const val notEnoughMessage = "Товарищ, афоризмы кончились. Придумывание новых афоризмов происходит раз в 4 часа"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 0, levelBonus = 1, notEnoughMessage)
     @OnCommand(["афоризм", "aphorism"], "Глубокий афоризм")
     fun aphorism(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.APHORISM, event)
@@ -58,7 +58,7 @@ object Aphorism {
 object Quote {
     private const val notEnoughMessage = "Товарищ, цитаты кончились. Придумывание новых цитат происходит раз в 4 часа"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 0, levelBonus = 1, notEnoughMessage)
     @OnCommand(["цитата", "quote"], "Интересная цитата")
     fun aphorism(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.QUOTE, event)
@@ -69,7 +69,7 @@ object Quote {
 object Toast {
     private const val notEnoughMessage = "Товарищ, тосты кончились. Придумывание новых тостов происходит раз в 4 часа"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 0, levelBonus = 1, notEnoughMessage)
     @OnCommand(["тост", "toast"], "Поучительный тост")
     fun aphorism(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.TOAST, event)
@@ -80,7 +80,7 @@ object Toast {
 object Status {
     private const val notEnoughMessage = "Товарищ, статусы кончились. Придумывание новых статусов происходит раз в 4 часа"
 
-    @UsageInfo(baseUsageAmount = 2, levelBonus = 1, notEnoughMessage)
+    @UsageInfo(baseUsageAmount = 0, levelBonus = 1, notEnoughMessage)
     @OnCommand(["статус", "status"], "Запоминающийся статус")
     fun aphorism(event: LongPollNewMessageEvent) {
         createAndSendContent(RzhunemoguContentType.STATUS, event)
