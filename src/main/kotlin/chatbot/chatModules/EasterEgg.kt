@@ -10,7 +10,7 @@ import chatbot.chatBotEvents.LongPollNewMessageEvent
 
 @ModuleObject
 object EasterEgg {
-    private const val notEnoughMessage = "Товарищ, ваши пасхалки закончились. Обновление запаса пасхалок происходит раз в 4 часа"
+    private const val notEnoughMessage = "Товарищ, ваши пасхалки закончились. Обновление запаса пасхалок происходит раз в 12 часов"
 
     @UsageInfo(baseUsageAmount = 1, levelBonus = 1, notEnoughMessage)
     @OnCommand(["тождество"], showInHelp = false)

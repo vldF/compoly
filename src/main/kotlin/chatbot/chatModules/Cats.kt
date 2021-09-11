@@ -10,7 +10,7 @@ import configs.theCatApiKey
 
 @ModuleObject
 object Cats : Animal() {
-    private const val notEnoughMessage = "Товарищ, ваши котики закончились. Обновление запаса котов происходит раз в 4 часа"
+    private const val notEnoughMessage = "Товарищ, ваши котики закончились. Обновление запаса котов происходит раз в 12 часов"
 
     @UsageInfo(baseUsageAmount = 1, levelBonus = 1, notEnoughMessage)
     @OnCommand(["котик", "cat"], "КОТИКИ!")
