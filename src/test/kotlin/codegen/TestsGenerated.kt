@@ -27,8 +27,8 @@ class TestsGenerated {
 
     @Test
     @Order(3)
-    fun gulagDefence() {
-        runTest("src/test/kotlin/testData/gulag_defence")
+    fun defenceFromGulag() {
+        runTest("src/test/kotlin/testData/defenceFromGulag")
     }
 
     @Test

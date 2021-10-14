@@ -323,12 +323,7 @@ abstract class Votable {
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
 
-        if (target == null) {
-            api.send(targetNoneGetBackMessage, chatId, removeDelay = DEFAULT_DELAY)
-            return
-        }
-
-        if (targetId == null) {
+        if (target == null || targetId == null) {
             api.send(targetNoneGetBackMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }

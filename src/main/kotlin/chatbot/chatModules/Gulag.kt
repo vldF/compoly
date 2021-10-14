@@ -41,10 +41,11 @@ object Gulag : Votable() {
             }
 
             val votingForMessage = "Если ты ручаешься за товарища $screenName\n" +
-                    "Отправь /оправдать ${target.rawText}"
+                    "Отправь /оправдать ${target.rawText}"//unused now, maybe can be used in voting gulag init
             val successVoteMessage = "против отправления $screenName в лагерь"
             val keyboardMessage = "/оправдать ${target.rawText}"
-            val onEndVotingMessage = "$screenName полностью чист перед партией"//could be unused
+            val onEndVotingMessage = "$screenName полностью чист перед партией"
+            //unused, cause don't have onVotingTimeIsUP
             Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
         }
     }
