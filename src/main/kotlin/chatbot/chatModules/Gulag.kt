@@ -35,7 +35,7 @@ object Gulag : Votable() {
     fun justifyMember(event: LongPollNewMessageEvent) {
         votingAgainst(event) { api, chatId, _, target ->
             val screenName = target.targetScreenName
-            if (target.targetId to chatId !in voting) {
+            if (super.voting[target.targetId to chatId] == null) {
                 api.send("Партия не ссудит $screenName", chatId)
                 return@votingAgainst null
             }
