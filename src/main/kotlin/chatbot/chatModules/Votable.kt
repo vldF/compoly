@@ -215,6 +215,15 @@ abstract class Votable {
             return
         }
 
+        val currentTime = event.time
+        var messages = someActions(api, chatId, senderId, target) ?: return
+
+        fun isNeedNewVote(voting: Voting?): Boolean {
+            return (voting == null
+                    || voting.timeOfClosing < currentTime
+                    || voting.completed)
+        }
+
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
 
         if ((targetId == null || api.getChatMembers(chatId, emptyList())
@@ -222,6 +231,10 @@ abstract class Votable {
                 .contains(targetId)
         ) {
             if (targetId != null && votedIds[targetId to chatId]?.contains(senderId) == true) {
+                if (isNeedNewVote(voting[targetId to chatId])) {
+                    startNewVoting(senderId, target, chatId, api, currentTime, messages)
+                    return
+                }
                 val senderScreenName = api.getUserNameById(senderId)
                 api.send("$senderScreenName$alreadyVotedMessage", chatId, removeDelay = DEFAULT_DELAY)
             } else api.send(targetNullMessage, chatId)
@@ -229,26 +242,22 @@ abstract class Votable {
         }
 
         if (votedIds[targetId to chatId]?.contains(senderId) == true) {
+            if (isNeedNewVote(voting[targetId to chatId])) {
+                startNewVoting(senderId, target, chatId, api, currentTime, messages)
+                return
+            }
             val senderScreenName = api.getUserNameById(senderId)
             api.send("$senderScreenName$alreadyVotedMessage", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
-
-        var messages = someActions(api, chatId, senderId, target) ?: return
 
         if (adminActions != null) {
             messages = adminActions(api, chatId, senderId, target)
             endVoting(targetId!!, chatId, api, messages)
             return
         }
-        val currentTime = event.time
-        val currentVoting = voting[targetId to chatId]
 
-        val isNewVoting = currentVoting == null
-                || currentVoting.timeOfClosing < currentTime
-                || currentVoting.completed
-
-        if (isNewVoting) {
+        if (isNeedNewVote(voting[targetId to chatId])) {
             startNewVoting(senderId, target, chatId, api, currentTime, messages)
         } else {
             val votingIsComplete = addVote(senderId, target, chatId, api, messages)
