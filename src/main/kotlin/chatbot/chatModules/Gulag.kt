@@ -84,7 +84,7 @@ object Gulag : Votable() {
     override var targetNoneGetBackMessage: String = "Не указан сосланный"
     override var targetEqualsSenderMessage: String = "Товарищ! Вы еще нужны своей Родине"
     override var targetDefendHimSelf: String = "У вас нет права голоса..."
-    override var alreadyChoseSide: String = "Вы уже высказали свое мнение"
+    override var alreadyChoseSide: String = ", Вы уже высказали свое мнение"
     override var targetEqualsBotMessage: String = "Пара воронков уже выехали"
     override var alreadyVotedMessage = ", Вы уже проголосовали за этого предателя Родины"
 }
