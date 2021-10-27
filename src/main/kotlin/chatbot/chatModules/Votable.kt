@@ -104,20 +104,18 @@ abstract class Votable {
 
     /**Increase necessary count for finish [senderId] vote*/
     private fun increaseNecessaryCountVote(
+        currentVotedIds: MutableSet<Int>,
+        currentVoting: Voting,
         senderId: Int,
-        target: Mention,
         chatId: Int,
         api: VkApi,
         messages: Messages
     ) {
-        val targetId = target.targetId!!
-        val currentVoting = voting[targetId to chatId]!!
-
         currentVoting.increaseRightNumToVote(1)
         val senderScreenName = api.getUserNameById(senderId)
         val votedCount = currentVoting.getVotes()
         val necessaryCount = currentVoting.rightNumToVote
-        votedIds[targetId to chatId]!!.add(senderId)
+        currentVotedIds.add(senderId)
 
         val message = "$senderScreenName проголосовал ${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
 
@@ -259,11 +257,12 @@ abstract class Votable {
         val currentTime = event.time
         var messages = someActions(api, chatId, senderId, target) ?: return
 
-        fun isNeedNewVote(voting: Voting?): Boolean {
-            return (voting == null
-                    || voting.timeOfClosing < currentTime
-                    || voting.completed)
-        }
+        val currentVoting = voting[targetId to chatId]
+
+        val isNeedNewVote = currentVoting == null
+                || currentVoting.timeOfClosing < currentTime
+                || currentVoting.completed
+
 
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
 
@@ -272,7 +271,7 @@ abstract class Votable {
                 .contains(targetId)
         ) {
             if (targetId != null && votedIds[targetId to chatId]?.contains(senderId) == true) {
-                if (isNeedNewVote(voting[targetId to chatId])) {
+                if (isNeedNewVote) {
                     startNewVoting(senderId, target, chatId, api, currentTime, messages)
                     return
                 }
@@ -283,7 +282,7 @@ abstract class Votable {
         }
 
         if (votedIds[targetId to chatId]?.contains(senderId) == true) {
-            if (isNeedNewVote(voting[targetId to chatId])) {
+            if (isNeedNewVote) {
                 startNewVoting(senderId, target, chatId, api, currentTime, messages)
                 return
             }
@@ -298,7 +297,7 @@ abstract class Votable {
             return
         }
 
-        if (isNeedNewVote(voting[targetId to chatId])) {
+        if (isNeedNewVote) {
             startNewVoting(senderId, target, chatId, api, currentTime, messages)
         } else {
             val votingIsComplete = addVote(senderId, target, chatId, api, messages)
@@ -335,15 +334,17 @@ abstract class Votable {
 
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
 
-        if (votedIds[targetId to chatId]?.contains(senderId) == true) {
+        val messages = someActions(api, chatId, senderId, target) ?: return
+
+        val currentVotedIds = votedIds[targetId to chatId]!!
+
+        if (currentVotedIds.contains(senderId)) {
             val senderScreenName = api.getUserNameById(senderId)
             api.send("$senderScreenName$alreadyChoseSide", chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
-        val messages = someActions(api, chatId, senderId, target) ?: return
-
-        increaseNecessaryCountVote(senderId, target, chatId, api, messages)
+        increaseNecessaryCountVote(currentVotedIds, voting[targetId to chatId]!!, senderId, chatId, api, messages)
     }
 
     data class Messages(
