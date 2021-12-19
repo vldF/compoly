@@ -54,7 +54,7 @@ object VirtualCommands {
             dbQuery {
                 isUpdate = true
                 VirtualCommands.update ({ (VirtualCommands.chatId eq chatId) and (VirtualCommands.commandName eq commandName) }) {
-                    it[this.textCommand] = textCommand
+                    it[this.textCommand] = text
                     it[this.attachments] = attachmentsString
                 }
                 VirtualCommands.select {
