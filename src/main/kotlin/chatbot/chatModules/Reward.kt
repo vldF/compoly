@@ -63,8 +63,10 @@ object Reward : Votable() {
     override var targetNoneGetBackMessage: String = ""
     override var targetNullMessage: String = "Товарищ, нельзя наградить того, кого нет"
     override var targetEqualsSenderMessage: String = "Товарищ! Вы не Брежнев"
+    override var targetDefendHimSelf: String = ""
     override var targetEqualsBotMessage: String = "Партии не нужны награды, партии нужен только коммунизм!"
     override var alreadyVotedMessage = ", Вы уже проголосовали за награждение этого товарища"
+    override var alreadyChoseSide: String = ""
 
     private fun ParseObject.getRewardName(): String {
         for (i in 2 until this.size) {

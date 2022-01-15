@@ -31,6 +31,25 @@ object Gulag : Votable() {
         }
     }
 
+    @OnCommand(["оправдать", "justify"], "свободу политосужденным!")
+    fun justifyMember(event: LongPollNewMessageEvent) {
+        votingAgainst(event) { api, chatId, _, target ->
+            val screenName = target.targetScreenName
+            if (super.voting[target.targetId to chatId] == null) {
+                api.send("Партия не ссудит $screenName", chatId)
+                return@votingAgainst null
+            }
+
+            val votingForMessage = "Если ты ручаешься за товарища $screenName\n" +
+                    "Отправь /оправдать ${target.rawText}"//unused now, maybe can be used in voting gulag init
+            val successVoteMessage = "против отправления $screenName в лагерь"
+            val keyboardMessage = "/оправдать ${target.rawText}"
+            val onEndVotingMessage = "$screenName полностью чист перед партией"
+            //unused, cause don't have onVotingTimeIsUP
+            Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
+        }
+    }
+
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN)
     fun cancelVotingResultGulag(event: LongPollNewMessageEvent) {
         cancelVotingResult(event, "Самопроизвольное возвращение из ссылки запрещено!") { api, chatId, _, target ->
@@ -64,6 +83,8 @@ object Gulag : Votable() {
     override var targetNullMessage: String = "Товарищ, нельзя сослать того, кого нет"
     override var targetNoneGetBackMessage: String = "Не указан сосланный"
     override var targetEqualsSenderMessage: String = "Товарищ! Вы еще нужны своей Родине"
+    override var targetDefendHimSelf: String = "У вас нет права голоса..."
+    override var alreadyChoseSide: String = ", Вы уже высказали свое мнение"
     override var targetEqualsBotMessage: String = "Пара воронков уже выехали"
     override var alreadyVotedMessage = ", Вы уже проголосовали за этого предателя Родины"
 }
