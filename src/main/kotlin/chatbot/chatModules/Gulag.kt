@@ -22,12 +22,19 @@ object Gulag : Votable() {
                 return@voting null
             }
             val votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
-                    "Отправь /гулаг ${target.rawText}"
+                    "Отправь /гулаг ${target.rawText}, или /оправдать ${target.rawText}, если ты ручаешься за товарища!"
             val successVoteMessage = "за отправление $screenName в лагерь"
-            val keyboardMessage = "/гулаг ${target.rawText}"
+            val keyboardPositiveMessage = "/гулаг ${target.rawText}"
+            val keyboardNegativeMessage = "/оправдать ${target.rawText}"
             val onEndVotingMessage =
                 "Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад"
-            Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
+            Messages(
+                votingForMessage,
+                successVoteMessage,
+                keyboardPositiveMessage,
+                keyboardNegativeMessage,
+                onEndVotingMessage
+            )
         }
     }
 
@@ -39,14 +46,8 @@ object Gulag : Votable() {
                 api.send("Партия не ссудит $screenName", chatId)
                 return@votingAgainst null
             }
-
-            val votingForMessage = "Если ты ручаешься за товарища $screenName\n" +
-                    "Отправь /оправдать ${target.rawText}"//unused now, maybe can be used in voting gulag init
             val successVoteMessage = "против отправления $screenName в лагерь"
-            val keyboardMessage = "/оправдать ${target.rawText}"
-            val onEndVotingMessage = "$screenName полностью чист перед партией"
-            //unused, cause don't have onVotingTimeIsUP
-            Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
+            Messages(successVoteMessage = successVoteMessage)
         }
     }
 
