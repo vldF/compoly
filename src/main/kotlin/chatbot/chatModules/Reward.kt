@@ -43,7 +43,12 @@ object Reward : Votable() {
             val keyboardMessage = "/наградить ${target.rawText}"
 
             val onEndVotingMessage = "$screenName получает награду ${rewardsMap[key]}"
-            Messages(votingForMessage, successVoteMessage, keyboardMessage, onEndVotingMessage)
+            Messages(
+                votingForMessage = votingForMessage,
+                successVoteMessage = successVoteMessage,
+                keyboardPositiveMessage = keyboardMessage,
+                onEndVotingMessage = onEndVotingMessage
+            )
         }
     }
 

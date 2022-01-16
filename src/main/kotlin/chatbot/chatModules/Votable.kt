@@ -71,13 +71,17 @@ abstract class Votable {
         votedIds[targetId to chatId] = mutableSetOf(senderId)
 
         val keyboard = KeyboardBuilder()
-            .addButton(KeyboardButton(messages.keyboardMessage, "за", KeyboardColor.NEGATIVE))
-            .build()
+            .addButton(KeyboardButton(messages.keyboardPositiveMessage, "за", KeyboardColor.POSITIVE))
+
+        if (messages.keyboardNegativeMessage != "") {
+            keyboard.addButton(KeyboardButton(messages.keyboardNegativeMessage, "против", KeyboardColor.NEGATIVE))
+        }
+
         val split = messages.votingForMessage.split("\n")
         api.send(
             "${split[0]} - 1/${newVoting.rightNumToVote}\n${split.drop(1).joinToString("")}",
             chatId,
-            keyboard = keyboard
+            keyboard = keyboard.build()
         )
     }
 
@@ -354,9 +358,11 @@ abstract class Votable {
         /**Successfully voted*/
         val successVoteMessage: String = "",
 
-        /**Keyboard message*/
-        val keyboardMessage: String = "",
+        /**Keyboard positive message*/
+        val keyboardPositiveMessage: String = "",
 
+        /**Keyboard negative message*/
+        val keyboardNegativeMessage: String = "",
 
         val onEndVotingMessage: String = ""
     )
