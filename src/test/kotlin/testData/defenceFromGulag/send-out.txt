@@ -1,6 +1,6 @@
 [
   {
-    "text": "Голосование на отправление @marx в лагерь началось - 1/12\nОтправь /гулаг [id2|@marx]",
+    "text": "Голосование на отправление @marx в лагерь началось - 1/12\nОтправь /гулаг [id2|@marx], или /оправдать [id2|@marx], если ты ручаешься за товарища!",
     "chatId": 1,
     "pixUrls": [],
     "keyboard": {
@@ -8,6 +8,11 @@
         {
           "callbackMessage": "/гулаг [id2|@marx]",
           "showingName": "за",
+          "color": "POSITIVE"
+        },
+        {
+          "callbackMessage": "/оправдать [id2|@marx]",
+          "showingName": "против",
           "color": "NEGATIVE"
         }
       ]

@@ -8,7 +8,7 @@
         {
           "callbackMessage": "/наградить [id2|@marx]",
           "showingName": "за",
-          "color": "NEGATIVE"
+          "color": "POSITIVE"
         }
       ]
     },
@@ -125,7 +125,7 @@
         {
           "callbackMessage": "/наградить [id2|@marx]",
           "showingName": "за",
-          "color": "NEGATIVE"
+          "color": "POSITIVE"
         }
       ]
     },
