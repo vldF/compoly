@@ -15,6 +15,7 @@ val chatIds = if (!useTestChatId) listOf(  // todo: remove 1?
 
 val useTestMode by BooleanConfig() // no logging, no messages, println() instead
 val useDebugTime by BooleanConfig() // used in timing.kt
+val useLocalDB by BooleanConfig() // to up local database
 
 val dbUserName by StringConfig()
 val dbPassword by StringConfig()

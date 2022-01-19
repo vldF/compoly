@@ -2,17 +2,22 @@ package database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import configs.dbIP
-import configs.dbPassword
-import configs.dbPort
-import configs.dbTable
-import configs.dbType
-import configs.dbUserName
+import configs.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
 const val EMPTY_HISTORY_TEXT = ""
+
+object DataBase {
+    fun start() {
+        if (useLocalDB) {
+            initInmemoryDB()
+        } else {
+            Database.connect(hikari())
+        }
+    }
+}
 
 object UserScore : Table() {
     val userId = integer("user_id")
@@ -34,7 +39,7 @@ object VirtualMentions : Table() {
     val id = integer("id").autoIncrement()
 }
 
-object VirtualCommands: Table() {
+object VirtualCommands : Table() {
     val commandId = integer("id").autoIncrement()
     val chatId = integer("chat_id")
     val commandName = text("trigger")
@@ -44,7 +49,7 @@ object VirtualCommands: Table() {
     override val primaryKey = PrimaryKey(commandId)
 }
 
-object ScheduleTable: Table("schedule") {
+object ScheduleTable : Table("schedule") {
     val id = integer("id").autoIncrement()
     val chatId = integer("chat_id")
     val days = integer("days")
