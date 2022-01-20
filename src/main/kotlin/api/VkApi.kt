@@ -92,7 +92,7 @@ object VkApi {
         pixUrls: List<String> = listOf(),
         keyboard: Keyboard? = null,
         removeDelay: Long = -1,
-        voting: Voting? = null
+        votingDelay: Voting? = null
     ) {
         val messageId = if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
@@ -128,11 +128,11 @@ object VkApi {
                 )
                 return
             }
-            if (voting != null) {
+            if (votingDelay != null) {
                 GarbageMessagesCollector.deleteMessageOnTimeIsUp(
                     messageId = messageId,
                     chatId = chatId,
-                    voting = voting
+                    voting = votingDelay
                 )
             }
         }

@@ -85,7 +85,7 @@ abstract class Votable {
             "${split[0]} - 1/${newVoting.rightNumToVote}\n${split.drop(1).joinToString("")}",
             chatId,
             keyboard = keyboard.build(),
-            voting = newVoting
+            votingDelay = newVoting
         )
     }
 
@@ -105,7 +105,7 @@ abstract class Votable {
 
         log.info("New vote - $message")
 
-        api.send(message, chatId, voting = voting[targetId to chatId])
+        api.send(message, chatId, votingDelay = voting[targetId to chatId])
 
         return votingIsComplete
     }
@@ -130,7 +130,7 @@ abstract class Votable {
 
         log.info("New vote - $message")
 
-        api.send(message, chatId, voting = voting[targetId to chatId])
+        api.send(message, chatId, votingDelay = voting[targetId to chatId])
     }
 
     /**Called when enough people have voted*/
@@ -139,7 +139,6 @@ abstract class Votable {
         api.send(messages.onEndVotingMessage, chatId)
         onEndVoting(targetId, chatId, api)
         votedIds.remove(targetId to chatId)
-        voting[targetId to chatId]
     }
 
     /**Special action at the end of a vote*/
@@ -242,7 +241,6 @@ abstract class Votable {
         message: Messages
     ) {
         log.info("Voting time is up: ${message.onTimeIsUp}")
-        voting.remove(targetId to chatId)
         votedIds.remove(targetId to chatId)
         if (message.onTimeIsUp != "") {
             VkApi.send(message.onTimeIsUp, chatId, removeDelay = MINUTE_DELAY)
