@@ -1,4 +1,4 @@
-package chatbot.chatModules
+package chatbot.chatModules.voting
 
 import api.ParseObject
 import api.Text
@@ -37,17 +37,16 @@ object Reward : Votable() {
             val screenName = target.targetScreenName
             val votingForMessage = "Голосование за вручение $screenName награды ${rewardsMap[key]}\n" +
                     "Отправь /наградить ${target.rawText}"
-
             val successVoteMessage = "за награждение $screenName"
-
             val keyboardMessage = "/наградить ${target.rawText}"
-
             val onEndVotingMessage = "$screenName получает награду ${rewardsMap[key]}"
+            val onTimeIsUp = "Голосование окончено! $screenName, слишком много чести для такой награды!!!"
             Messages(
                 votingForMessage = votingForMessage,
                 successVoteMessage = successVoteMessage,
                 keyboardPositiveMessage = keyboardMessage,
-                onEndVotingMessage = onEndVotingMessage
+                onEndVotingMessage = onEndVotingMessage,
+                onTimeIsUp = onTimeIsUp
             )
         }
     }

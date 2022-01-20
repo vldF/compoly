@@ -6,6 +6,7 @@ import api.objects.VkUser
 import chatbot.Attachment
 import chatbot.GenerateMock
 import chatbot.chatModules.VirtualTargets
+import chatbot.chatModules.misc.Voting
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -26,6 +27,7 @@ object VkApi {
     private val client = HttpClientBuilder.create().build()
     private val gson = Gson()
     private val history = ApiHistory(4)
+
     // true if user is admin
     private val userAdminMap = mutableMapOf<Pair<Int, Int>, Boolean>()
 
@@ -50,10 +52,12 @@ object VkApi {
 
     @GenerateMock(["chatId", "userId"])
     fun kickUserFromChat(chatId: Int, userId: Int) {
-        post("messages.removeChatUser", mutableMapOf(
+        post(
+            "messages.removeChatUser", mutableMapOf(
                 "chat_id" to chatId - 2000000000,
                 "user_id" to userId
-        ))
+            )
+        )
     }
 
     @GenerateMock(["chatId", "userId"], "false")
@@ -87,13 +91,14 @@ object VkApi {
         chatId: Int,
         pixUrls: List<String> = listOf(),
         keyboard: Keyboard? = null,
-        removeDelay: Long = -1
-    ){
+        removeDelay: Long = -1,
+        voting: Voting? = null
+    ) {
         val messageId = if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
-                    "message" to text,
-                    "peer_ids" to chatId,
-                    "random_id" to System.currentTimeMillis().toString()
+                "message" to text,
+                "peer_ids" to chatId,
+                "random_id" to System.currentTimeMillis().toString()
             )
             if (keyboard != null) {
                 params["keyboard"] = keyboard.getJson()
@@ -114,23 +119,35 @@ object VkApi {
             sendWithAttachments(text, chatId, attachments)
         }
 
-        if (removeDelay != -1L && messageId != null) {
-            GarbageMessagesCollector.deleteMessageWithDelay(
-                messageId = messageId,
-                chatId = chatId,
-                delay = removeDelay
-            )
+        if (messageId != null) {
+            if (removeDelay != -1L) {
+                GarbageMessagesCollector.deleteMessageWithDelay(
+                    messageId = messageId,
+                    chatId = chatId,
+                    delay = removeDelay
+                )
+                return
+            }
+            if (voting != null) {
+                GarbageMessagesCollector.deleteMessageOnTimeIsUp(
+                    messageId = messageId,
+                    chatId = chatId,
+                    voting = voting
+                )
+            }
         }
     }
 
     @GenerateMock(["text", "chatId", "attachments"], "null")
     fun sendWithAttachments(text: String, chatId: Int, attachments: List<String>): Int? {
-        val res = post("messages.send", mutableMapOf(
-            "message" to text,
-            "peer_ids" to chatId,
-            "random_id" to System.currentTimeMillis().toString(),
-            "attachment" to attachments.joinToString(separator = ",")
-        ))
+        val res = post(
+            "messages.send", mutableMapOf(
+                "message" to text,
+                "peer_ids" to chatId,
+                "random_id" to System.currentTimeMillis().toString(),
+                "attachment" to attachments.joinToString(separator = ",")
+            )
+        )
 
         return res
             ?.get("response")
@@ -188,11 +205,11 @@ object VkApi {
     @GenerateMock(["peer_id", "fields"], "listOf()")
     fun getChatMembers(peer_id: Int, fields: List<String>): List<VkUser>? {
         val resp = post(
-                "messages.getConversationMembers",
-                mutableMapOf(
-                        "peer_id" to peer_id,
-                        "fields" to fields.joinToString(separator = ",")
-                )
+            "messages.getConversationMembers",
+            mutableMapOf(
+                "peer_id" to peer_id,
+                "fields" to fields.joinToString(separator = ",")
+            )
         ) ?: return null
 
         val vkResponse = resp["response"]?.asJsonObject ?: return null
@@ -204,11 +221,11 @@ object VkApi {
     /* It isn't profiles!!! */
     private fun getChatMembersItems(peer_id: Int, fields: List<String>): List<ChatMemberItemsInfo>? {
         val resp = post(
-                "messages.getConversationMembers",
-                mutableMapOf(
-                        "peer_id" to peer_id,
-                        "fields" to fields.joinToString(separator = ",")
-                )
+            "messages.getConversationMembers",
+            mutableMapOf(
+                "peer_id" to peer_id,
+                "fields" to fields.joinToString(separator = ",")
+            )
         ) ?: return null
 
         val vkResponse = resp["response"]?.asJsonObject ?: return null
@@ -323,11 +340,13 @@ object VkApi {
     }
 
     fun deleteMessage(messageId: Int, chatId: Int) {
-        val resp = post("messages.delete", mutableMapOf(
-            "conversation_message_ids" to messageId,
-            "delete_for_all" to 1,
-            "peer_id" to chatId
-        ))
+        val resp = post(
+            "messages.delete", mutableMapOf(
+                "conversation_message_ids" to messageId,
+                "delete_for_all" to 1,
+                "peer_id" to chatId
+            )
+        )
 
         println(resp)
     }

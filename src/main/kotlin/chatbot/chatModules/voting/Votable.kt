@@ -1,8 +1,9 @@
-package chatbot.chatModules
+package chatbot.chatModules.voting
 
 import api.GarbageMessage.Companion.toGarbageMessageWithDelay
 import api.GarbageMessagesCollector
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
+import api.GarbageMessagesCollector.Companion.MINUTE_DELAY
 import api.Mention
 import api.TextMessageParser
 import api.VkApi
@@ -77,11 +78,14 @@ abstract class Votable {
             keyboard.addButton(KeyboardButton(messages.keyboardNegativeMessage, "против", KeyboardColor.NEGATIVE))
         }
 
+        OnTimeIsUp(newVoting, targetId, chatId, messages, this).call()
+
         val split = messages.votingForMessage.split("\n")
         api.send(
             "${split[0]} - 1/${newVoting.rightNumToVote}\n${split.drop(1).joinToString("")}",
             chatId,
-            keyboard = keyboard.build()
+            keyboard = keyboard.build(),
+            voting = newVoting
         )
     }
 
@@ -101,31 +105,32 @@ abstract class Votable {
 
         log.info("New vote - $message")
 
-        api.send(message, chatId)
+        api.send(message, chatId, voting = voting[targetId to chatId])
 
         return votingIsComplete
     }
 
     /**Increase necessary count for finish [senderId] vote*/
     private fun increaseNecessaryCountVote(
-        currentVotedIds: MutableSet<Int>,
-        currentVoting: Voting,
+        targetId: Int,
         senderId: Int,
         chatId: Int,
         api: VkApi,
         messages: Messages
     ) {
+        val currentVoting = voting[targetId to chatId]!!
+
         currentVoting.increaseRightNumToVote(1)
         val senderScreenName = api.getUserNameById(senderId)
         val votedCount = currentVoting.getVotes()
         val necessaryCount = currentVoting.rightNumToVote
-        currentVotedIds.add(senderId)
+        votedIds[targetId to chatId]!!.add(senderId)
 
         val message = "$senderScreenName проголосовал ${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
 
         log.info("New vote - $message")
 
-        api.send(message, chatId)
+        api.send(message, chatId, voting = voting[targetId to chatId])
     }
 
     /**Called when enough people have voted*/
@@ -230,6 +235,20 @@ abstract class Votable {
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
     }
 
+    /**Callback when time of voting is up*/
+    fun onTimeIsOut(
+        targetId: Int,
+        chatId: Int,
+        message: Messages
+    ) {
+        log.info("Voting time is up: ${message.onTimeIsUp}")
+        voting.remove(targetId to chatId)
+        votedIds.remove(targetId to chatId)
+        if (message.onTimeIsUp != "") {
+            VkApi.send(message.onTimeIsUp, chatId, removeDelay = MINUTE_DELAY)
+        }
+    }
+
     /**Private voting process*/
     private fun voting(
         event: LongPollNewMessageEvent,
@@ -258,7 +277,7 @@ abstract class Votable {
             return
         }
 
-        val currentTime = event.time
+        val currentTime = System.currentTimeMillis() / 1000
         var messages = someActions(api, chatId, senderId, target) ?: return
 
         val currentVoting = voting[targetId to chatId]
@@ -281,7 +300,7 @@ abstract class Votable {
                 }
                 val senderScreenName = api.getUserNameById(senderId)
                 api.send("$senderScreenName$alreadyVotedMessage", chatId, removeDelay = DEFAULT_DELAY)
-            } else api.send(targetNullMessage, chatId)
+            } else api.send(targetNullMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
@@ -348,7 +367,7 @@ abstract class Votable {
             return
         }
 
-        increaseNecessaryCountVote(currentVotedIds, voting[targetId to chatId]!!, senderId, chatId, api, messages)
+        increaseNecessaryCountVote(targetId, senderId, chatId, api, messages)
     }
 
     data class Messages(
@@ -364,7 +383,11 @@ abstract class Votable {
         /**Keyboard negative message*/
         val keyboardNegativeMessage: String = "",
 
-        val onEndVotingMessage: String = ""
+        /**Voted successfully end*/
+        val onEndVotingMessage: String = "",
+
+        /**Vote time is up*/
+        val onTimeIsUp: String = ""
     )
 
 }

@@ -6,7 +6,7 @@ import com.google.gson.JsonArray
 import configs.botId
 import log
 import configs.mainChatPeerId
-import chatbot.chatModules.Gulag
+import chatbot.chatModules.voting.Gulag
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import configs.useTestChatId

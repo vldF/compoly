@@ -2,7 +2,7 @@ package chatbot.chatModules.misc
 
 
 class Voting(
-    var timeOfClosing: Long,
+    @Volatile var timeOfClosing: Long, // in seconds
     var rightNumToVote: Int
 ) {
     private val voteSet = mutableSetOf<Pair<Int, Int>>()
