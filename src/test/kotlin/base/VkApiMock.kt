@@ -1,12 +1,13 @@
 package base
+
 import api.VkApi
 import api.keyboards.Keyboard
 import api.objects.VkUser
-import chatbot.chatModules.misc.Voting
 import com.nhaarman.mockitokotlin2.*
 import org.mockito.Answers
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
+import java.util.concurrent.atomic.AtomicLong
 
 //DO NO MODIFY THIS CODE MANUALLY!!!
 
@@ -19,7 +20,14 @@ interface VkApiMock {
 
     fun uploadPhotoByUrlAsAttachment(url: String?): String?
 
-    fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?, voting: Voting?): Unit
+    fun send(
+        text: String?,
+        chatId: Int?,
+        pixUrls: List<String>?,
+        keyboard: Keyboard?,
+        removeDelay: Long?,
+        dynamicRemoveDelay: AtomicLong?
+    ): Unit
 
     fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Integer?
 

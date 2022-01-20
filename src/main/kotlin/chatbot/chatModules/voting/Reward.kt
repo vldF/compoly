@@ -1,9 +1,6 @@
 package chatbot.chatModules.voting
 
-import api.ParseObject
-import api.Text
-import api.TextMessageParser
-import api.VkApi
+import api.*
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
@@ -20,7 +17,7 @@ object Reward : Votable() {
         voting(event) { api, chatId, _, target ->
             val targetId = target.targetId
             val isNewVoting =
-                voting[targetId to chatId] == null || voting[targetId to chatId]!!.timeOfClosing < event.time
+                voting[targetId to chatId] == null || voting[targetId to chatId]!!.timeOfClosing.get() < event.time
             val rewardNameInMessage = TextMessageParser().parse(event.text).getRewardName()
 
             val key = "$chatId.$targetId"

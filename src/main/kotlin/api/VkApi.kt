@@ -6,7 +6,6 @@ import api.objects.VkUser
 import chatbot.Attachment
 import chatbot.GenerateMock
 import chatbot.chatModules.VirtualTargets
-import chatbot.chatModules.misc.Voting
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -21,6 +20,7 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
 import java.io.ByteArrayInputStream
 import java.net.URL
+import java.util.concurrent.atomic.AtomicLong
 
 
 object VkApi {
@@ -92,7 +92,7 @@ object VkApi {
         pixUrls: List<String> = listOf(),
         keyboard: Keyboard? = null,
         removeDelay: Long = -1,
-        votingDelay: Voting? = null
+        dynamicRemoveDelay: AtomicLong? = null
     ) {
         val messageId = if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
@@ -128,11 +128,11 @@ object VkApi {
                 )
                 return
             }
-            if (votingDelay != null) {
-                GarbageMessagesCollector.deleteMessageOnTimeIsUp(
+            if (dynamicRemoveDelay != null) {
+                GarbageMessagesCollector.deleteMessageOnDynamicDelay(
                     messageId = messageId,
                     chatId = chatId,
-                    voting = votingDelay
+                    delay = dynamicRemoveDelay
                 )
             }
         }
