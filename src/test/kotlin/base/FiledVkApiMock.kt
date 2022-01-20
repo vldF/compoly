@@ -1,6 +1,7 @@
 package base
 import api.keyboards.Keyboard
 import api.objects.VkUser
+import chatbot.chatModules.misc.Voting
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.File
@@ -31,7 +32,14 @@ private val keeper: ApiResponseKeeper
         return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "photo_by_url_as_attachment")
     }
     
-    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?): Unit {
+    override fun send(
+        text: String?,
+        chatId: Int?,
+        pixUrls: List<String>?,
+        keyboard: Keyboard?,
+        removeDelay: Long?,
+        voting: Voting?
+    ): Unit {
         writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard, "removeDelay" to removeDelay)
     }
     
