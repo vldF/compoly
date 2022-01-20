@@ -32,7 +32,8 @@ private fun generateVkApiMockInterface(apiMethods: MethodInfoList) {
         "com.nhaarman.mockitokotlin2.*",
         "org.mockito.Answers",
         "org.mockito.invocation.InvocationOnMock",
-        "org.mockito.stubbing.Answer"
+        "org.mockito.stubbing.Answer",
+        "java.util.concurrent.atomic.AtomicLong"
     )
 
     val utilitiesFunctionsCode = """
@@ -95,7 +96,8 @@ private fun generateVkApiMockImplementation(apiMethods: MethodInfoList) {
         "api.objects.VkUser",
         "com.google.gson.Gson",
         "com.google.gson.JsonObject",
-        "java.io.File"
+        "java.io.File",
+        "java.util.concurrent.atomic.AtomicLong"
     )
 
     val utilitiesFunctionsCode = """

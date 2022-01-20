@@ -85,7 +85,7 @@ object VkApi {
         return uploadDoc(chatId, docStream.readBytes(), fileName)
     }
 
-    @GenerateMock(["text", "chatId", "pixUrls", "keyboard", "removeDelay"], "null")
+    @GenerateMock(["text", "chatId", "pixUrls", "keyboard", "removeDelay", "dynamicRemoveDelay"], "null")
     fun send(
         text: String,
         chatId: Int,
