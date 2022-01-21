@@ -40,13 +40,12 @@ dependencies {
     compile("org.postgresql:postgresql:42.2.2")
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
-    implementation 'com.h2database:h2:1.4.199'
 
     compile("net.dv8tion:JDA:4.2.0_168")
     //implementation 'io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:5.0.0'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation 'org.mockito:mockito-inline:3.7.7'
-    testImplementation 'com.h2database:h2:1.4.199'
+    implementation 'com.h2database:h2:1.4.199'
     implementation 'com.github.nkb03:kotlin-robot:1.0'
 }
 
