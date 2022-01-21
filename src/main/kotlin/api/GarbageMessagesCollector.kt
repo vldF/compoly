@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class GarbageMessagesCollector : Thread() {
     companion object {
-        const val DEFAULT_DELAY: Long = 10000
+        const val DEFAULT_DELAY: Long = 1000 * 10
         const val MINUTE_DELAY: Long = 1000 * 60
 
         private val queue: LinkedBlockingQueue<GarbageMessage> = LinkedBlockingQueue()
@@ -23,9 +23,9 @@ class GarbageMessagesCollector : Thread() {
             deleteMessageOnTime(messageId, chatId, deleteTime)
         }
 
-        /** @param delay: delay that can increase or decrease, before message will be deleted, ms */
-        fun deleteMessageOnDynamicDelay(messageId: Int, chatId: Int, delay: AtomicLong) {
-            queue.add(GarbageMessage(messageId, chatId, dynamicDeleteTime = delay))
+        /** @param time: time that can be increased or decreased, when message will be deleted, ms */
+        fun deleteMessageOnDynamicTime(messageId: Int, chatId: Int, time: AtomicLong) {
+            queue.add(GarbageMessage(messageId, chatId, dynamicDeleteTime = time))
         }
 
         fun addGarbageMessage(message: GarbageMessage) {
@@ -42,13 +42,15 @@ class GarbageMessagesCollector : Thread() {
                     continue // remove after VK will send message id
                 }
 
-                val timeIsUp = if (element.dynamicDeleteTime == null) {
-                    element.deleteTime - System.currentTimeMillis() > 0
+                val currentTime = System.currentTimeMillis()
+
+                val notTimeYet = if (element.dynamicDeleteTime == null) {
+                    element.deleteTime - currentTime > 0
                 } else {
-                    element.dynamicDeleteTime.get() * 1000 - System.currentTimeMillis() > 0
+                    element.dynamicDeleteTime.get() - currentTime > 0
                 }
 
-                if (timeIsUp) {
+                if (notTimeYet) {
                     queue.add(element) // return element to queue
                     sleep(30)
                     continue

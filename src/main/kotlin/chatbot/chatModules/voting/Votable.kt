@@ -3,6 +3,7 @@ package chatbot.chatModules.voting
 import api.GarbageMessage.Companion.toGarbageMessageWithDelay
 import api.GarbageMessagesCollector
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
+import api.GarbageMessagesCollector.Companion.MINUTE_DELAY
 import api.Mention
 import api.TextMessageParser
 import api.VkApi
@@ -30,8 +31,8 @@ abstract class Votable {
     /**The minimum number of people to win the vote*/
     protected open var minCount = 12
 
-    /**Time until the end of voting in seconds*/
-    protected open var timeOfClosing = 60 * 5
+    /**Time until the end of voting in ms*/
+    protected open var timeOfClosing = 60 * 5 * 1000L
 
     private val targets = ConcurrentHashMap<Int, MutableSet<Int>>()
 
@@ -48,15 +49,12 @@ abstract class Votable {
      *
      * [chatId] - chat id
      *
-     * [api] - vk api
-     *
-     * [currentTime] - voting start time*/
+     * [api] - vk api */
     private fun startNewVoting(
         senderId: Int,
         target: Mention,
         chatId: Int,
         api: VkApi,
-        currentTime: Long,
         messages: Messages
     ) {
         val targetId = target.targetId!!
@@ -64,7 +62,7 @@ abstract class Votable {
         val count = (onlineCount * percentageOfOnline).toInt()
         val newVoting =
             Voting(
-                timeOfClosing = AtomicLong(currentTime + timeOfClosing),
+                timeOfClosing = AtomicLong(System.currentTimeMillis() + timeOfClosing),
                 rightNumToVote = Integer.max(count, minCount)
             )
 
@@ -88,7 +86,7 @@ abstract class Votable {
             "${split[0]} - 1/${newVoting.rightNumToVote}\n${split.drop(1).joinToString("")}",
             chatId,
             keyboard = keyboard.build(),
-            dynamicRemoveDelay = newVoting.timeOfClosing
+            dynamicRemoveTime = newVoting.timeOfClosing
         )
     }
 
@@ -98,7 +96,7 @@ abstract class Votable {
         val currentVoting = voting[targetId to chatId]!!
 
         val votingIsComplete = currentVoting.addVote(senderId, chatId)
-        currentVoting.increaseTimeOfClosing(60)
+        currentVoting.increaseTimeOfClosing(MINUTE_DELAY)
         val senderScreenName = api.getUserNameById(senderId)
         val votedCount = currentVoting.getVotes()
         val necessaryCount = currentVoting.rightNumToVote
@@ -108,7 +106,7 @@ abstract class Votable {
 
         log.info("New vote - $message")
 
-        api.send(message, chatId, dynamicRemoveDelay = voting[targetId to chatId]!!.timeOfClosing)
+        api.send(message, chatId, dynamicRemoveTime = voting[targetId to chatId]!!.timeOfClosing)
 
         return votingIsComplete
     }
@@ -133,7 +131,7 @@ abstract class Votable {
 
         log.info("New vote - $message")
 
-        api.send(message, chatId, dynamicRemoveDelay = voting[targetId to chatId]!!.timeOfClosing)
+        api.send(message, chatId, dynamicRemoveTime = voting[targetId to chatId]!!.timeOfClosing)
     }
 
     /**Called when enough people have voted*/
@@ -245,9 +243,8 @@ abstract class Votable {
     ) {
         log.info("Voting time is up: ${message.onTimeIsUp}")
         votedIds.remove(targetId to chatId)
-
         if (!voting[targetId to chatId]!!.isFinishedSuccessful && message.onTimeIsUp != "") {
-            VkApi.send(message.onTimeIsUp, chatId, removeDelay = GarbageMessagesCollector.MINUTE_DELAY)
+            VkApi.send(message.onTimeIsUp, chatId, removeDelay = MINUTE_DELAY)
         }
     }
 
@@ -279,14 +276,13 @@ abstract class Votable {
             return
         }
 
-        val currentTime = System.currentTimeMillis() / 1000
         var messages = someActions(api, chatId, senderId, target) ?: return
 
         val currentVoting = voting[targetId to chatId]
 
         val isNeedNewVote = currentVoting == null
-                || currentVoting.timeOfClosing.get() < currentTime
-                || currentVoting.completed
+                || currentVoting.isTimeUp
+                || currentVoting.isFinishedSuccessful
 
 
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
@@ -297,7 +293,7 @@ abstract class Votable {
         ) {
             if (targetId != null && votedIds[targetId to chatId]?.contains(senderId) == true) {
                 if (isNeedNewVote) {
-                    startNewVoting(senderId, target, chatId, api, currentTime, messages)
+                    startNewVoting(senderId, target, chatId, api, messages)
                     return
                 }
                 val senderScreenName = api.getUserNameById(senderId)
@@ -308,7 +304,7 @@ abstract class Votable {
 
         if (votedIds[targetId to chatId]?.contains(senderId) == true) {
             if (isNeedNewVote) {
-                startNewVoting(senderId, target, chatId, api, currentTime, messages)
+                startNewVoting(senderId, target, chatId, api, messages)
                 return
             }
             val senderScreenName = api.getUserNameById(senderId)
@@ -323,7 +319,7 @@ abstract class Votable {
         }
 
         if (isNeedNewVote) {
-            startNewVoting(senderId, target, chatId, api, currentTime, messages)
+            startNewVoting(senderId, target, chatId, api, messages)
         } else {
             val votingIsComplete = addVote(senderId, target, chatId, api, messages)
             if (votingIsComplete) {

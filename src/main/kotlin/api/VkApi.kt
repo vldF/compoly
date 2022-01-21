@@ -85,14 +85,14 @@ object VkApi {
         return uploadDoc(chatId, docStream.readBytes(), fileName)
     }
 
-    @GenerateMock(["text", "chatId", "pixUrls", "keyboard", "removeDelay", "dynamicRemoveDelay"], "null")
+    @GenerateMock(["text", "chatId", "pixUrls", "keyboard", "removeDelay", "dynamicRemoveTime"], "null")
     fun send(
         text: String,
         chatId: Int,
         pixUrls: List<String> = listOf(),
         keyboard: Keyboard? = null,
         removeDelay: Long = -1,
-        dynamicRemoveDelay: AtomicLong? = null
+        dynamicRemoveTime: AtomicLong? = null
     ) {
         val messageId = if (pixUrls.isEmpty()) {
             val params = mutableMapOf<String, Any>(
@@ -128,11 +128,11 @@ object VkApi {
                 )
                 return
             }
-            if (dynamicRemoveDelay != null) {
-                GarbageMessagesCollector.deleteMessageOnDynamicDelay(
+            if (dynamicRemoveTime != null) {
+                GarbageMessagesCollector.deleteMessageOnDynamicTime(
                     messageId = messageId,
                     chatId = chatId,
-                    delay = dynamicRemoveDelay
+                    time = dynamicRemoveTime
                 )
             }
         }

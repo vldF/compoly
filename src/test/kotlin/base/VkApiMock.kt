@@ -19,7 +19,7 @@ interface VkApiMock {
     
     fun uploadPhotoByUrlAsAttachment(url: String?): String?
     
-    fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?, dynamicRemoveDelay: AtomicLong?): Unit
+    fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?, dynamicRemoveTime: AtomicLong?): Unit
     
     fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Integer?
     

@@ -18,13 +18,13 @@ class OnTimeIsUp(
 
     fun listen() {
         EventStream.addDynamicTask {
-            var time = calculateDelayTime(dynamicDelay.get() * 1000, System.currentTimeMillis())
+            var time = calculateDelayTime(dynamicDelay.get(), System.currentTimeMillis())
 
             runBlocking {
                 while (time > 0) {
                     log.info("Sleeping for $time until next <${votable}> call")
                     delay(time)
-                    time = calculateDelayTime(dynamicDelay.get() * 1000, System.currentTimeMillis())
+                    time = calculateDelayTime(dynamicDelay.get(), System.currentTimeMillis())
                 }
             }
 

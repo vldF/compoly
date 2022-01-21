@@ -17,7 +17,7 @@ object Reward : Votable() {
         voting(event) { api, chatId, _, target ->
             val targetId = target.targetId
             val isNewVoting =
-                voting[targetId to chatId] == null || voting[targetId to chatId]!!.timeOfClosing.get() < event.time
+                voting[targetId to chatId] == null || voting[targetId to chatId]!!.isTimeUp
             val rewardNameInMessage = TextMessageParser().parse(event.text).getRewardName()
 
             val key = "$chatId.$targetId"

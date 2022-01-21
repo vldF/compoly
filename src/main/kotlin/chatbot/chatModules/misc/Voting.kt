@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 
 class Voting(
-    var timeOfClosing: AtomicLong, // in seconds
+    var timeOfClosing: AtomicLong, // in ms
     var rightNumToVote: Int
 ) {
     private val voteSet = mutableSetOf<Pair<Int, Int>>()
@@ -27,6 +27,6 @@ class Voting(
         timeOfClosing.compareAndSet(timeOfClosing.get(), timeOfClosing.get() + time)
     }
 
-    val completed: Boolean
-        get() = voteSet.size >= rightNumToVote
+    val isTimeUp: Boolean
+        get() = System.currentTimeMillis() >= timeOfClosing.get()
 }

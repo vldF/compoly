@@ -32,8 +32,8 @@ private val keeper: ApiResponseKeeper
         return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "photo_by_url_as_attachment")
     }
     
-    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?, dynamicRemoveDelay: AtomicLong?): Unit {
-        writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard, "removeDelay" to removeDelay, "dynamicRemoveDelay" to dynamicRemoveDelay)
+    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?, dynamicRemoveTime: AtomicLong?): Unit {
+        writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard, "removeDelay" to removeDelay, "dynamicRemoveTime" to dynamicRemoveTime)
     }
     
     override fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Integer? {
