@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource
 import configs.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.postgresql.Driver
 import javax.sql.DataSource
 
 const val EMPTY_HISTORY_TEXT = ""
@@ -60,6 +61,7 @@ object ScheduleTable : Table("schedule") {
 
 fun hikari(): DataSource {
     val conf = HikariConfig()
+    conf.driverClassName = Driver::class.java.name
     conf.jdbcUrl = "jdbc:$dbType://$dbIP:$dbPort/$dbTable"
     conf.username = dbUserName
     conf.password = dbPassword
