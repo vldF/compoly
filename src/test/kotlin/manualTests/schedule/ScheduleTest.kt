@@ -4,6 +4,8 @@ import base.*
 import chatbot.chatModules.Schedule
 import database.ScheduleTable
 import database.dbQuery
+import database.destroyDB
+import database.initInmemoryDB
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.junit.jupiter.api.Test
