@@ -12,6 +12,9 @@ class ApiResponseKeeper {
         get() = storage.keys
 
     fun write(apiMethod: String, value: JsonObject) {
+        if (apiMethod == "send") {
+            value.remove("dynamicRemoveTime")
+        }
         val fromStorage = storage.getOrPut(apiMethod) { JsonArray() }
         fromStorage.add(value)
     }

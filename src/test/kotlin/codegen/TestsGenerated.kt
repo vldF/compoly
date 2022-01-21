@@ -21,16 +21,16 @@ class TestsGenerated {
     
     @Test
     @Order(2)
-    fun gulag() {
-        runTest("src/test/kotlin/testData/gulag")
-    }
-
-    @Test
-    @Order(3)
     fun defenceFromGulag() {
         runTest("src/test/kotlin/testData/defenceFromGulag")
     }
-
+    
+    @Test
+    @Order(3)
+    fun gulag() {
+        runTest("src/test/kotlin/testData/gulag")
+    }
+    
     @Test
     @Order(4)
     fun help() {

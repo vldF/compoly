@@ -1,9 +1,6 @@
-package chatbot.chatModules
+package chatbot.chatModules.voting
 
-import api.ParseObject
-import api.Text
-import api.TextMessageParser
-import api.VkApi
+import api.*
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
@@ -20,7 +17,7 @@ object Reward : Votable() {
         voting(event) { api, chatId, _, target ->
             val targetId = target.targetId
             val isNewVoting =
-                voting[targetId to chatId] == null || voting[targetId to chatId]!!.timeOfClosing < event.time
+                voting[targetId to chatId] == null || voting[targetId to chatId]!!.isTimeUp
             val rewardNameInMessage = TextMessageParser().parse(event.text).getRewardName()
 
             val key = "$chatId.$targetId"
@@ -37,17 +34,16 @@ object Reward : Votable() {
             val screenName = target.targetScreenName
             val votingForMessage = "Голосование за вручение $screenName награды ${rewardsMap[key]}\n" +
                     "Отправь /наградить ${target.rawText}"
-
             val successVoteMessage = "за награждение $screenName"
-
             val keyboardMessage = "/наградить ${target.rawText}"
-
             val onEndVotingMessage = "$screenName получает награду ${rewardsMap[key]}"
+            val onTimeIsUp = "Голосование окончено! $screenName, слишком много чести для такой награды!!!"
             Messages(
                 votingForMessage = votingForMessage,
                 successVoteMessage = successVoteMessage,
                 keyboardPositiveMessage = keyboardMessage,
-                onEndVotingMessage = onEndVotingMessage
+                onEndVotingMessage = onEndVotingMessage,
+                onTimeIsUp = onTimeIsUp
             )
         }
     }

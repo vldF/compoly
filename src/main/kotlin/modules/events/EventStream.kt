@@ -8,6 +8,7 @@ import millisecondInDay
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.Exception
+import java.lang.Runnable
 import kotlin.concurrent.thread
 
 object EventStream {
@@ -30,7 +31,7 @@ object EventStream {
             }
         events = loaded.filter { it.schedule.isNotEmpty() }
 
-        log.info("Events: ${events.map { it.javaClass.toString() + ":" + it.schedule.toString() } }")
+        log.info("Events: ${events.map { it.javaClass.toString() + ":" + it.schedule.toString() }}")
         log.info("EventStream is initialised")
     }
 
@@ -83,6 +84,11 @@ object EventStream {
                 }
             }
         }
+    }
+
+    /** For single time scheduled event*/
+    fun addDynamicTask(runnable: Runnable) {
+        Thread(runnable).start()
     }
 
     private fun calculateDelayTime(eventTime: Long, currentTime: Long) =

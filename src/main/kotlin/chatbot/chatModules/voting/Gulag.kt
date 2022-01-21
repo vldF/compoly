@@ -1,4 +1,4 @@
-package chatbot.chatModules
+package chatbot.chatModules.voting
 
 import api.*
 import chatbot.CommandPermission
@@ -28,12 +28,14 @@ object Gulag : Votable() {
             val keyboardNegativeMessage = "/оправдать ${target.rawText}"
             val onEndVotingMessage =
                 "Подумай над своим поведением, $screenName, а потом напиши админам, чтобы тебя позвали назад"
+            val onTimeIsUp = "Голосование окончено, сегодня партия милует $screenName!"
             Messages(
                 votingForMessage,
                 successVoteMessage,
                 keyboardPositiveMessage,
                 keyboardNegativeMessage,
-                onEndVotingMessage
+                onEndVotingMessage,
+                onTimeIsUp
             )
         }
     }

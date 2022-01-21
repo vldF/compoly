@@ -4,6 +4,7 @@ import api.objects.VkUser
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.File
+import java.util.concurrent.atomic.AtomicLong
 
 //DO NO MODIFY THIS CODE MANUALLY!!!
 
@@ -31,8 +32,8 @@ private val keeper: ApiResponseKeeper
         return readValueFromFile(pathToFile, "uploadPhotoByUrlAsAttachment", "photo_by_url_as_attachment")
     }
     
-    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?): Unit {
-        writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard, "removeDelay" to removeDelay)
+    override fun send(text: String?, chatId: Int?, pixUrls: List<String>?, keyboard: Keyboard?, removeDelay: Long?, dynamicRemoveTime: AtomicLong?): Unit {
+        writeResponse("send", "text" to text, "chatId" to chatId, "pixUrls" to pixUrls, "keyboard" to keyboard, "removeDelay" to removeDelay, "dynamicRemoveTime" to dynamicRemoveTime)
     }
     
     override fun sendWithAttachments(text: String?, chatId: Int?, attachments: List<String>?): Integer? {
