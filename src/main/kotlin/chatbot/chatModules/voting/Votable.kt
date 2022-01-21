@@ -14,6 +14,7 @@ import chatbot.chatBotEvents.LongPollNewMessageEvent
 import chatbot.chatModules.misc.Voting
 import configs.botId
 import log
+import modules.events.EventStream
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
@@ -79,7 +80,7 @@ abstract class Votable {
             keyboard.addButton(KeyboardButton(messages.keyboardNegativeMessage, "против", KeyboardColor.NEGATIVE))
         }
 
-        OnTimeIsUp(newVoting.timeOfClosing, targetId, chatId, messages, this).listen()
+        onTimeIsUpThreadRunner(newVoting.timeOfClosing, targetId, chatId, messages)
 
         val split = messages.votingForMessage.split("\n")
         api.send(
@@ -235,8 +236,23 @@ abstract class Votable {
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
     }
 
-    /**Callback when time of voting is up*/
-    fun onTimeIsUp(
+    private fun onTimeIsUpThreadRunner(dynamicDelay: AtomicLong, targetId: Int, chatId: Int, messages: Messages) {
+        EventStream.addDynamicTask {
+            var time = calculateDelayTime(dynamicDelay.get(), System.currentTimeMillis())
+            while (time > 0) {
+                log.info("Sleeping for $time until next <${this}> call")
+                Thread.sleep(time)
+                time = calculateDelayTime(dynamicDelay.get(), System.currentTimeMillis())
+            }
+            onTimeIsUp(targetId, chatId, messages)
+        }
+    }
+
+    private fun calculateDelayTime(eventTime: Long, currentTime: Long): Long {
+        return eventTime - currentTime
+    }
+
+    private fun onTimeIsUp(
         targetId: Int,
         chatId: Int,
         message: Messages

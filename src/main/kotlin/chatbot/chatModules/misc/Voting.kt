@@ -24,7 +24,7 @@ class Voting(
     fun getVotes() = voteSet.size
 
     fun increaseTimeOfClosing(time: Long) {
-        timeOfClosing.compareAndSet(timeOfClosing.get(), timeOfClosing.get() + time)
+        timeOfClosing.set(timeOfClosing.get() + time)
     }
 
     val isTimeUp: Boolean
