@@ -7,6 +7,10 @@ import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import database.destroyDB
+import database.dumpDB
+import database.initInmemoryDB
+import database.loadDBTable
 import org.junit.jupiter.api.Assertions
 import java.io.File
 import java.io.FileNotFoundException

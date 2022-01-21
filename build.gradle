@@ -45,7 +45,7 @@ dependencies {
     //implementation 'io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:5.0.0'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation 'org.mockito:mockito-inline:3.7.7'
-    testImplementation 'com.h2database:h2:1.4.199'
+    implementation 'com.h2database:h2:1.4.199'
     implementation 'com.github.nkb03:kotlin-robot:1.0'
 }
 

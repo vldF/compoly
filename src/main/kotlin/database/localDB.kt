@@ -1,6 +1,5 @@
-package base
+package database
 
-import database.*
 import org.h2.jdbc.JdbcResultSet
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -40,15 +39,15 @@ fun dumpDB(): Map<String, String> {
                 while (it.next()) {
                     var colIndex = 1
                     while (true) {
-                            try {
-                                builder.append((it as JdbcResultSet).get(colIndex))
-                                builder.append(", ")
-                                colIndex++
-                            } catch (E: Exception) {
-                                break
-                            }
+                        try {
+                            builder.append((it as JdbcResultSet).get(colIndex))
+                            builder.append(", ")
+                            colIndex++
+                        } catch (E: Exception) {
+                            break
+                        }
                     }
-                    builder.appendln()
+                    builder.appendLine()
                 }
             }
 
