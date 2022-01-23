@@ -137,7 +137,7 @@ fun assertTextEquals(expected: String, expectedPath: String, actual: String, err
 }
 
 private val String.formatted
-    get() = replace("\n\r", "\n").replace("\\n", "\n").replace(" ", "")
+    get() = replace("\r\n", "\n").replace("\\n", "\n").replace(" ", "")
 
 private fun loadMessages(path: String, api: VkApi): List<LongPollNewMessageEvent> {
     val content = File("$path/messages.txt").readText()
