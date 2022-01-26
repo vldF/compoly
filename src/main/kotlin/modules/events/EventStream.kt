@@ -9,11 +9,13 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.Exception
 import java.lang.Runnable
+import java.util.concurrent.Executors
 import kotlin.concurrent.thread
 
 object EventStream {
 
     private val events: List<Event>
+    private val dynamicTaskExecutor = Executors.newCachedThreadPool()
 
     init {
         log.info("Initialising EventStream...")
@@ -88,7 +90,7 @@ object EventStream {
 
     /** For single time scheduled event*/
     fun addDynamicTask(runnable: Runnable) {
-        Thread(runnable).start()
+        dynamicTaskExecutor.submit(runnable)
     }
 
     private fun calculateDelayTime(eventTime: Long, currentTime: Long) =
