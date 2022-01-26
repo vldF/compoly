@@ -3,14 +3,12 @@ package chatbot
 import api.GarbageMessagesCollector.Companion.DEFAULT_DELAY
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
-import chatbot.chatModules.Cats
 import chatbot.chatModules.RatingSystem
 import chatbot.listeners.CommandListener
 import chatbot.listeners.MessageListener
 import chatbot.listeners.PollAnswerListener
 import chatbot.listeners.PollListener
 import io.github.classgraph.ClassGraph
-import krobot.api.invoke
 import log
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
@@ -19,7 +17,7 @@ import java.util.concurrent.Executors
 class EventProcessor(private val queue: ConcurrentLinkedQueue<LongPollEventBase>) : Thread() {
     private val pollSize = 4
     private val poll = Executors.newFixedThreadPool(pollSize)
-    private val commandRegex = Regex("^/([a-zA-Zа-яА-ЯёЁ_]+)")
+    private val commandRegex = Regex("^/([a-zA-Zа-яА-ЯёЁ_?]+)")
 
     companion object {
         lateinit var commandListeners: List<CommandListener>
