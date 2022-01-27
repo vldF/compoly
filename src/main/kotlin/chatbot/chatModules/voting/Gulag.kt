@@ -22,7 +22,7 @@ object Gulag : Votable() {
                 return@voting null
             }
             val votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
-                    "Отправь /гулаг ${target.rawText}, или /оправдать ${target.rawText}, если ты ручаешься за товарища!"
+                    "Отправь /гулаг ${target.rawText}, чтобы проголосовать за, или /оправдать ${target.rawText}, если ты ручаешься за товарища!"
             val successVoteMessage = "за отправление $screenName в лагерь"
             val keyboardPositiveMessage = "/гулаг ${target.rawText}"
             val keyboardNegativeMessage = "/оправдать ${target.rawText}"
@@ -40,7 +40,7 @@ object Gulag : Votable() {
         }
     }
 
-    @OnCommand(["оправдать", "justify"], "свободу политосужденным!")
+    @OnCommand(["оправдать", "justify"], "свободу политосужденным!", showInHelp = false)
     fun justifyMember(event: LongPollNewMessageEvent) {
         votingAgainst(event) { api, chatId, _, target ->
             val screenName = target.targetScreenName
@@ -55,7 +55,7 @@ object Gulag : Votable() {
 
     @OnCommand(["вернуть", "back"], "вернуть из ссылки", CommandPermission.ADMIN)
     fun cancelVotingResultGulag(event: LongPollNewMessageEvent) {
-        cancelVotingResult(event, "Самопроизвольное возвращение из ссылки запрещено!") { api, chatId, _, target ->
+        cancelVotingResult(event) { api, chatId, _, target ->
             if (gulagKickTime.remove(target.targetId to chatId) == null) {
                 api.send("Данного человека нет в архивах ГУЛАГ", chatId)
                 return@cancelVotingResult
