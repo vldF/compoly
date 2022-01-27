@@ -1,5 +1,6 @@
 package chatbot
 
+import api.GarbageMessagesCollector.Companion.MINUTE_DELAY
 import api.VkApi
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -9,6 +10,7 @@ import configs.mainChatPeerId
 import chatbot.chatModules.voting.Gulag
 import chatbot.chatBotEvents.LongPollEventBase
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import chatbot.chatModules.voting.Mute
 import configs.useTestChatId
 import java.io.IOException
 import java.net.URI
@@ -18,7 +20,7 @@ import java.net.http.HttpResponse
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
-class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thread() {
+class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>) : Thread() {
     private lateinit var server: String
     private lateinit var key: String
     private lateinit var ts: String
@@ -26,10 +28,10 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thr
 
     private fun initLongPoll() {
         val response = VkApi.post(
-                "groups.getLongPollServer",
-                mutableMapOf(
-                        "group_id" to botId
-                )
+            "groups.getLongPollServer",
+            mutableMapOf(
+                "group_id" to botId
+            )
         )
 
         val jsonVK = Gson().fromJson(response, JsonVK::class.java)
@@ -49,14 +51,14 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thr
     private fun longPollRequest(): HttpResponse<String?> {
         val wait = 25
         val request = HttpRequest.newBuilder()
-                .uri(URI.create(server))
-                .POST(HttpRequest.BodyPublishers.ofString("act=a_check&key=$key&ts=$ts&wait=$wait"))
-                .build()
+            .uri(URI.create(server))
+            .POST(HttpRequest.BodyPublishers.ofString("act=a_check&key=$key&ts=$ts&wait=$wait"))
+            .build()
         val client = HttpClient.newHttpClient()
         return try {
             val response = client.send(
-                    request,
-                    HttpResponse.BodyHandlers.ofString()
+                request,
+                HttpResponse.BodyHandlers.ofString()
             )
             log.info("response: ${response.body()}")
             response
@@ -107,12 +109,26 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thr
                         update.`object`.conversation_message_id
                     )
 
+                    val targetId = messageEvent.userId
+                    val peerId = messageEvent.chatId
+                    if (Mute.mutedTime.containsKey(targetId to peerId)) {
+                        val dif = Mute.mutedTime[targetId to peerId]!! - System.currentTimeMillis()
+                        if (dif > 0) {
+                            VkApi.deleteMessage(messageEvent.messageId, messageEvent.chatId)
+                            continue
+                        } else {
+                            Mute.mutedTime.remove(targetId to peerId)
+                            VkApi.send("Больше не шали, $targetId.", peerId, removeDelay = MINUTE_DELAY)
+                        }
+                    }
+
                     queue.add(messageEvent)
                 }
 
                 if (update.type == "message_new" && (update.`object`.action != null)) {
                     if (update.`object`.action.type == "chat_invite_user"
-                            || update.`object`.action.type == "chat_invite_user_by_link") {
+                        || update.`object`.action.type == "chat_invite_user_by_link"
+                    ) {
                         log.info("Somebody was added to chat")
                         val targetId = update.`object`.action.member_id
                         val peerId = update.`object`.peer_id
@@ -145,48 +161,49 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>): Thr
 
 data class JsonVK(val response: Response?, val error: Error?) {
     data class Response(
-            val key: String,
-            val server: String,
-            val ts: String
+        val key: String,
+        val server: String,
+        val ts: String
     )
 
     data class Error(
-            val error_code: Int,
-            val error_msg: String,
-            val request_params: JsonArray
+        val error_code: Int,
+        val error_msg: String,
+        val request_params: JsonArray
     )
 }
 
 data class JsonAnswer(
-        val ts: String,
-        val updates: List<Update>,
-        val failed: Int?
+    val ts: String,
+    val updates: List<Update>,
+    val failed: Int?
 )
 
 data class Update(
-        val type: String,
-        val `object`: MessageNewObj,
-        val group_id: Int,
-        val event_id: String
+    val type: String,
+    val `object`: MessageNewObj,
+    val group_id: Int,
+    val event_id: String
 )
 
 data class MessageNewObj(
-        val date: Int,
-        val from_id: Int,
-        val id: Long,
-        val out: Int,
-        val peer_id: Int,
-        val text: String,
-        val conversation_message_id: Int,
-        val reply_message: MessageNewObj?,
-        val important: Boolean,
-        val random_id: Int,
-        val attachments: List<Attachment>,
-        val is_hidden: Boolean,
-        val action: Action?,
-        val payload: String,
-        val fwd_messages: Array<MessageNewObj>
+    val date: Int,
+    val from_id: Int,
+    val id: Long,
+    val out: Int,
+    val peer_id: Int,
+    val text: String,
+    val conversation_message_id: Int,
+    val reply_message: MessageNewObj?,
+    val important: Boolean,
+    val random_id: Int,
+    val attachments: List<Attachment>,
+    val is_hidden: Boolean,
+    val action: Action?,
+    val payload: String,
+    val fwd_messages: Array<MessageNewObj>
 )
+
 data class Attachment(
     val type: String,
     val photo: Photo? = null,
@@ -195,6 +212,7 @@ data class Attachment(
     val doc: Doc? = null,
     val poll: Poll? = null
 )
+
 data class Photo(
     val id: Int,
     val owner_id: Int,
@@ -231,13 +249,13 @@ data class AttachmentObj(
 )
 
 data class Action(
-        val type: String,
-        val member_id: Int,
-        val text: String,
-        val email: String,
-        val photo: Any
+    val type: String,
+    val member_id: Int,
+    val text: String,
+    val email: String,
+    val photo: Any
 )
 
-data class Callback (
-        val callback: String
+data class Callback(
+    val callback: String
 )

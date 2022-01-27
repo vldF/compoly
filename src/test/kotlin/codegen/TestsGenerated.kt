@@ -39,24 +39,30 @@ class TestsGenerated {
     
     @Test
     @Order(5)
+    fun mute() {
+        runTest("src/test/kotlin/testData/mute")
+    }
+    
+    @Test
+    @Order(6)
     fun ratingSystem() {
         runTest("src/test/kotlin/testData/ratingSystem")
     }
     
     @Test
-    @Order(6)
+    @Order(7)
     fun reward() {
         runTest("src/test/kotlin/testData/reward")
     }
     
     @Test
-    @Order(7)
+    @Order(8)
     fun virtualcommands() {
         runTest("src/test/kotlin/testData/virtualcommands")
     }
     
     @Test
-    @Order(8)
+    @Order(9)
     fun virtualTargets() {
         runTest("src/test/kotlin/testData/virtualTargets")
     }

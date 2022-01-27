@@ -207,7 +207,6 @@ abstract class Votable {
     /**If you want to cancel the voting results*/
     fun cancelVotingResult(
         event: LongPollNewMessageEvent,
-        targetEqualsSender: String,
         cancelAction: ((api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Unit)?
     ) {
         val api = event.api
@@ -224,11 +223,6 @@ abstract class Votable {
 
         if (targetId == null) {
             api.send(targetNoneGetBackMessage, chatId, removeDelay = DEFAULT_DELAY)
-            return
-        }
-
-        if (targetId == senderId) {
-            api.send(targetEqualsSender, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
 
@@ -259,7 +253,7 @@ abstract class Votable {
     ) {
         log.info("Voting time is up: ${message.onTimeIsUp}")
         votedIds.remove(targetId to chatId)
-        if (!voting[targetId to chatId]!!.isFinishedSuccessful && message.onTimeIsUp != "") {
+        if (voting[targetId to chatId]?.isFinishedSuccessful == false && message.onTimeIsUp != "") {
             VkApi.send(message.onTimeIsUp, chatId, removeDelay = MINUTE_DELAY)
         }
     }
@@ -277,6 +271,9 @@ abstract class Votable {
         val parsed = TextMessageParser().parse(event.text)
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
+
+        GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
+
         if (target == null) {
             api.send(targetNoneMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
@@ -299,9 +296,6 @@ abstract class Votable {
         val isNeedNewVote = currentVoting == null
                 || currentVoting.isTimeUp
                 || currentVoting.isFinishedSuccessful
-
-
-        GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
 
         if ((targetId == null || api.getChatMembers(chatId, emptyList())
                 ?.find { it.id == targetId } == null) && !targets.getOrPut(chatId) { mutableSetOf() }
@@ -330,6 +324,7 @@ abstract class Votable {
 
         if (adminActions != null) {
             messages = adminActions(api, chatId, senderId, target)
+            voting[targetId to chatId]?.isFinishedSuccessful = true
             endVoting(targetId!!, chatId, api, messages)
             return
         }
@@ -359,6 +354,8 @@ abstract class Votable {
         val target = parsed.get<Mention>(1)
         val targetId = target?.targetId
 
+        GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
+
         if (target == null || targetId == null) {
             api.send(targetNoneGetBackMessage, chatId, removeDelay = DEFAULT_DELAY)
             return
@@ -368,8 +365,6 @@ abstract class Votable {
             api.send(targetDefendHimSelf, chatId, removeDelay = DEFAULT_DELAY)
             return
         }
-
-        GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
 
         val messages = someActions(api, chatId, senderId, target) ?: return
 
