@@ -98,7 +98,8 @@ object Mute : Votable() {
                 for (muted in mutedInCurrentChat) {
                     val stillMutedMinutes = (mutedTime[muted]!! - currentTime) / (1000 * 60)
                     val targetId = muted.first
-                    append("@id$targetId будет вежливым еще целых $stillMutedMinutes минут!\n")
+                    val targetScreenName = event.api.getUserNameById(targetId)
+                    append("@$targetScreenName будет вежливым еще целых $stillMutedMinutes минут!\n")
                 }
             }
             event.api.send(answer, event.chatId, removeDelay = MINUTE_DELAY)
