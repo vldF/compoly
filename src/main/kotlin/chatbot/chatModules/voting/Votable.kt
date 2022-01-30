@@ -98,12 +98,11 @@ abstract class Votable {
 
         val votingIsComplete = currentVoting.addVote(senderId, chatId)
         currentVoting.increaseTimeOfClosing(MINUTE_DELAY)
-        val senderScreenName = api.getUserNameById(senderId)
         val votedCount = currentVoting.getVotes()
         val necessaryCount = currentVoting.rightNumToVote
         votedIds[targetId to chatId]!!.add(senderId)
 
-        val message = "$senderScreenName проголосовал ${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
+        val message = "${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
 
         log.info("New vote - $message")
 
@@ -123,12 +122,11 @@ abstract class Votable {
         val currentVoting = voting[targetId to chatId]!!
 
         currentVoting.increaseRightNumToVote(1)
-        val senderScreenName = api.getUserNameById(senderId)
         val votedCount = currentVoting.getVotes()
         val necessaryCount = currentVoting.rightNumToVote
         votedIds[targetId to chatId]!!.add(senderId)
 
-        val message = "$senderScreenName проголосовал ${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
+        val message = "${messages.successVoteMessage} - [$votedCount/$necessaryCount]"
 
         log.info("New vote - $message")
 

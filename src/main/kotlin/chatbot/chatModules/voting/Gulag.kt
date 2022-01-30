@@ -21,9 +21,10 @@ object Gulag : Votable() {
                 api.send("Партия уже наказала $screenName", chatId)
                 return@voting null
             }
+            val senderScreenName = api.getUserNameById(event.userId)
             val votingForMessage = "Голосование на отправление $screenName в лагерь началось\n" +
                     "Отправь /гулаг ${target.rawText}, чтобы проголосовать за, или /оправдать ${target.rawText}, если ты ручаешься за товарища!"
-            val successVoteMessage = "за отправление $screenName в лагерь"
+            val successVoteMessage = "$senderScreenName проголосовал за отправление $screenName в лагерь"
             val keyboardPositiveMessage = "/гулаг ${target.rawText}"
             val keyboardNegativeMessage = "/оправдать ${target.rawText}"
             val onEndVotingMessage =
@@ -48,7 +49,8 @@ object Gulag : Votable() {
                 api.send("Партия не ссудит $screenName", chatId)
                 return@votingAgainst null
             }
-            val successVoteMessage = "против отправления $screenName в лагерь"
+            val senderScreenName = api.getUserNameById(event.userId)
+            val successVoteMessage = "$senderScreenName проголосовал против отправления $screenName в лагерь"
             Messages(successVoteMessage = successVoteMessage)
         }
     }

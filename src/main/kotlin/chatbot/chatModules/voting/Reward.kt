@@ -30,11 +30,11 @@ object Reward : Votable() {
                 api.send("Пожалуйста, укажите название награды в квадратных скобках после имени награждаемого", chatId)
                 return@voting null
             }
-
+            val senderScreenName = api.getUserNameById(event.userId)
             val screenName = target.targetScreenName
             val votingForMessage = "Голосование за вручение $screenName награды ${rewardsMap[key]}\n" +
                     "Отправь /наградить ${target.rawText}"
-            val successVoteMessage = "за награждение $screenName"
+            val successVoteMessage = "$senderScreenName проголосовал за награждение $screenName"
             val keyboardMessage = "/наградить ${target.rawText}"
             val onEndVotingMessage = "$screenName получает награду ${rewardsMap[key]}"
             val onTimeIsUp = "Голосование окончено! $screenName, слишком много чести для такой награды!!!"
