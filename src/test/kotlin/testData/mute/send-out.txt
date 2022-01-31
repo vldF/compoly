@@ -38,7 +38,7 @@
     "removeDelay": 10000.0
   },
   {
-    "text": "Test User проголосовал хочет слышать прекрасный голос @marx - [1/13]",
+    "text": "Test User хочет слышать прекрасный голос @marx - [1/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
@@ -56,73 +56,73 @@
     "removeDelay": 10000.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [2/13]",
+    "text": "Test User не хочет слышать @marx - [2/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [3/13]",
+    "text": "Test User не хочет слышать @marx - [3/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [4/13]",
+    "text": "Test User не хочет слышать @marx - [4/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [5/13]",
+    "text": "Test User не хочет слышать @marx - [5/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [6/13]",
+    "text": "Test User не хочет слышать @marx - [6/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [7/13]",
+    "text": "Test User не хочет слышать @marx - [7/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [8/13]",
+    "text": "Test User не хочет слышать @marx - [8/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [9/13]",
+    "text": "Test User не хочет слышать @marx - [9/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [10/13]",
+    "text": "Test User не хочет слышать @marx - [10/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [11/13]",
+    "text": "Test User не хочет слышать @marx - [11/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [12/13]",
+    "text": "Test User не хочет слышать @marx - [12/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
   },
   {
-    "text": "Test User проголосовал не хочет слышать @marx - [13/13]",
+    "text": "Test User не хочет слышать @marx - [13/13]",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": -1.0
@@ -134,7 +134,7 @@
     "removeDelay": -1.0
   },
   {
-    "text": "Список вежливых людей:\n@id2 будет вежливым еще целых 719 минут!\n",
+    "text": "Список вежливых людей:\n@Test User будет вежливым еще целых 719 минут!\n",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": 60000.0
@@ -176,7 +176,7 @@
     "removeDelay": -1.0
   },
   {
-    "text": "Список вежливых людей:\n@id3 будет вежливым еще целых 719 минут!\n@id2 будет вежливым еще целых 719 минут!\n",
+    "text": "Список вежливых людей:\n@Test User будет вежливым еще целых 719 минут!\n@Test User будет вежливым еще целых 719 минут!\n",
     "chatId": 1.0,
     "pixUrls": [],
     "removeDelay": 60000.0

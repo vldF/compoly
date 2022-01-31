@@ -23,9 +23,10 @@ object Mute : Votable() {
                 api.send("Партия уже заглушила $screenName", chatId)
                 return@voting null
             }
+            val senderScreenName = api.getUserNameById(event.userId)
             val votingForMessage = "Голосование на лишение голоса $screenName началось\n" +
                     "Отправь /mute ${target.rawText}, чтобы проголосовать за, или /stopmute ${target.rawText}, если ты хочешь слышать товарища!"
-            val successVoteMessage = "не хочет слышать $screenName"
+            val successVoteMessage = "$senderScreenName не хочет слышать $screenName"
             val keyboardPositiveMessage = "/mute ${target.rawText}"
             val keyboardNegativeMessage = "/stopmute ${target.rawText}"
             val onEndVotingMessage =
@@ -54,7 +55,8 @@ object Mute : Votable() {
                 api.send("Нет подходящего голосования $screenName", chatId)
                 return@votingAgainst null
             }
-            val successVoteMessage = "хочет слышать прекрасный голос $screenName"
+            val senderScreenName = api.getUserNameById(event.userId)
+            val successVoteMessage = "$senderScreenName хочет слышать прекрасный голос $screenName"
             Messages(successVoteMessage = successVoteMessage)
         }
     }
@@ -96,7 +98,8 @@ object Mute : Votable() {
                 for (muted in mutedInCurrentChat) {
                     val stillMutedMinutes = (mutedTime[muted]!! - currentTime) / (1000 * 60)
                     val targetId = muted.first
-                    append("@id$targetId будет вежливым еще целых $stillMutedMinutes минут!\n")
+                    val targetScreenName = event.api.getUserNameById(targetId)
+                    append("@$targetScreenName будет вежливым еще целых $stillMutedMinutes минут!\n")
                 }
             }
             event.api.send(answer, event.chatId, removeDelay = MINUTE_DELAY)

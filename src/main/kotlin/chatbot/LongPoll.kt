@@ -118,7 +118,8 @@ class LongPoll(private val queue: ConcurrentLinkedQueue<LongPollEventBase>) : Th
                             continue
                         } else {
                             Mute.mutedTime.remove(targetId to peerId)
-                            VkApi.send("Больше не шали, $targetId.", peerId, removeDelay = MINUTE_DELAY)
+                            val name = VkApi.getUserNameById(targetId)
+                            VkApi.send("Больше не шали, @$name", peerId, removeDelay = MINUTE_DELAY)
                         }
                     }
 
