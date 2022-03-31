@@ -9,7 +9,7 @@ import com.google.gson.JsonParser
 
 @ModuleObject
 object Dogs : Animal() {
-    private const val notEnoughMessage = "Товарищ, ваши пёсики закончились. Обновление запаса пёсиков происходит раз в 4 часа"
+    private const val notEnoughMessage = "Товарищ, ваши пёсики закончились. Обновление запаса пёсиков происходит раз в 12 часов"
 
     @UsageInfo(baseUsageAmount = 1, levelBonus = 1, notEnoughMessage)
     @OnCommand(["пёсик", "dog", "песик"], "ПЁСИКИ!")

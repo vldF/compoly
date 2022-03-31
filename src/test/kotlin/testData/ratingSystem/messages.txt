@@ -31,6 +31,12 @@
     },
     {
         chatId: 1,
+        text: "/disrespect [id2|@marx]",
+        userId: 3,
+        date: 0
+    },
+    {
+        chatId: 1,
         text: "/lvl",
         userId: 2,
         date: 0

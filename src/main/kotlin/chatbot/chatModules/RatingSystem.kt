@@ -52,14 +52,14 @@ object RatingSystem {
 
     private val levels = mapOf(
             Integer.MIN_VALUE..-1 to Level.LEVEL0,
-            0..20 to Level.LEVEL1,
-            21..50 to Level.LEVEL2,
-            51..100 to Level.LEVEL3,
-            101..200 to Level.LEVEL4,
-            201..500 to Level.LEVEL5,
-            501..1000 to Level.LEVEL6,
-            1001..5000 to Level.LEVEL7,
-            5001..Integer.MAX_VALUE to Level.LEVEL8
+            0..10 to Level.LEVEL1,
+            11..30 to Level.LEVEL2,
+            31..60 to Level.LEVEL3,
+            61..100 to Level.LEVEL4,
+            101..150 to Level.LEVEL5,
+            151..200 to Level.LEVEL6,
+            201..300 to Level.LEVEL7,
+            301..Integer.MAX_VALUE to Level.LEVEL8
     )
 
     fun addReputation(count: Int, toUser: Int, chatId: Int, api: VkApi) {

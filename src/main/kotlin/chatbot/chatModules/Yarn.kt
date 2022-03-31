@@ -12,7 +12,7 @@ import kotlin.random.Random
 @ExperimentalStdlibApi
 @ModuleObject
 object Yarn {
-    private const val notEnoughMessage = "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса нитей происходит раз в 4 часа"
+    private const val notEnoughMessage = "Товарищ, ваши запросы на поиск нити закончились. Обновление запаса нитей происходит раз в 12 часов"
     private var probability = 0
 
     @UsageInfo(baseUsageAmount = 6, levelBonus = 2, notEnoughMessage)
