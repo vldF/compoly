@@ -22,7 +22,7 @@ object Reward : Votable() {
 
             val key = "$chatId.$targetId"
 
-            if (!rewardsMap.keys.contains(key) && rewardNameInMessage != "") {
+            if (isNewVoting && rewardNameInMessage != "") {
                 rewardsMap[key] = rewardNameInMessage
             }
 
