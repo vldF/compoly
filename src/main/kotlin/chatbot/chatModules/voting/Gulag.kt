@@ -6,11 +6,13 @@ import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
 import java.lang.Thread.sleep
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 @ModuleObject
 object Gulag : Votable() {
-    private const val kickMinuteTime = 12 * 60 // Время нахождения в ГУЛАГе
+    private val kickDuration = Duration.ofHours(12) // Время нахождения в ГУЛАГе
     val gulagKickTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
 
     @OnCommand(["гулаг", "gulag"], "голосование на отправление в трудовой лагерь")
@@ -76,12 +78,20 @@ object Gulag : Votable() {
         }
     }
 
-    override fun onEndVoting(targetId: Int, chatId: Int, api: VkApi) {
+    override fun onEndVoting(targetMention: Mention, chatId: Int, api: VkApi) {
         sleep(500)
+        val targetId = targetMention.targetId ?: error("target id is null for mention $targetMention")
         api.kickUserFromChat(chatId, targetId)
-        val currentTime = System.currentTimeMillis()
-        gulagKickTime[targetId to chatId] = currentTime + 1000 * 60 * kickMinuteTime
+        val endTime = System.currentTimeMillis() + kickDuration.toMillis()
+        gulagKickTime[targetId to chatId] = endTime
         voting.remove(targetId to chatId)
+        sendDelayedMessage(
+            message = "Пользователь ${targetMention.targetScreenName} может вернуться в чат",
+            chatId = chatId,
+            sendTimeMillis = AtomicLong(endTime),
+        ) {
+            gulagKickTime[targetId to chatId] != null
+        }
     }
 
     override var targetNoneMessage: String = "Не указан ссыльный"

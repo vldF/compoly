@@ -10,6 +10,7 @@ import java.io.StringWriter
 import java.lang.Exception
 import java.lang.Runnable
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
 
 object EventStream {
@@ -91,6 +92,19 @@ object EventStream {
     /** For single time scheduled event*/
     fun addDynamicTask(runnable: Runnable) {
         dynamicTaskExecutor.submit(runnable)
+    }
+
+    fun addTaskWithDynamicRunTime(executionTimeMillis: AtomicLong, func: () -> Unit) {
+        dynamicTaskExecutor.submit {
+            var time = executionTimeMillis.get() - System.currentTimeMillis()
+            while (time > 0) {
+                log.info("Sleeping for $time until next <${this}> call")
+                Thread.sleep(time)
+                time = executionTimeMillis.get() - System.currentTimeMillis()
+            }
+
+            func()
+        }
     }
 
     private fun calculateDelayTime(eventTime: Long, currentTime: Long) =

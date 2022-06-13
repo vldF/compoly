@@ -134,15 +134,15 @@ abstract class Votable {
     }
 
     /**Called when enough people have voted*/
-    private fun endVoting(targetId: Int, chatId: Int, api: VkApi, messages: Messages) {
+    private fun endVoting(targetMention: Mention, chatId: Int, api: VkApi, messages: Messages) {
         log.info("Voting ends: ${messages.onEndVotingMessage}")
         api.send(messages.onEndVotingMessage, chatId)
-        onEndVoting(targetId, chatId, api)
-        votedIds.remove(targetId to chatId)
+        onEndVoting(targetMention, chatId, api)
+        votedIds.remove(targetMention.targetId to chatId)
     }
 
     /**Special action at the end of a vote*/
-    protected abstract fun onEndVoting(targetId: Int, chatId: Int, api: VkApi)
+    protected abstract fun onEndVoting(targetMention: Mention, chatId: Int, api: VkApi)
 
     /**No target*/
     protected abstract var targetNoneMessage: String
@@ -228,20 +228,15 @@ abstract class Votable {
         GarbageMessagesCollector.addGarbageMessage(event.toGarbageMessageWithDelay(DEFAULT_DELAY))
     }
 
-    private fun onTimeIsUpThreadRunner(dynamicDelay: AtomicLong, targetId: Int, chatId: Int, messages: Messages) {
-        EventStream.addDynamicTask {
-            var time = calculateDelayTime(dynamicDelay.get(), System.currentTimeMillis())
-            while (time > 0) {
-                log.info("Sleeping for $time until next <${this}> call")
-                Thread.sleep(time)
-                time = calculateDelayTime(dynamicDelay.get(), System.currentTimeMillis())
-            }
+    private fun onTimeIsUpThreadRunner(
+        dynamicRunTimeMillis: AtomicLong,
+        targetId: Int,
+        chatId: Int,
+        messages: Messages
+    ) {
+        EventStream.addTaskWithDynamicRunTime(dynamicRunTimeMillis) {
             onTimeIsUp(targetId, chatId, messages)
         }
-    }
-
-    private fun calculateDelayTime(eventTime: Long, currentTime: Long): Long {
-        return eventTime - currentTime
     }
 
     private fun onTimeIsUp(
@@ -253,6 +248,19 @@ abstract class Votable {
         votedIds.remove(targetId to chatId)
         if (voting[targetId to chatId]?.isFinishedSuccessful == false && message.onTimeIsUp != "") {
             VkApi.send(message.onTimeIsUp, chatId, removeDelay = MINUTE_DELAY)
+        }
+    }
+
+    protected fun sendDelayedMessage(
+        message: String,
+        chatId: Int,
+        sendTimeMillis: AtomicLong,
+        isMessageActual: () -> Boolean
+    ) {
+        EventStream.addTaskWithDynamicRunTime(sendTimeMillis) {
+            if (isMessageActual()) {
+                VkApi.send(message, chatId)
+            }
         }
     }
 
@@ -323,7 +331,7 @@ abstract class Votable {
         if (adminActions != null) {
             messages = adminActions(api, chatId, senderId, target)
             voting[targetId to chatId]?.isFinishedSuccessful = true
-            endVoting(targetId!!, chatId, api, messages)
+            endVoting(target, chatId, api, messages)
             return
         }
 
@@ -333,7 +341,7 @@ abstract class Votable {
             val votingIsComplete = addVote(senderId, target, chatId, api, messages)
             if (votingIsComplete) {
                 targets.getOrPut(chatId) { mutableSetOf() }.add(targetId!!)
-                endVoting(targetId, chatId, api, messages)
+                endVoting(target, chatId, api, messages)
             }
         }
     }
@@ -341,6 +349,7 @@ abstract class Votable {
     /**Private voting against process*/
     private fun votingAgainst(
         event: LongPollNewMessageEvent,
+        // unused, but still here to save the same semantics as in voting()
         adminActions: ((api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages)?,
         someActions: (api: VkApi, chatId: Int, senderId: Int, target: Mention) -> Messages?
     ) {

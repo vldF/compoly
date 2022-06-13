@@ -8,11 +8,14 @@ import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import org.apache.commons.lang3.time.DurationFormatUtils
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 @ModuleObject
 object Mute : Votable() {
-    private const val muteMinuteTime = 12 * 60
+    private val muteDuration = Duration.ofHours(12)
     val mutedTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
 
     @OnCommand(["mute", "мут", "заглушить", "shutup"], "голосование на выдачу бесплатного мьюта")
@@ -29,8 +32,9 @@ object Mute : Votable() {
             val successVoteMessage = "$senderScreenName не хочет слышать $screenName"
             val keyboardPositiveMessage = "/mute ${target.rawText}"
             val keyboardNegativeMessage = "/stopmute ${target.rawText}"
+            val timeLeft = DurationFormatUtils.formatDuration(muteDuration.toMillis(), "HH:mm:ss")
             val onEndVotingMessage =
-                "Вы лишены голоса на $muteMinuteTime минут, $screenName, переосмыслите хорошенько свои взгляды!!"
+                "Вы лишены голоса на $timeLeft, $screenName, переосмыслите хорошенько свои взгляды!!"
             val onTimeIsUp = "Голосование окончено, $screenName будет и дальше нас радовать своими прекрасными речами!"
             Messages(
                 votingForMessage,
@@ -81,10 +85,18 @@ object Mute : Votable() {
         }
     }
 
-    override fun onEndVoting(targetId: Int, chatId: Int, api: VkApi) {
-        val currentTime = System.currentTimeMillis()
-        mutedTime[targetId to chatId] = currentTime + 1000 * 60 * muteMinuteTime
+    override fun onEndVoting(targetMention: Mention, chatId: Int, api: VkApi) {
+        val endTime = System.currentTimeMillis() + muteDuration.toMillis()
+        val targetId = targetMention.targetId!!
+        mutedTime[targetId to chatId] = endTime
         voting.remove(targetId to chatId)
+        sendDelayedMessage(
+            message = "Пользователь ${targetMention.targetScreenName} снова может писать в чат",
+            chatId = chatId,
+            sendTimeMillis = AtomicLong(endTime),
+        ) {
+            mutedTime[targetId to chatId] != null
+        }
     }
 
     @OnCommand(["mutelist", "muted"], " показать список самых вежливых людей", showInHelp = false)
