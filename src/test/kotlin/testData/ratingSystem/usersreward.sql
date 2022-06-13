@@ -1,1 +1,0 @@
--- user_id, chat_id, reward_name

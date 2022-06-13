@@ -1,9 +1,0 @@
-[
-    {
-        chatId: 1,
-        text: "/cat",
-        userId: 1,
-        forwardMessageFromId: 123,
-        date: 0
-    }
-]

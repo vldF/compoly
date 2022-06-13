@@ -1,9 +1,0 @@
-[
-  {
-    "text": "",
-    "chatId": 1,
-    "attachments": [
-      "photo_of_cat"
-    ]
-  }
-]

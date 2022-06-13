@@ -1,8 +1,0 @@
-[
-  {
-    "text": "Задачи на сегодня:\ntest\nmultiline\ntext\n\n",
-    "chatId": 1.0,
-    "pixUrls": [],
-    "removeDelay": -1.0
-  }
-]
