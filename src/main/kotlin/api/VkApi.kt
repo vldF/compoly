@@ -43,7 +43,8 @@ object VkApi {
         return json
             ?.get("response")
             ?.asJsonArray
-            ?.get(0)
+            ?.map { it }
+            ?.getOrNull(0)
             ?.asJsonObject
             ?.get("screen_name")
             ?.asString
