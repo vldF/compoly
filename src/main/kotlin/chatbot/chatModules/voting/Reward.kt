@@ -49,7 +49,7 @@ object Reward : Votable() {
     }
 
     override fun onEndVoting(targetMention: Mention, chatId: Int, api: VkApi) {
-        val targetId = targetMention.targetId!!
+        val targetId = targetMention.targetId ?: error("target id is null for mention $targetMention")
         val key = "$chatId.$targetId"
         dbQuery {
             UserReward.insert {

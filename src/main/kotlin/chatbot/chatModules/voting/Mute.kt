@@ -87,10 +87,10 @@ object Mute : Votable() {
 
     override fun onEndVoting(targetMention: Mention, chatId: Int, api: VkApi) {
         val endTime = System.currentTimeMillis() + muteDuration.toMillis()
-        val targetId = targetMention.targetId!!
+        val targetId = targetMention.targetId ?: error("target id is null for mention $targetMention")
         mutedTime[targetId to chatId] = endTime
         voting.remove(targetId to chatId)
-        sendDelayedMessage(
+        sendMessageWithDynamicDelay(
             message = "Пользователь ${targetMention.targetScreenName} снова может писать в чат",
             chatId = chatId,
             sendTimeMillis = AtomicLong(endTime),

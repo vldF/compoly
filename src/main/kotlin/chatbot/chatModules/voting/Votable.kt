@@ -15,6 +15,7 @@ import chatbot.chatModules.misc.Voting
 import configs.botId
 import log
 import modules.events.EventStream
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
@@ -33,7 +34,7 @@ abstract class Votable {
     protected open var minCount = 12
 
     /**Time until the end of voting in ms*/
-    protected open var timeOfClosing = 60 * 5 * 1000L
+    protected open var timeOfClosing: Duration = Duration.ofMinutes(5)
 
     private val targets = ConcurrentHashMap<Int, MutableSet<Int>>()
 
@@ -63,7 +64,7 @@ abstract class Votable {
         val count = (onlineCount * percentageOfOnline).toInt()
         val newVoting =
             Voting(
-                timeOfClosing = AtomicLong(System.currentTimeMillis() + timeOfClosing),
+                timeOfClosing = AtomicLong(System.currentTimeMillis() + timeOfClosing.toMillis()),
                 rightNumToVote = Integer.max(count, minCount)
             )
 
@@ -251,7 +252,7 @@ abstract class Votable {
         }
     }
 
-    protected fun sendDelayedMessage(
+    protected fun sendMessageWithDynamicDelay(
         message: String,
         chatId: Int,
         sendTimeMillis: AtomicLong,

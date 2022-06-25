@@ -85,7 +85,7 @@ object Gulag : Votable() {
         val endTime = System.currentTimeMillis() + kickDuration.toMillis()
         gulagKickTime[targetId to chatId] = endTime
         voting.remove(targetId to chatId)
-        sendDelayedMessage(
+        sendMessageWithDynamicDelay(
             message = "Пользователь ${targetMention.targetScreenName} может вернуться в чат",
             chatId = chatId,
             sendTimeMillis = AtomicLong(endTime),
