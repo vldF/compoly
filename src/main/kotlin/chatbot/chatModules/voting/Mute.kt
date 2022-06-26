@@ -8,7 +8,9 @@ import chatbot.CommandPermission
 import chatbot.ModuleObject
 import chatbot.OnCommand
 import chatbot.chatBotEvents.LongPollNewMessageEvent
+import configs.mainChatPeerId
 import org.apache.commons.lang3.time.DurationFormatUtils
+import java.io.File
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
@@ -17,6 +19,20 @@ import java.util.concurrent.atomic.AtomicLong
 object Mute : Votable() {
     private val muteDuration = Duration.ofHours(12)
     val mutedTime = ConcurrentHashMap<Pair<Int, Int>, Long>()
+
+    init {
+        val permanentMutedListFile = File("permmute.txt")
+        val ids = permanentMutedListFile
+            .readText()
+            .filter { c -> c !in listOf('\r', ' ') }
+            .split("\n")
+            .filter { line -> line.isNotBlank() }
+            .map { idStr -> idStr.toInt() }
+
+        for (mutedId in ids) {
+            mutedTime[mutedId to mainChatPeerId] = Long.MAX_VALUE
+        }
+    }
 
     @OnCommand(["mute", "мут", "заглушить", "shutup"], "голосование на выдачу бесплатного мьюта")
     fun votingMute(event: LongPollNewMessageEvent) {
